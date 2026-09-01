@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+__pycache__/
+BitBytesData_*.txt
+.venv/
+venv/
+automation/generated_images/
+!frontend/public/*.png
+!frontend/public/*.svg
+!frontend/public/fonts/*
+.pytest_cache/
+automation/bridge_queue.json
