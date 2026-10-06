@@ -1,0 +1,20 @@
+{
+  "id": "day_02",
+  "track": "System Design 101",
+  "day": "Tuesday",
+  "title": "Caching Strategies: Cache-Aside vs Write-Through",
+  "subtitle": "How large-scale distributed systems achieve sub-millisecond reads",
+  "summary": "Caching places high-frequency data in lightning-fast in-memory stores (like Redis or Memcached) to prevent exhausting your primary database.",
+  "key_points": [
+    "Cache-Aside (Lazy Loading): The application first checks cache. If cache miss, reads from DB and writes to cache. Great for read-heavy workloads.",
+    "Write-Through: App writes data to the cache, which immediately writes to the DB. High consistency, slightly slower write latency.",
+    "Eviction Policies: LRU (Least Recently Used) is most common. LFU (Least Frequently Used) is best for long-term popularity curves."
+  ],
+  "code_snippet": "# Cache-Aside Pattern in Python/Redis\ndef get_user_profile(user_id):\n    cached = redis_client.get(f\"user:{user_id}\")\n    if cached:\n        return json.loads(cached)\n    \n    # Cache miss: fetch from primary database\n    user = db.query_user(user_id)\n    redis_client.setex(f\"user:{user_id}\", 3600, json.dumps(user))\n    return user",
+  "complexity": {
+    "cache_hit": "< 5ms (RAM access)",
+    "db_read": "50ms - 500ms (Disk I/O / Network)"
+  },
+  "interview_tip": "In interviews, always bring up Cache Invalidation ('There are only two hard things in Computer Science: cache invalidation and naming things').",
+  "tags": ["#SystemDesign", "#Redis", "#BackendEngineering", "#Architecture", "#BTechPlacements"]
+}
