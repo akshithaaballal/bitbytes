@@ -1,0 +1,21 @@
+{
+  "id": "day_03",
+  "track": "Core CS: Operating Systems",
+  "day": "Wednesday",
+  "title": "Process vs Thread Explained Visually",
+  "subtitle": "The #1 favorite question asked in university exams & technical rounds",
+  "summary": "A Process is an executing program with its own dedicated memory space, whereas a Thread is a lightweight unit of execution within that process.",
+  "key_points": [
+    "Memory Isolation: Processes have independent virtual address spaces (Stack, Heap, Code). If one process crashes, others are unaffected.",
+    "Shared Memory: Threads within the same process share the Heap and Data segments, but have their own private Registers and Stack.",
+    "Context Switching: Thread switching is significantly faster than process switching because MMU page tables do not need to be flushed.",
+    "IPC: Processes communicate via Inter-Process Communication (Pipes, Sockets, Shared Memory). Threads communicate directly through shared memory variables."
+  ],
+  "code_snippet": "# Python Multiprocessing vs Threading\nfrom threading import Thread\nfrom multiprocessing import Process\n\n# Multi-threading: great for I/O bound tasks (Network, Disk)\nt1 = Thread(target=fetch_api_data)\nt1.start()\n\n# Multi-processing: bypasses Python GIL for CPU-bound tasks\np1 = Process(target=heavy_math_computation)\np1.start()",
+  "complexity": {
+    "creation_cost": "Process (High overhead) vs Thread (Lightweight)",
+    "communication": "Process (IPC required) vs Thread (Shared heap)"
+  },
+  "interview_tip": "If asked about Python specifically, remember the GIL (Global Interpreter Lock): threads don't run in true parallel on multi-core for CPU tasks; use multiprocessing instead!",
+  "tags": ["#OperatingSystems", "#ComputerScience", "#BTech", "#GATE", "#CodingInterviewPrep"]
+}
