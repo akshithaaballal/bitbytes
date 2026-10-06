@@ -1,0 +1,20 @@
+{
+  "id": "day_01",
+  "track": "DSA Bite",
+  "day": "Monday",
+  "title": "Mastering the Two-Pointer Technique",
+  "subtitle": "Solve sorted array problems in O(N) time with O(1) space",
+  "summary": "The Two-Pointer approach reduces brute-force O(N^2) pair searches to linear O(N) time by moving pointers inward or outward based on condition checks.",
+  "key_points": [
+    "Opposite Direction: One pointer at start (left = 0), another at end (right = n - 1).",
+    "Condition: If sum < target -> left++; If sum > target -> right--; If sum == target -> match found!",
+    "Classic Applications: Pair Sum, Container With Most Water, 3Sum, Valid Palindrome."
+  ],
+  "code_snippet": "def two_sum_sorted(arr, target):\n    left, right = 0, len(arr) - 1\n    while left < right:\n        curr_sum = arr[left] + arr[right]\n        if curr_sum == target:\n            return (left, right)\n        elif curr_sum < target:\n            left += 1\n        else:\n            right -= 1\n    return None",
+  "complexity": {
+    "time": "O(N) - single pass through array",
+    "space": "O(1) - only two integer pointers"
+  },
+  "interview_tip": "Always check if the array is already sorted. If not, sorting takes O(N log N) - check if hashing (O(N) space) is better!",
+  "tags": ["#DSA", "#LeetCode", "#CodingInterviews", "#Python", "#BTechEngineering"]
+}
