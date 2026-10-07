@@ -1,0 +1,21 @@
+{
+  "id": "day_04",
+  "track": "Developer Tools & Git",
+  "day": "Thursday",
+  "title": "When & How to use Git Cherry-Pick",
+  "subtitle": "Pick specific commits across branches like a Senior Engineer",
+  "summary": "git cherry-pick allows you to apply a specific commit from one branch onto your current branch without merging the entire history.",
+  "key_points": [
+    "Use Case 1 (Hotfix): You fixed a bug in a development branch and need to port ONLY that fix to the production branch immediately.",
+    "Use Case 2 (Accidental Branching): You made a commit on main instead of a feature branch.",
+    "Syntax: git checkout <target-branch> -> git cherry-pick <commit-hash>",
+    "Pro Tip: If conflicts occur, resolve them and run 'git cherry-pick --continue', or abort using 'git cherry-pick --abort'."
+  ],
+  "code_snippet": "# 1. Find the commit hash from git log\ngit log --oneline\n# a1b2c3d Fix payment gateway crash\n\n# 2. Switch to production branch\ngit checkout main\n\n# 3. Cherry-pick only that commit\ngit cherry-pick a1b2c3d",
+  "complexity": {
+    "safety": "Non-destructive: generates a new SHA hash with the same diff",
+    "best_practice": "Use sparingly to avoid duplicate commits in long-lived branches"
+  },
+  "interview_tip": "Interviewers love asking how cherry-pick differs from rebase and merge: merge joins branches, rebase rewrites linear history, cherry-pick copies individual commits.",
+  "tags": ["#Git", "#DevTools", "#SoftwareEngineering", "#WebDev", "#StudentDevelopers"]
+}
