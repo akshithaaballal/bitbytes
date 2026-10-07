@@ -1,0 +1,20 @@
+{
+  "id": "day_05",
+  "track": "Computer Networks",
+  "day": "Friday",
+  "title": "TCP vs UDP: 3-Way Handshake vs Blazing Speed",
+  "subtitle": "Understanding the transport layer powering the internet",
+  "summary": "TCP guarantees reliable, ordered packet delivery with flow and congestion control. UDP prioritizes minimum latency with zero handshake overhead.",
+  "key_points": [
+    "TCP (Reliable): 3-Way Handshake (SYN -> SYN-ACK -> ACK). Resends lost packets. Best for HTTP/HTTPS, WebSockets, File Downloads.",
+    "UDP (Speed): Connectionless, fire-and-forget. Packet loss is tolerated for low-latency streaming. Best for Video Calls (WebRTC), Gaming, DNS, VoIP.",
+    "QUIC & HTTP/3: Modern breakthrough! Runs on top of UDP to eliminate Head-of-Line blocking while maintaining TCP-level encryption and reliability."
+  ],
+  "code_snippet": "# Python UDP Socket Client (Zero Handshake)\nimport socket\n\nclient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\nclient.sendto(b\"Telemetry Ping\", (\"127.0.0.1\", 9999))\n# No connection established; sent directly over the wire!",
+  "complexity": {
+    "header_size": "TCP (20-60 bytes) vs UDP (8 bytes fixed)",
+    "overhead": "TCP has connection teardown (FIN/ACK); UDP has zero teardown"
+  },
+  "interview_tip": "When asked why YouTube or Netflix uses TCP instead of UDP: video streaming buffers chunks ahead of time via HTTP/TCP; live real-time video calls (Zoom/Meet) use UDP via WebRTC!",
+  "tags": ["#ComputerNetworks", "#TCP", "#UDP", "#WebRTC", "#EngineeringExams"]
+}
