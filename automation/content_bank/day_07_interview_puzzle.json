@@ -1,0 +1,21 @@
+{
+  "id": "day_07",
+  "track": "Weekly Recap & Puzzle",
+  "day": "Sunday",
+  "title": "Weekly Challenge: The 25 Horses Puzzle",
+  "subtitle": "Classic Google & FAANG interview thinking puzzle",
+  "summary": "You have 25 horses and a race track with 5 lanes. What is the minimum number of races needed to find the top 3 fastest horses without a stopwatch?",
+  "key_points": [
+    "Round 1 (5 races): Divide 25 horses into 5 groups of 5. Race each group. Order horses within each group: A1 > A2 > A3 > A4 > A5, B1 > B2 ..., etc.",
+    "Round 2 (1 race): Race the 5 winners from Round 1 (A1, B1, C1, D1, E1). Assume order: A1 > B1 > C1 > D1 > E1. A1 is officially the fastest horse overall!",
+    "Round 3 (Final race): Horses eligible for 2nd and 3rd place are only: A2, A3, B1, B2, C1 (5 horses total). Race them once!",
+    "Total Races: 5 + 1 + 1 = 7 races."
+  ],
+  "code_snippet": "# Simulation of Elimination Logic\ncandidates = {\n    'Race 1 Winner group': ['A2', 'A3'],\n    'Race 2 Winner group': ['B1', 'B2'],\n    'Race 3 Winner group': ['C1']\n}\n# Total candidates left for 2nd and 3rd place: exactly 5 horses!",
+  "complexity": {
+    "total_races": "7 races minimum",
+    "core_skill": "Logical deduction & pruning impossible candidates"
+  },
+  "interview_tip": "In puzzle rounds, never jump to guessing. State your assumptions aloud, divide into batches, and clearly justify why certain candidates can be eliminated.",
+  "tags": ["#Puzzles", "#FAANG", "#LogicPuzzles", "#InterviewQuestions", "#BTechCareer"]
+}
