@@ -1,0 +1,38 @@
+[
+  {
+    "timestamp": "2026-10-11T22:21:25.497256",
+    "post_id": "day_01",
+    "track": "DSA Bite",
+    "title": "Mastering the Two-Pointer Technique",
+    "git": true,
+    "telegram": false,
+    "instagram": false
+  },
+  {
+    "timestamp": "2026-10-11T22:21:39.151430",
+    "post_id": "day_02",
+    "track": "System Design 101",
+    "title": "Caching Strategies: Cache-Aside vs Write-Through",
+    "git": true,
+    "telegram": false,
+    "instagram": false
+  },
+  {
+    "timestamp": "2026-10-12T11:03:40.151958",
+    "post_id": "day_03",
+    "track": "Core CS: Operating Systems",
+    "title": "Process vs Thread Explained Visually",
+    "git": true,
+    "telegram": true,
+    "instagram": false
+  },
+  {
+    "timestamp": "2026-10-12T11:03:48.615500",
+    "post_id": "day_04",
+    "track": "Developer Tools & Git",
+    "title": "When & How to use Git Cherry-Pick",
+    "git": true,
+    "telegram": true,
+    "instagram": false
+  }
+]
