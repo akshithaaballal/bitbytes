@@ -70,5 +70,14 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-12T23:20:14.413250",
+    "post_id": "day_02",
+    "track": "System Design 101",
+    "title": "Caching Strategies: Cache-Aside vs Write-Through",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
