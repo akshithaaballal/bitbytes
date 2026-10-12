@@ -61,7 +61,7 @@ export default function BroadcastCard() {
           className="channel-pill"
           title="Open live Telegram Channel"
         >
-          📡 @csbites ↗
+          @csbites [Open Channel]
         </a>
       </div>
 
@@ -103,7 +103,7 @@ export default function BroadcastCard() {
         {result && (
           <div className="broadcast-success" style={{ marginTop: '14px' }}>
             <div className="success-header">
-              <span>🎉 Broadcast Successfully Sent!</span>
+              <span>Broadcast Successfully Sent</span>
             </div>
             <p className="success-topic">
               <strong>Delivered:</strong> {result.post?.title}
@@ -117,7 +117,7 @@ export default function BroadcastCard() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    #{result.telegram.message_id} (View in Telegram ↗)
+                    #{result.telegram.message_id} (View in Telegram)
                   </a>
                 </div>
               )}
@@ -148,7 +148,7 @@ export default function BroadcastCard() {
                 <span>Broadcasting to @csbites...</span>
               </>
             ) : (
-              <span>🚀 Broadcast Now</span>
+              <span>Broadcast Now</span>
             )}
           </button>
           <button
@@ -157,7 +157,7 @@ export default function BroadcastCard() {
             onClick={fetchNext}
             disabled={broadcasting}
           >
-            ↻ Refresh Queue
+            Refresh Queue
           </button>
         </div>
       </div>

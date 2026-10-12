@@ -40,7 +40,7 @@ export default function RequestForm({ types, submitting, error, onSubmit }) {
         <button className="primary" onClick={send} disabled={!canSend}>
           {submitting ? 'Sending…' : 'Send request'}
         </button>
-        <small>Ctrl or ⌘ + Enter also sends</small>
+        <small>Ctrl or Cmd + Enter also sends</small>
       </div>
     </section>
   );
