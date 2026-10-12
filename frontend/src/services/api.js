@@ -18,4 +18,5 @@ export const getTypes = () => http('/api/request-types');
 export const getRequests = () => http('/api/requests');
 export const sendRequest = (payload) => http('/api/request', { method: 'POST', body: JSON.stringify(payload) });
 export const getNextBroadcast = () => http('/api/broadcast/next');
+export const getBroadcastHistory = () => http('/api/broadcast/history');
 export const triggerBroadcast = () => http('/api/broadcast', { method: 'POST', body: '{}' });

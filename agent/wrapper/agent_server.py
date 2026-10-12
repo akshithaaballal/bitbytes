@@ -65,6 +65,17 @@ class RealCosmitudeAgentHandler(BaseHTTPRequestHandler):
             except Exception as err:
                 return json_response(self, 500, {"error": str(err)})
 
+        if self.path == "/broadcast/history":
+            if not automation_main:
+                return json_response(self, 500, {"error": "Automation engine not loaded"})
+            try:
+                base_dir = os.path.dirname(os.path.abspath(automation_main.__file__))
+                history_path = os.path.join(base_dir, "history.json")
+                history = automation_main.load_history(history_path)
+                return json_response(self, 200, {"ok": True, "history": list(reversed(history))})
+            except Exception as err:
+                return json_response(self, 500, {"error": str(err)})
+
         if self.path.startswith("/requests/"):
             request_id = self.path.split("/")[-1]
             req = requests.get(request_id)

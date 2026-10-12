@@ -83,6 +83,10 @@ export async function getNextBroadcast() {
   return await call('GET', '/broadcast/next');
 }
 
+export async function getBroadcastHistory() {
+  return await call('GET', '/broadcast/history');
+}
+
 export async function triggerBroadcast() {
   return await call('POST', '/broadcast', {}, 60000);
 }

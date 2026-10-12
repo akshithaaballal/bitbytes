@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getNextBroadcast, triggerBroadcast } from '../services/api.js';
 
-export default function BroadcastCard() {
+export default function BroadcastCard({ onBroadcastComplete }) {
   const [nextPost, setNextPost] = useState(null);
   const [loadingNext, setLoadingNext] = useState(true);
   const [broadcasting, setBroadcasting] = useState(false);
@@ -37,6 +37,9 @@ export default function BroadcastCard() {
         setResult(res);
         // Refresh the next post in the rotation
         fetchNext();
+        if (typeof onBroadcastComplete === 'function') {
+          onBroadcastComplete(res);
+        }
       } else {
         setError(res?.error || 'Broadcast failed.');
       }

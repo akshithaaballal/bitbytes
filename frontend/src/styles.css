@@ -83,6 +83,19 @@ textarea { resize: vertical; }
 .success-details a { color: #166534; font-weight: 600; text-decoration: underline; }
 .success-details code { background: #d2f4e1; padding: 1px 5px; border-radius: 3px; font-family: monospace; }
 
+/* Broadcast History Audit Log */
+.broadcast-history-panel { margin-top: 14px; background: #ffffff; }
+.history-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+.history-table-container { overflow-x: auto; margin-top: 10px; border: 1px solid var(--line); border-radius: 8px; }
+.broadcast-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+.broadcast-table th { background: var(--paper); padding: 10px 14px; font-weight: 600; color: var(--ink); border-bottom: 1px solid var(--line); }
+.broadcast-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.broadcast-table tr:last-child td { border-bottom: 0; }
+.broadcast-table tr:hover { background: #fafbff; }
+.cell-time { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.cell-title { display: flex; flex-direction: column; gap: 2px; }
+.post-id-tag { color: var(--muted); font-family: monospace; font-size: 11px; }
+
 
 @media (max-width: 760px) {
   .grid { grid-template-columns: 1fr; }
