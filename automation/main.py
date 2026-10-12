@@ -147,6 +147,31 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None):
         print(f"\n💾 Rotation history updated ({len(history)} total posts recorded).")
 
     print("\n🎉 Pipeline execution completed successfully!\n")
+    return {
+        "success": True,
+        "post": post,
+        "telegram": telegram_result,
+        "git": git_result,
+        "instagram": instagram_result,
+        "image_path": image_path
+    }
+
+def get_next_post_summary() -> dict:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    content_dir = os.path.join(base_dir, "content_bank")
+    history_path = os.path.join(base_dir, "history.json")
+    posts = get_all_posts(content_dir)
+    history = load_history(history_path)
+    next_post = pick_next_post(posts, history)
+    return {
+        "id": next_post.get("id"),
+        "title": next_post.get("title"),
+        "track": next_post.get("track"),
+        "subtitle": next_post.get("subtitle", ""),
+        "summary": next_post.get("summary", ""),
+        "tags": next_post.get("tags", []),
+        "history_count": len(history)
+    }
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="BitBytes Daily Post Orchestrator")

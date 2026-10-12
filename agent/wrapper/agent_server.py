@@ -10,10 +10,21 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 # Add agent root to sys.path so we can import Bot
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 AGENT_DIR = os.path.dirname(CURRENT_DIR)
+PROJECT_ROOT = os.path.dirname(AGENT_DIR)
+AUTOMATION_DIR = os.path.join(PROJECT_ROOT, "automation")
+
 if AGENT_DIR not in sys.path:
     sys.path.insert(0, AGENT_DIR)
+if AUTOMATION_DIR not in sys.path:
+    sys.path.insert(0, AUTOMATION_DIR)
 
 import Bot
+
+try:
+    import main as automation_main
+except Exception as e:
+    print(f"[Cosmitude-Wrapper] Warning importing automation: {e}")
+    automation_main = None
 
 HOST = "127.0.0.1"
 PORT = 5000
@@ -45,6 +56,15 @@ class RealCosmitudeAgentHandler(BaseHTTPRequestHandler):
                 },
             )
 
+        if self.path == "/broadcast/next":
+            if not automation_main:
+                return json_response(self, 500, {"error": "Automation engine not loaded"})
+            try:
+                next_post = automation_main.get_next_post_summary()
+                return json_response(self, 200, {"ok": True, "next": next_post})
+            except Exception as err:
+                return json_response(self, 500, {"error": str(err)})
+
         if self.path.startswith("/requests/"):
             request_id = self.path.split("/")[-1]
             req = requests.get(request_id)
@@ -65,6 +85,33 @@ class RealCosmitudeAgentHandler(BaseHTTPRequestHandler):
         )
 
     def do_POST(self):
+        if self.path == "/broadcast":
+            if not automation_main:
+                return json_response(self, 500, {"error": "Automation engine not loaded"})
+            try:
+                # Trigger the automation pipeline
+                result = automation_main.run_pipeline()
+                if not result.get("success"):
+                    return json_response(self, 500, {"error": "Pipeline run failed", "details": result})
+                
+                # Also log the broadcast event directly on Cosmitude Bridge forum
+                post_title = result["post"].get("title", "Unknown")
+                post_id = result["post"].get("id", "Unknown")
+                bridge_msg = f"Broadcasted: {post_title} [{post_id}] to Telegram channel @csbites"
+                
+                bridge_res = Bot.sendUserRequestBridge("BitBytesData_DataProcessing", bridge_msg)
+                
+                return json_response(self, 200, {
+                    "ok": True,
+                    "success": True,
+                    "post": result["post"],
+                    "telegram": result["telegram"],
+                    "git": result["git"],
+                    "bridge": bridge_res
+                })
+            except Exception as err:
+                return json_response(self, 500, {"error": str(err)})
+
         if self.path != "/requests":
             return json_response(
                 self,

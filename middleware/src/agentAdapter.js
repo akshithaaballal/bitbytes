@@ -17,7 +17,7 @@ export class AgentError extends Error {
   }
 }
 
-async function call(method, path, body) {
+async function call(method, path, body, timeoutMs = config.agentTimeoutMs) {
   if (!config.agentUrl) {
     throw new AgentError(
       'Cosmitude Agent adapter is not configured yet. Set AGENT_URL in middleware/.env.',
@@ -26,7 +26,7 @@ async function call(method, path, body) {
     );
   }
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), config.agentTimeoutMs);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const headers = { 'Content-Type': 'application/json' };
     if (config.agentApiKey) headers['X-Agent-Key'] = config.agentApiKey;
@@ -77,4 +77,12 @@ export async function getResult(id) {
     output: raw.output ?? null,
     error: status === 'failed' ? String(raw.error || 'The agent reported a failure.') : null,
   };
+}
+
+export async function getNextBroadcast() {
+  return await call('GET', '/broadcast/next');
+}
+
+export async function triggerBroadcast() {
+  return await call('POST', '/broadcast', {}, 60000);
 }

@@ -5,6 +5,7 @@ import { AgentError } from './agentAdapter.js';
 import { ValidationError } from './services/requestService.js';
 import healthRoutes from './routes/health.js';
 import requestRoutes from './routes/requests.js';
+import broadcastRoutes from './routes/broadcast.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
 
 app.use('/api', healthRoutes);
 app.use('/api', requestRoutes);
+app.use('/api', broadcastRoutes);
 app.use('/api', (req, res) => res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Unknown route.' } }));
 
 // eslint-disable-next-line no-unused-vars

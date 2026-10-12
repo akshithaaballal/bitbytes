@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import PipelineStatus from '../components/PipelineStatus.jsx';
+import BroadcastCard from '../components/BroadcastCard.jsx';
 import RequestForm from '../components/RequestForm.jsx';
 import ResponsePanel from '../components/ResponsePanel.jsx';
 import HistoryList from '../components/HistoryList.jsx';
@@ -51,6 +52,7 @@ export default function Dashboard() {
   return (
     <>
       <PipelineStatus health={health} />
+      <BroadcastCard />
       <div className="grid">
         <RequestForm types={types} submitting={submitting} error={error} onSubmit={handleSubmit} />
         <ResponsePanel request={history.find((r) => r.id === selectedId)} />

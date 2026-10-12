@@ -43,5 +43,23 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-12T12:22:56.854057",
+    "post_id": "day_06",
+    "track": "Database Engineering",
+    "title": "How B-Tree Indexes Speed Up SQL Queries 1000x",
+    "git": true,
+    "telegram": true,
+    "instagram": false
+  },
+  {
+    "timestamp": "2026-10-12T12:23:49.456059",
+    "post_id": "day_07",
+    "track": "Weekly Recap & Puzzle",
+    "title": "Weekly Challenge: The 25 Horses Puzzle",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
