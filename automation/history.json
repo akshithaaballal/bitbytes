@@ -61,5 +61,14 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-12T16:16:15.466807",
+    "post_id": "day_01",
+    "track": "DSA Bite",
+    "title": "Mastering the Two-Pointer Technique",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
