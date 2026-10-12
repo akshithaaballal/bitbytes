@@ -27,7 +27,7 @@ small { color: var(--muted); }
 .node-state { color: var(--muted); font-size: 13px; }
 .node.ok .node-state { color: var(--ok); } .node.bad .node-state { color: var(--bad); }
 
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px; }
 .grid > :last-child { grid-column: 1 / -1; }
 .panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 20px; min-width: 0; }
 .empty { color: var(--muted); margin: 0; }
