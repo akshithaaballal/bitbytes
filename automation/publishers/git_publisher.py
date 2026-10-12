@@ -58,9 +58,11 @@ def publish_to_git(post: dict, base_dir: str = None) -> dict:
     archive_dir = os.path.join(base_dir, "archive")
     os.makedirs(archive_dir, exist_ok=True)
     
-    today_str = datetime.now().strftime("%Y-%m-%d")
+    now = datetime.now()
+    timestamp_str = now.strftime("%Y-%m-%d %H:%M")
+    date_code = now.strftime("%Y-%m-%d_%H%M")
     post_id = post.get("id", "post")
-    filename = f"{today_str}_{post_id}.md"
+    filename = f"{date_code}_{post_id}.md"
     file_path = os.path.join(archive_dir, filename)
     
     content = format_github_markdown(post)
@@ -69,10 +71,10 @@ def publish_to_git(post: dict, base_dir: str = None) -> dict:
         
     # Update INDEX.md
     index_path = os.path.join(base_dir, "INDEX.md")
-    index_entry = f"| {today_str} | **{post.get('day', '')}** | {post.get('track', '')} | [{post.get('title', '')}](archive/{filename}) |\n"
+    index_entry = f"| {timestamp_str} | **{post.get('day', '')}** | {post.get('track', '')} | [{post.get('title', '')}](archive/{filename}) |\n"
     
     if not os.path.exists(index_path):
-        header = "# 📚 BitBytes Daily Engineering Archive\n\n| Date | Day | Track | Topic |\n| :--- | :--- | :--- | :--- |\n"
+        header = "# 📚 BitBytes Engineering Knowledge Archive\n\n| Timestamp | Track Day | Track | Topic |\n| :--- | :--- | :--- | :--- |\n"
         with open(index_path, "w", encoding="utf-8") as f:
             f.write(header + index_entry)
     else:

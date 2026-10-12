@@ -1,9 +1,9 @@
-name: Daily B.Tech Engineering Post Automation
+name: Hourly B.Tech Engineering Post Automation
 
 on:
   schedule:
-    # 02:30 UTC = 08:00 AM IST (Indian Standard Time)
-    - cron: '30 2 * * *'
+    # Runs at the top of every hour (24/7)
+    - cron: '0 * * * *'
   workflow_dispatch: # Allows manual trigger from GitHub Actions UI
 
 permissions:
