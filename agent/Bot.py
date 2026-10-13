@@ -24,10 +24,22 @@ if os.path.exists(_ENV_PATH):
 
 API_BASE = os.getenv('COSMITUDE_API_BASE', 'https://ca.cosmitude.com')
 MAC_ADDRESS = os.getenv('COSMITUDE_MAC_ADDRESS', 'Bridge-Web')
-USER_NAME = os.getenv('COSMITUDE_USERNAME', '@uuid6e47f42c43ef4fc19054770dca3b2cea')
-PASSWORD = os.getenv('COSMITUDE_PASSWORD', 'CosmitudeBridgeDevice')
-SERVER_ID = os.getenv('COSMITUDE_SERVER_ID', 'c9b6722d-5dbf-4b4f-a28e-692b4d26c1cf-7870eb8e-2f45-458a-9a70-d6b2d71ee871')
-forumID = os.getenv('COSMITUDE_FORUM_ID', '99163d71-96b5-4575-9cf9-8341fb36c917')
+USER_NAME = os.getenv('COSMITUDE_USERNAME')
+PASSWORD = os.getenv('COSMITUDE_PASSWORD')
+SERVER_ID = os.getenv('COSMITUDE_SERVER_ID')
+forumID = os.getenv('COSMITUDE_FORUM_ID')
+
+_missing_cosmitude = [k for k, v in [
+    ('COSMITUDE_USERNAME', USER_NAME),
+    ('COSMITUDE_PASSWORD', PASSWORD),
+    ('COSMITUDE_SERVER_ID', SERVER_ID),
+    ('COSMITUDE_FORUM_ID', forumID),
+] if not v]
+if _missing_cosmitude:
+    raise RuntimeError(
+        f"Missing required Cosmitude environment variables: {', '.join(_missing_cosmitude)}. "
+        f"Define them in agent/.env or system environment."
+    )
 
 Sessionid = ''
 username = ''
