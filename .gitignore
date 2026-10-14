@@ -6,3 +6,9 @@ dist/
 *.log
 __pycache__/
 BitBytesData_*.txt
+.venv/
+venv/
+automation/generated_images/
+!frontend/public/*.png
+!frontend/public/*.svg
+!frontend/public/fonts/*
