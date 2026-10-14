@@ -142,5 +142,14 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-14T19:01:43.446509",
+    "post_id": "day_03",
+    "track": "Core CS: Operating Systems",
+    "title": "Process vs Thread Explained Visually",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
