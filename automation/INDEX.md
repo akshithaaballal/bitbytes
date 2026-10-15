@@ -27,3 +27,4 @@
 | 2026-10-15 17:28 | **Monday** | DSA Bite | [Mastering the Two-Pointer Technique](archive/2026-10-15_1728_day_01.md) |
 | 2026-10-15 23:20 | **Thursday** | AI & Machine Learning | [Simons Foundation launches $15M effort to help mathematicians navigate AI e](archive/2026-10-15_2320_radar_20261015_2320.md) |
 | 2026-10-15 23:21 | **Thursday** | AI & Machine Learning | [Neural Networks Are Already Clean](archive/2026-10-15_2321_radar_20261015_2321.md) |
+| 2026-10-15 20:40 | **Monday** | DSA Bite | [Mastering the Two-Pointer Technique](archive/2026-10-15_2040_day_01.md) |
