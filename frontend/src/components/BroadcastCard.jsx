@@ -76,7 +76,10 @@ export default function BroadcastCard({ onBroadcastComplete }) {
         ) : nextPost ? (
           <div className="next-concept-card">
             <div className="concept-meta">
-              <span className="badge-track">{nextPost.track || 'CS Concept'}</span>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <span className="badge-track">{nextPost.track || 'CS Concept'}</span>
+                {nextPost.radar_enabled && <span className="badge-radar">Live AI Radar</span>}
+              </div>
               <span className="concept-id">Queue ID: {nextPost.id}</span>
             </div>
             <h3 className="concept-title">{nextPost.title}</h3>
@@ -112,6 +115,23 @@ export default function BroadcastCard({ onBroadcastComplete }) {
               <strong>Delivered:</strong> {result.post?.title}
             </p>
             <div className="success-details">
+              {result.post?.curation_engine && (
+                <div>
+                  • Engine: <code>{result.post.curation_engine}</code>
+                </div>
+              )}
+              {result.post?.source_url && (
+                <div>
+                  • Web Source:{' '}
+                  <a
+                    href={result.post.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {result.post.source_url}
+                  </a>
+                </div>
+              )}
               {result.telegram?.message_id && (
                 <div>
                   • Telegram Message ID:{' '}

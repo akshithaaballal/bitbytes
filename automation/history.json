@@ -196,5 +196,27 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-15T23:20:48.224214",
+    "post_id": "radar_20261015_2320",
+    "track": "AI & Machine Learning",
+    "title": "Simons Foundation launches $15M effort to help mathematicians navigate AI e",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_url": "https://www.simonsfoundation.org/news/simons-foundation-launches-15m-effort-to-help-mathematicians-navigate-ai-era/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
+  },
+  {
+    "timestamp": "2026-10-15T23:21:28.671061",
+    "post_id": "radar_20261015_2321",
+    "track": "AI & Machine Learning",
+    "title": "Neural Networks Are Already Clean",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_url": "https://already-clean.goodfire.com/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]

@@ -25,6 +25,12 @@ from publishers.git_publisher import publish_to_git
 from publishers.image_generator import render_social_card
 from publishers.instagram_publisher import publish_to_instagram
 
+# Import Autonomous Tech Radar (Firecrawl + LLM)
+try:
+    from crawlers.tech_radar import harvest_autonomous_post
+except Exception as e:
+    harvest_autonomous_post = None
+
 def load_post_by_path(path: str) -> dict:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -61,7 +67,7 @@ def pick_next_post(posts: list, history: list) -> dict:
             
     return posts[0]
 
-def run_pipeline(dry_run: bool = False, specific_post_id: str = None):
+def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar: bool = None):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     load_dotenv(os.path.join(base_dir, ".env"))
     
@@ -69,18 +75,26 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None):
     history_path = os.path.join(base_dir, "history.json")
     
     posts = get_all_posts(content_dir)
-    if not posts:
-        print("[ERROR] No post templates found in content_bank.")
-        return
-        
+    history = load_history(history_path)
+    radar_enabled = use_radar if use_radar is not None else (os.getenv("USE_AI_RADAR", "true").lower() == "true")
+    
     if specific_post_id:
         target = next((p for p in posts if p.get("id") == specific_post_id), None)
         if not target:
             print(f"[ERROR] Post with id '{specific_post_id}' not found.")
             return
         post = target
+    elif radar_enabled and harvest_autonomous_post:
+        try:
+            print("\n🛰️ Mode: Autonomous Tech Radar (Firecrawl + LLM)")
+            post = harvest_autonomous_post(history)
+        except Exception as err:
+            print(f"⚠️ Autonomous Radar encounter: {err}. Falling back to content bank...")
+            post = pick_next_post(posts, history) if posts else None
     else:
-        history = load_history(history_path)
+        if not posts:
+            print("[ERROR] No post templates found in content_bank.")
+            return
         post = pick_next_post(posts, history)
         
     print(f"\n=======================================================")
@@ -139,6 +153,8 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None):
             "post_id": post.get("id"),
             "track": post.get("track"),
             "title": post.get("title"),
+            "source": post.get("curation_engine", "Content Bank"),
+            "source_url": post.get("source_url", ""),
             "git": git_result.get("success", False),
             "telegram": telegram_result.get("success", False),
             "instagram": instagram_result.get("success", False)
@@ -158,11 +174,26 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None):
 
 def get_next_post_summary() -> dict:
     base_dir = os.path.dirname(os.path.abspath(__file__))
+    load_dotenv(os.path.join(base_dir, ".env"))
     content_dir = os.path.join(base_dir, "content_bank")
     history_path = os.path.join(base_dir, "history.json")
     posts = get_all_posts(content_dir)
     history = load_history(history_path)
-    next_post = pick_next_post(posts, history)
+    radar_active = os.getenv("USE_AI_RADAR", "true").lower() == "true"
+    
+    if radar_active:
+        return {
+            "id": "live_tech_radar",
+            "title": "Live Autonomous Tech Radar",
+            "track": "AI & Core CS (Real-Time Feed)",
+            "subtitle": "Continuously scraping trending research & systems breakthroughs via Firecrawl + LLM",
+            "summary": "Every broadcast dynamically searches Hacker News, GitHub Trending, and arXiv, synthesizes code & insights, and eliminates topic duplication.",
+            "tags": ["#LiveWeb", "#Firecrawl", "#GeminiLLM", "#NeverRepeating", "#BTechEngineering"],
+            "radar_enabled": True,
+            "history_count": len(history)
+        }
+
+    next_post = pick_next_post(posts, history) if posts else {}
     return {
         "id": next_post.get("id"),
         "title": next_post.get("title"),
@@ -170,6 +201,7 @@ def get_next_post_summary() -> dict:
         "subtitle": next_post.get("subtitle", ""),
         "summary": next_post.get("summary", ""),
         "tags": next_post.get("tags", []),
+        "radar_enabled": False,
         "history_count": len(history)
     }
 
@@ -177,6 +209,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="BitBytes Daily Post Orchestrator")
     parser.add_argument("--dry-run", action="store_true", help="Simulate publishing without external API calls")
     parser.add_argument("--post", type=str, help="Specify post ID to run (e.g. day_01)")
+    parser.add_argument("--radar", action="store_true", help="Force autonomous radar mode (Firecrawl + LLM)")
     args = parser.parse_args()
     
-    run_pipeline(dry_run=args.dry_run, specific_post_id=args.post)
+    run_pipeline(dry_run=args.dry_run, specific_post_id=args.post, use_radar=args.radar if args.radar else None)
