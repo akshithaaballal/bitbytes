@@ -273,5 +273,16 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-16T17:03:12.949641",
+    "post_id": "day_06",
+    "track": "Database Engineering",
+    "title": "How B-Tree Indexes Speed Up SQL Queries 1000x",
+    "source": "Content Bank",
+    "source_url": "",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
