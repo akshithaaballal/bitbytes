@@ -41,3 +41,4 @@
 | 2026-10-17 14:35 | **Friday** | Computer Networks | [TCP vs UDP: 3-Way Handshake vs Blazing Speed](archive/2026-10-17_1435_day_05.md) |
 | 2026-10-17 17:36 | **Saturday** | Database Engineering | [How B-Tree Indexes Speed Up SQL Queries 1000x](archive/2026-10-17_1736_day_06.md) |
 | 2026-10-17 19:48 | **Sunday** | Weekly Recap & Puzzle | [Weekly Challenge: The 25 Horses Puzzle](archive/2026-10-17_1948_day_07.md) |
+| 2026-10-17 21:50 | **Monday** | DSA Bite | [Mastering the Two-Pointer Technique](archive/2026-10-17_2150_day_01.md) |
