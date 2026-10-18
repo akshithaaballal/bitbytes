@@ -47,3 +47,4 @@
 | 2026-10-18 07:00 | **Thursday** | Developer Tools & Git | [When & How to use Git Cherry-Pick](archive/2026-10-18_0700_day_04.md) |
 | 2026-10-18 12:14 | **Friday** | Computer Networks | [TCP vs UDP: 3-Way Handshake vs Blazing Speed](archive/2026-10-18_1214_day_05.md) |
 | 2026-10-18 16:12 | **Saturday** | Database Engineering | [How B-Tree Indexes Speed Up SQL Queries 1000x](archive/2026-10-18_1612_day_06.md) |
+| 2026-10-18 19:03 | **Sunday** | Weekly Recap & Puzzle | [Weekly Challenge: The 25 Horses Puzzle](archive/2026-10-18_1903_day_07.md) |
