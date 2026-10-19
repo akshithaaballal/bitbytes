@@ -50,3 +50,4 @@
 | 2026-10-18 19:03 | **Sunday** | Weekly Recap & Puzzle | [Weekly Challenge: The 25 Horses Puzzle](archive/2026-10-18_1903_day_07.md) |
 | 2026-10-18 22:01 | **Monday** | DSA Bite | [Mastering the Two-Pointer Technique](archive/2026-10-18_2201_day_01.md) |
 | 2026-10-19 00:35 | **Tuesday** | System Design 101 | [Caching Strategies: Cache-Aside vs Write-Through](archive/2026-10-19_0035_day_02.md) |
+| 2026-10-19 05:27 | **Wednesday** | Core CS: Operating Systems | [Process vs Thread Explained Visually](archive/2026-10-19_0527_day_03.md) |
