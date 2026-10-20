@@ -59,3 +59,4 @@
 | 2026-10-20 10:35 | **Tuesday** | System Design 101 | [Caching Strategies: Cache-Aside vs Write-Through](archive/2026-10-20_1035_day_02.md) |
 | 2026-10-20 15:26 | **Wednesday** | Core CS: Operating Systems | [Process vs Thread Explained Visually](archive/2026-10-20_1526_day_03.md) |
 | 2026-10-20 19:43 | **Thursday** | Developer Tools & Git | [When & How to use Git Cherry-Pick](archive/2026-10-20_1943_day_04.md) |
+| 2026-10-20 22:47 | **Friday** | Computer Networks | [TCP vs UDP: 3-Way Handshake vs Blazing Speed](archive/2026-10-20_2247_day_05.md) |
