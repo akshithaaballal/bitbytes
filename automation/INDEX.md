@@ -58,3 +58,4 @@
 | 2026-10-20 05:30 | **Monday** | DSA Bite | [Mastering the Two-Pointer Technique](archive/2026-10-20_0530_day_01.md) |
 | 2026-10-20 10:35 | **Tuesday** | System Design 101 | [Caching Strategies: Cache-Aside vs Write-Through](archive/2026-10-20_1035_day_02.md) |
 | 2026-10-20 15:26 | **Wednesday** | Core CS: Operating Systems | [Process vs Thread Explained Visually](archive/2026-10-20_1526_day_03.md) |
+| 2026-10-20 19:43 | **Thursday** | Developer Tools & Git | [When & How to use Git Cherry-Pick](archive/2026-10-20_1943_day_04.md) |
