@@ -17,5 +17,11 @@
     "storage": "Consumes 10% - 30% additional disk space per table"
   },
   "interview_tip": "Be prepared to explain when NOT to use an index: small tables (<1000 rows), frequently written/updated columns with rare reads, or columns with low cardinality (like boolean flags).",
-  "tags": ["#SQL", "#Database", "#BTree", "#Backend", "#TechInterviews"]
+  "tags": ["#SQL", "#Database", "#BTree", "#Backend", "#TechInterviews"],
+  "references": [
+    {
+      "title": "PostgreSQL Documentation: B-Tree Indexes",
+      "url": "https://www.postgresql.org/docs/current/btree-intro.html"
+    }
+  ]
 }
