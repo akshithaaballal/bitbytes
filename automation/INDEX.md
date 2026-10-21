@@ -60,3 +60,4 @@
 | 2026-10-20 15:26 | **Wednesday** | Core CS: Operating Systems | [Process vs Thread Explained Visually](archive/2026-10-20_1526_day_03.md) |
 | 2026-10-20 19:43 | **Thursday** | Developer Tools & Git | [When & How to use Git Cherry-Pick](archive/2026-10-20_1943_day_04.md) |
 | 2026-10-20 22:47 | **Friday** | Computer Networks | [TCP vs UDP: 3-Way Handshake vs Blazing Speed](archive/2026-10-20_2247_day_05.md) |
+| 2026-10-21 01:06 | **Saturday** | Database Engineering | [How B-Tree Indexes Speed Up SQL Queries 1000x](archive/2026-10-21_0106_day_06.md) |
