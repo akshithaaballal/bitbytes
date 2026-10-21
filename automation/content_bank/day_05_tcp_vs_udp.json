@@ -16,5 +16,15 @@
     "overhead": "TCP has connection teardown (FIN/ACK); UDP has zero teardown"
   },
   "interview_tip": "When asked why YouTube or Netflix uses TCP instead of UDP: video streaming buffers chunks ahead of time via HTTP/TCP; live real-time video calls (Zoom/Meet) use UDP via WebRTC!",
-  "tags": ["#ComputerNetworks", "#TCP", "#UDP", "#WebRTC", "#EngineeringExams"]
+  "tags": ["#ComputerNetworks", "#TCP", "#UDP", "#WebRTC", "#EngineeringExams"],
+  "references": [
+    {
+      "title": "RFC 9293: Transmission Control Protocol (TCP)",
+      "url": "https://www.rfc-editor.org/rfc/rfc9293.html"
+    },
+    {
+      "title": "RFC 768: User Datagram Protocol",
+      "url": "https://www.rfc-editor.org/rfc/rfc768.html"
+    }
+  ]
 }
