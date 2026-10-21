@@ -636,5 +636,16 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-21T23:55:28.491734",
+    "post_id": "day_04",
+    "track": "Developer Tools & Git",
+    "title": "When & How to use Git Cherry-Pick",
+    "source": "Content Bank",
+    "source_url": "",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
