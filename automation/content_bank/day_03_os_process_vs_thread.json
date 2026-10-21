@@ -17,5 +17,11 @@
     "communication": "Process (IPC required) vs Thread (Shared heap)"
   },
   "interview_tip": "If asked about Python specifically, remember the GIL (Global Interpreter Lock): threads don't run in true parallel on multi-core for CPU tasks; use multiprocessing instead!",
-  "tags": ["#OperatingSystems", "#ComputerScience", "#BTech", "#GATE", "#CodingInterviewPrep"]
+  "tags": ["#OperatingSystems", "#ComputerScience", "#BTech", "#GATE", "#CodingInterviewPrep"],
+  "references": [
+    {
+      "title": "Linux Programmer's Manual: clone(2)",
+      "url": "https://man7.org/linux/man-pages/man2/clone.2.html"
+    }
+  ]
 }

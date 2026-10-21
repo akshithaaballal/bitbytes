@@ -17,5 +17,6 @@
     "core_skill": "Logical deduction & pruning impossible candidates"
   },
   "interview_tip": "In puzzle rounds, never jump to guessing. State your assumptions aloud, divide into batches, and clearly justify why certain candidates can be eliminated.",
-  "tags": ["#Puzzles", "#FAANG", "#LogicPuzzles", "#InterviewQuestions", "#BTechCareer"]
+  "tags": ["#Puzzles", "#FAANG", "#LogicPuzzles", "#InterviewQuestions", "#BTechCareer"],
+  "references": []
 }

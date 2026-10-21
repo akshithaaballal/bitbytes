@@ -16,5 +16,11 @@
     "space": "O(1) - only two integer pointers"
   },
   "interview_tip": "Always check if the array is already sorted. If not, sorting takes O(N log N) - check if hashing (O(N) space) is better!",
-  "tags": ["#DSA", "#LeetCode", "#CodingInterviews", "#Python", "#BTechEngineering"]
+  "tags": ["#DSA", "#LeetCode", "#CodingInterviews", "#Python", "#BTechEngineering"],
+  "references": [
+    {
+      "title": "Two Pointers Technique",
+      "url": "https://www.geeksforgeeks.org/two-pointers-technique/"
+    }
+  ]
 }

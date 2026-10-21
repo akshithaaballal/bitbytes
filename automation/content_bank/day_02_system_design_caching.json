@@ -16,5 +16,11 @@
     "db_read": "50ms - 500ms (Disk I/O / Network)"
   },
   "interview_tip": "In interviews, always bring up Cache Invalidation ('There are only two hard things in Computer Science: cache invalidation and naming things').",
-  "tags": ["#SystemDesign", "#Redis", "#BackendEngineering", "#Architecture", "#BTechPlacements"]
+  "tags": ["#SystemDesign", "#Redis", "#BackendEngineering", "#Architecture", "#BTechPlacements"],
+  "references": [
+    {
+      "title": "Redis Documentation: Key eviction",
+      "url": "https://redis.io/docs/latest/develop/reference/eviction/"
+    }
+  ]
 }
