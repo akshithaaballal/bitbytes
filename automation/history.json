@@ -592,5 +592,16 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-21T06:44:55.052554",
+    "post_id": "day_07",
+    "track": "Weekly Recap & Puzzle",
+    "title": "Weekly Challenge: The 25 Horses Puzzle",
+    "source": "Content Bank",
+    "source_url": "",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
