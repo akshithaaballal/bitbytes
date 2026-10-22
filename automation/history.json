@@ -647,5 +647,16 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-22T02:25:31.684912",
+    "post_id": "day_05",
+    "track": "Computer Networks",
+    "title": "TCP vs UDP: 3-Way Handshake vs Blazing Speed",
+    "source": "Content Bank",
+    "source_url": "",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
