@@ -77,3 +77,4 @@
 | 2026-10-23 17:34 | **Saturday** | Database Engineering | [How B-Tree Indexes Speed Up SQL Queries 1000x](archive/2026-10-23_1734_day_06.md) |
 | 2026-10-23 20:45 | **Sunday** | Weekly Recap & Puzzle | [Weekly Challenge: The 25 Horses Puzzle](archive/2026-10-23_2045_day_07.md) |
 | 2026-10-23 23:38 | **Monday** | DSA Bite | [Mastering the Two-Pointer Technique](archive/2026-10-23_2338_day_01.md) |
+| 2026-10-24 02:23 | **Tuesday** | System Design 101 | [Caching Strategies: Cache-Aside vs Write-Through](archive/2026-10-24_0223_day_02.md) |
