@@ -904,5 +904,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-25T17:57:29.551293",
+    "post_id": "radar_20261025_1757",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "A 10-year-old CNN outperforms frontier LLMs for skin cancer diagnosis",
+    "source_url": "https://lynchlab.net/llm-skin-cancer",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
