@@ -856,5 +856,29 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-25T13:17:04.519530",
+    "post_id": "radar_20261025_1317",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (firecrawl-sdk) + LLM",
+    "source_headline": "We should be more ambitious with the software we build",
+    "source_url": "https://danluu.com/ambitious/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
+  },
+  {
+    "timestamp": "2026-10-25T13:24:49.507639",
+    "post_id": "linear-attention-mechanisms-transformers",
+    "track": "AI & Machine Learning",
+    "title": "Linear Attention Mechanisms in Transformers",
+    "source": "Firecrawl (firecrawl-sdk) + LLM",
+    "source_headline": "Cerebras Deploys Trillion-Parameter AI Models",
+    "source_url": "https://www.cerebras.ai/blog/how-we-deploy-trillion-parameter-frontier-models-on-cerebras",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]

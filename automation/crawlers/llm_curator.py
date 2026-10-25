@@ -101,6 +101,7 @@ TASK:
             res = self._call_gemini(user_prompt)
             if res:
                 return res
+            print("   ⚠️ Google Gemini did not return a valid lesson, checking next option...")
 
         # 2. Try OpenAI API
         if self.openai_key:
@@ -108,9 +109,10 @@ TASK:
             res = self._call_openai(user_prompt)
             if res:
                 return res
+            print("   ⚠️ OpenAI did not return a valid lesson, checking next option...")
 
         # 3. Smart Heuristic Synthesizer (Zero API key required fallback)
-        print("   ℹ️ No LLM API key detected in .env (GEMINI_API_KEY / OPENAI_API_KEY). Using Smart Concept Synthesizer...")
+        print("   ℹ️ Using Smart Concept Synthesizer fallback...")
         return self._smart_synthesize(article_text, source_title, source_url, past_topics)
 
     def _call_gemini(self, user_prompt: str) -> dict:
@@ -120,8 +122,8 @@ TASK:
             client = genai.Client(api_key=self.gemini_key)
             full_prompt = f"{SYSTEM_PROMPT}\n\n{user_prompt}"
             
-            # Use gemini-2.5-flash or gemini-1.5-flash
-            for model_name in ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"]:
+            # Use active models: gemini-3.8-flash, gemini-flash-latest, gemini-2.5-flash-lite
+            for model_name in ["gemini-3.8-flash", "gemini-flash-latest", "gemini-2.5-flash-lite", "gemini-3.1-flash-lite"]:
                 try:
                     response = client.models.generate_content(
                         model=model_name,
@@ -138,7 +140,7 @@ TASK:
 
         # B. Fallback to direct Gemini REST API
         try:
-            for model_id in ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash"]:
+            for model_id in ["gemini-3.8-flash", "gemini-flash-latest", "gemini-2.5-flash-lite", "gemini-3.1-flash-lite"]:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_id}:generateContent?key={self.gemini_key}"
                 headers = {"Content-Type": "application/json"}
                 payload = {
@@ -165,8 +167,7 @@ TASK:
                         if parsed:
                             return parsed
                 else:
-                    if res.status_code == 400:
-                        continue
+                    continue
         except Exception as exc:
             print(f"   ⚠️ Gemini REST request failed: {exc}")
 
