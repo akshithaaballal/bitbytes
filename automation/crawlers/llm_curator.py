@@ -1,7 +1,9 @@
 """
 LLM Technical Curator & Semantic Deduplication Engine for BitBytes.
-Transforms raw scraped tech/AI articles into structured micro-lessons for B.Tech students.
-Supports Google Gemini, OpenAI, and a Smart Algorithmic Synthesizer fallback.
+Transforms raw scraped tech/AI news into structured micro-lessons for B.Tech students.
+Takes ONLY the underlying Computer Science / AI concept from the news, using the news
+purely as an opening hook: "As you heard [news event], what is [Concept]? Let's learn about this!"
+Supports Google Gemini (SDK + REST), OpenAI, and a Smart Algorithmic Synthesizer fallback.
 """
 
 import os
@@ -19,66 +21,78 @@ if sys.platform == "win32":
         pass
 
 
-SYSTEM_PROMPT = """You are the Principal Curriculum Architect and Technical Curator for 'BitBytes', 
+SYSTEM_PROMPT = """You are the Principal Curriculum Architect and Technical Educator for 'BitBytes', 
 a daily micro-learning channel for B.Tech Computer Science and AI students.
 
-Your task is to take a raw technical article or trending software release and distill it into an 
-engaging, high-yield educational micro-lesson.
+YOUR CORE MANDATE:
+Do NOT simply report or broadcast the news article.
+Instead, use the news story PURELY as a pedagogical launchpad to teach the underlying COMPUTER SCIENCE or AI CONCEPT behind it.
+
+CRITICAL CONTENT HOOK RULE:
+The 'summary' field MUST start off with a conversational hook referencing the news event and pivoting to the technical concept:
+Format: "As you might have heard recently, [1 sentence summarizing the real-world news, event, or announcement]. But what actually is *[Main Concept Name]*? Let's learn about this: [2-3 sentences explaining the underlying CS/AI mechanism, how it works under the hood, and why it matters]."
+
+TITLE RULE:
+The 'title' MUST be the clean, formal technical name of the Computer Science / AI Concept or Architecture itself (e.g., "Mixture-of-Experts (MoE) Architecture", "Multi-Head Latent Attention (MLA)", "Kernel Space vs. User Space Isolation", "Distributed Write-Ahead Logging"). 
+Do NOT make the title a news headline like "Company X raises $10M" or "New paper published".
 
 You MUST output a valid JSON object matching this EXACT schema:
 {
   "id": "slug_id_here",
-  "track": "Track Name (e.g. AI & Deep Learning, Distributed Systems, Database Architecture, DSA & Algorithms)",
+  "track": "Track Name (e.g. AI & Machine Learning, Distributed Systems, Database Engineering, Core Operating Systems, Computer Networks)",
   "day": "DayName (e.g. Monday, Tuesday, etc.)",
-  "title": "Punchy 6-9 word title explaining the technical breakthrough or pattern",
-  "subtitle": "One crisp sentence explaining the real-world value or architectural advantage",
-  "summary": "2-3 clear sentences explaining the underlying Computer Science mechanism.",
+  "title": "Clean, Formal Technical Name of the Concept / Architecture (4-8 words)",
+  "subtitle": "One crisp sentence explaining what the architecture/algorithm solves or its performance advantage",
+  "summary": "As you might have heard recently, [news event]. But what actually is [Main Concept]? Let's learn about this: [clear explanation of the core technical mechanism].",
   "key_points": [
-    "1st key engineering insight or algorithm detail",
-    "2nd benchmark, architectural decision, or trade-off",
+    "1st key engineering insight, internal data structure, or algorithm detail",
+    "2nd benchmark, architectural trade-off, or hardware implication",
     "3rd practical implementation tip or best practice"
   ],
-  "code_snippet": "A clean 5-10 line Python snippet or pseudocode demonstrating the concept",
+  "code_snippet": "A clean 5-10 line Python snippet or pseudocode demonstrating the concept clearly",
   "complexity": {
-    "metric": "Key performance characteristic (e.g., O(log N) parameter search, 3x memory reduction)",
-    "paradigm": "e.g., Vector Embeddings, Concurrency, MapReduce, Transformer Architecture"
+    "time_or_memory": "Key performance characteristic (e.g., O(1) cache lookup, O(N) memory scaling, 3x lower inference latency)",
+    "paradigm": "e.g., Sparse Gating, Vector Indexing, WAL Persistence, Page Table Virtualization"
   },
-  "interview_tip": "One sharp advice on how this concept is tested in FAANG / engineering interviews.",
-  "tags": ["#AI", "#ComputerScience", "#Engineering", "#TechUpdate"]
+  "interview_tip": "One sharp advice on how this concept is tested in FAANG / engineering interviews or exams.",
+  "tags": ["#AI", "#ComputerScience", "#Engineering", "#TechConcepts"]
 }
 
-CRITICAL RULES:
+STRICT INSTRUCTIONS:
 1. Return ONLY the raw JSON object. Do not wrap in markdown ```json ``` blocks.
-2. Ensure technical rigor. The code snippet must be valid and readable.
-3. Keep explanation concise and accessible for engineering students.
+2. Technical rigor is paramount. Ensure the code snippet is syntactically clean and directly illustrates the concept.
+3. Keep the tone approachable yet deeply educational for B.Tech engineering students.
 """
 
 
 class LLMCurator:
     def __init__(self, gemini_api_key: str = None, openai_api_key: str = None):
-        self.gemini_key = gemini_api_key or os.getenv("GEMINI_API_KEY", "").strip()
+        self.gemini_key = gemini_api_key or os.getenv("GEMINI_API_KEY", "").strip() or os.getenv("GOOGLE_API_KEY", "").strip()
         self.openai_key = openai_api_key or os.getenv("OPENAI_API_KEY", "").strip()
 
     def curate_article(self, article_text: str, source_title: str = "", source_url: str = "", past_topics: list = None) -> dict:
         """
-        Transforms article markdown into a BitBytes lesson with semantic deduplication.
+        Transforms article text into a BitBytes concept lesson with semantic deduplication.
         """
-        past_topics_str = ", ".join(f"'{t}'" for t in (past_topics or [])[-15:])
+        past_topics_str = ", ".join(f"'{t}'" for t in (past_topics or [])[-20:])
 
         user_prompt = f"""
-SOURCE TITLE: {source_title}
+TRENDING NEWS HEADLINE: {source_title}
 SOURCE URL: {source_url}
 
 RECENTLY COVERED TOPICS (DO NOT DUPLICATE THESE):
 [{past_topics_str}]
 
-RAW ARTICLE CONTENT (Excerpt):
+NEWS ARTICLE EXCERPT:
 ----------------------------------------
 {article_text[:4000]}
 ----------------------------------------
 
-Please analyze this article and produce the structured BitBytes JSON lesson.
-Make sure the concept is distinct and offers fresh insights compared to recent topics.
+TASK:
+1. Identify the fundamental Computer Science / AI / Systems concept behind this news.
+2. Ensure the concept is NOT in the recently covered topics list above.
+3. Start the summary with: "As you might have heard recently, [news event]. But what actually is [Main Concept]? Let's learn about this: ..."
+4. Output the complete structured BitBytes lesson JSON.
 """
 
         # 1. Try Gemini API
@@ -95,40 +109,68 @@ Make sure the concept is distinct and offers fresh insights compared to recent t
             if res:
                 return res
 
-        # 3. Smart Heuristic Synthesizer (No API key required)
-        print("   ℹ️ No LLM API key detected (GEMINI_API_KEY / OPENAI_API_KEY). Using Intelligent Synthesizer...")
+        # 3. Smart Heuristic Synthesizer (Zero API key required fallback)
+        print("   ℹ️ No LLM API key detected in .env (GEMINI_API_KEY / OPENAI_API_KEY). Using Smart Concept Synthesizer...")
         return self._smart_synthesize(article_text, source_title, source_url, past_topics)
 
     def _call_gemini(self, user_prompt: str) -> dict:
+        # A. Try official google-genai SDK first
         try:
-            # Using Gemini 1.5 Flash endpoint
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={self.gemini_key}"
-            headers = {"Content-Type": "application/json"}
-            payload = {
-                "contents": [
-                    {
-                        "parts": [
-                            {"text": SYSTEM_PROMPT},
-                            {"text": user_prompt}
-                        ]
+            from google import genai
+            client = genai.Client(api_key=self.gemini_key)
+            full_prompt = f"{SYSTEM_PROMPT}\n\n{user_prompt}"
+            
+            # Use gemini-2.5-flash or gemini-1.5-flash
+            for model_name in ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"]:
+                try:
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents=full_prompt,
+                    )
+                    if response and response.text:
+                        parsed = self._parse_json(response.text)
+                        if parsed:
+                            return parsed
+                except Exception as model_err:
+                    continue
+        except Exception as sdk_err:
+            print(f"   ℹ️ google-genai SDK note ({sdk_err}), trying direct REST API...")
+
+        # B. Fallback to direct Gemini REST API
+        try:
+            for model_id in ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash"]:
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_id}:generateContent?key={self.gemini_key}"
+                headers = {"Content-Type": "application/json"}
+                payload = {
+                    "contents": [
+                        {
+                            "parts": [
+                                {"text": SYSTEM_PROMPT},
+                                {"text": user_prompt}
+                            ]
+                        }
+                    ],
+                    "generationConfig": {
+                        "temperature": 0.3,
+                        "responseMimeType": "application/json"
                     }
-                ],
-                "generationConfig": {
-                    "temperature": 0.4,
-                    "responseMimeType": "application/json"
                 }
-            }
-            res = requests.post(url, headers=headers, json=payload, timeout=30)
-            if res.status_code == 200:
-                data = res.json()
-                text = data["candidates"][0]["content"]["parts"][0]["text"]
-                return self._parse_json(text)
-            else:
-                print(f"   ⚠️ Gemini API error (HTTP {res.status_code}): {res.text[:200]}")
-                return None
+                res = requests.post(url, headers=headers, json=payload, timeout=30)
+                if res.status_code == 200:
+                    data = res.json()
+                    candidates = data.get("candidates", [])
+                    if candidates:
+                        text = candidates[0]["content"]["parts"][0]["text"]
+                        parsed = self._parse_json(text)
+                        if parsed:
+                            return parsed
+                else:
+                    if res.status_code == 400:
+                        continue
         except Exception as exc:
-            print(f"   ⚠️ Gemini request failed: {exc}")
-            return None
+            print(f"   ⚠️ Gemini REST request failed: {exc}")
+
+        return None
 
     def _call_openai(self, user_prompt: str) -> dict:
         try:
@@ -143,7 +185,7 @@ Make sure the concept is distinct and offers fresh insights compared to recent t
                     {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": user_prompt}
                 ],
-                "temperature": 0.4,
+                "temperature": 0.3,
                 "response_format": {"type": "json_object"}
             }
             res = requests.post(url, headers=headers, json=payload, timeout=30)
@@ -168,7 +210,7 @@ Make sure the concept is distinct and offers fresh insights compared to recent t
             # Ensure required fields
             if "title" in parsed and "summary" in parsed:
                 if not parsed.get("id"):
-                    parsed["id"] = f"radar_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+                    parsed["id"] = f"concept_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
                 if not parsed.get("day"):
                     parsed["day"] = datetime.datetime.now().strftime("%A")
                 return parsed
@@ -178,77 +220,124 @@ Make sure the concept is distinct and offers fresh insights compared to recent t
 
     def _smart_synthesize(self, text: str, title: str, url: str, past_topics: list) -> dict:
         """
-        Deterministic, zero-key intelligent synthesizer that crafts a valid,
-        high-yield CS bite directly from scraped headlines and content.
+        Deterministic, zero-key intelligent synthesizer that extracts the core CS concept
+        from trending headlines and guarantees the 'As you heard..., what is *concept*?' format.
         """
         now = datetime.datetime.now()
         day_name = now.strftime("%A")
         date_stamp = now.strftime("%Y%m%d_%H%M")
 
-        clean_title = title or "Modern Architectural Patterns in High-Performance Systems"
-        # Avoid duplication with simple variation
-        if past_topics and clean_title in past_topics:
-            clean_title = f"Deep Dive: {clean_title} in Production"
+        clean_headline = (title or "Recent industry breakthroughs in scalable engineering").strip()
+        lower_combined = (clean_headline + " " + text[:600]).lower()
 
-        # Determine best track based on keywords
-        lower_text = (clean_title + " " + text[:500]).lower()
-        if any(w in lower_text for w in ["ai", "llm", "transformer", "neural", "gpu", "model", "diffusion"]):
+        # Deduce concept and track from content
+        if any(w in lower_combined for w in ["ai", "llm", "transformer", "neural", "attention", "gpu", "model", "deepseek", "gemini", "openai"]):
+            concept_title = "Mixture-of-Experts (MoE) Architecture"
             track = "AI & Machine Learning"
+            subtitle = "How routing tokens to sparse subnetworks achieves 4x inference throughput"
+            hook = (
+                f"As you might have heard recently, discussions around {clean_headline} have been surging across the AI community. "
+                f"But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters "
+                f"for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, "
+                f"drastically slashing computation while maintaining high representation capacity."
+            )
             snippet = (
-                "# Scalable Attention Mechanism Check\n"
+                "# Sparse Mixture of Experts (MoE) Routing\n"
                 "import torch\n"
-                "def flash_attention_block(q, k, v, mask=None):\n"
-                "    # Linearized memory footprint: O(N) instead of O(N^2)\n"
-                "    return torch.nn.functional.scaled_dot_product_attention(q, k, v, attn_mask=mask)"
+                "def moe_routing(tokens, router_weights, top_k=2):\n"
+                "    logits = torch.matmul(tokens, router_weights) # [batch, num_experts]\n"
+                "    top_weights, top_indices = torch.topk(torch.softmax(logits, dim=-1), top_k)\n"
+                "    return top_weights, top_indices # Send tokens only to selected experts"
             )
-            complexity = {"time": "O(N) memory scaling", "paradigm": "Flash Attention / Tensor Parallelism"}
-            tip = "Expect questions on how KV-cache optimization prevents GPU out-of-memory errors during autoregressive decoding."
-            tags = ["#AI", "#MachineLearning", "#DeepLearning", "#Python", "#Engineering"]
-        elif any(w in lower_text for w in ["database", "sql", "cache", "redis", "storage", "disk"]):
-            track = "Database & Storage Systems"
+            complexity = {"time_or_memory": "O(k / total_experts) active compute", "paradigm": "Conditional Computation & Gating"}
+            tip = "In AI interviews, be ready to explain how token routing load-balancing prevents expert collapse."
+            tags = ["#AI", "#DeepLearning", "#MixtureOfExperts", "#Transformers", "#Python"]
+
+        elif any(w in lower_combined for w in ["database", "sql", "cache", "redis", "storage", "disk", "postgres", "valkey"]):
+            concept_title = "Write-Ahead Logging (WAL) in Distributed Storage"
+            track = "Database Engineering"
+            subtitle = "Achieving ACID durability with sequential append-only disk commits"
+            hook = (
+                f"As you might have heard recently, discussions surrounding {clean_headline} have put database reliability in the spotlight. "
+                f"But what actually is *Write-Ahead Logging (WAL)*? Let's learn about this: to guarantee Durability without the huge latency penalty "
+                f"of writing random disk blocks immediately, databases write changes sequentially to an append-only log file first before updating main tables, "
+                f"enabling instant crash recovery and point-in-time rollbacks."
+            )
             snippet = (
-                "# LSM-Tree Write Path (Append-Only Log)\n"
+                "# Minimal Write-Ahead Logger (WAL) Simulation\n"
                 "class WALLogger:\n"
-                "    def append_record(self, key, value):\n"
-                "        # Sequential disk I/O gives 100x write throughput over random writes\n"
-                "        with open('wal.log', 'a') as f:\n"
-                "            f.write(f'{key}:{value}\\n')"
+                "    def log_operation(self, lsn: int, tx_id: str, op: str):\n"
+                "        # Sequential disk writes are up to 100x faster than random I/O\n"
+                "        with open('engine.wal', 'a') as wal_file:\n"
+                "            wal_file.write(f'{lsn}:{tx_id}:{op}\\n')\n"
+                "            wal_file.flush() # Force write to physical storage"
             )
-            complexity = {"time": "O(1) sequential write", "paradigm": "LSM Trees & Write-Ahead Logging"}
-            tip = "Be prepared to compare B-Tree (read-optimized) vs LSM-Tree (write-heavy) architectures."
-            tags = ["#Database", "#Storage", "#Backend", "#DistributedSystems", "#CS"]
+            complexity = {"time_or_memory": "O(1) sequential append", "paradigm": "Durability & Crash Recovery"}
+            tip = "Expect questions on how checkpointing prevents the WAL log from expanding indefinitely."
+            tags = ["#Databases", "#ACID", "#SystemDesign", "#Storage", "#Backend"]
+
+        elif any(w in lower_combined for w in ["kernel", "driver", "crash", "operating system", "linux", "windows", "memory", "thread", "concurrency"]):
+            concept_title = "Kernel Space vs. User Space Protection Rings"
+            track = "Core Operating Systems"
+            subtitle = "Hardware privilege rings (Ring 0 vs. Ring 3) and memory boundary isolation"
+            hook = (
+                f"As you might have heard recently, widespread system outages highlighted in {clean_headline} raised questions about OS stability. "
+                f"But what actually is *Kernel Space vs. User Space Isolation*? Let's learn about this: modern CPUs enforce hardware privilege levels "
+                f"where user applications run in restricted Ring 3 without direct hardware access, while the OS kernel operates in privileged Ring 0. "
+                f"A crash in Ring 3 terminates only that app, but an unhandled fault in Ring 0 triggers a full system crash (BSOD or Kernel Panic)."
+            )
+            snippet = (
+                "# User Space System Call Transition\n"
+                "# In user space (Ring 3), apps cannot directly access hardware.\n"
+                "# They execute a Software Interrupt / Syscall Instruction:\n"
+                "import os\n"
+                "def safe_read(file_descriptor, byte_count):\n"
+                "    # os.read traps into Ring 0 kernel mode safely\n"
+                "    return os.read(file_descriptor, byte_count)"
+            )
+            complexity = {"time_or_memory": "Hardware context switch overhead (~100-500ns)", "paradigm": "Hardware Privilege Rings"}
+            tip = "Know the difference between Context Switch (process-to-process) and Mode Switch (user-to-kernel)."
+            tags = ["#OperatingSystems", "#Kernel", "#MemoryManagement", "#Architecture", "#CS"]
+
         else:
+            concept_title = "Distributed Idempotency & Two-Phase Locking"
             track = "Distributed Systems & Cloud"
+            subtitle = "Preventing double-spend and race conditions in distributed microservices"
+            hook = (
+                f"As you might have heard recently in discussions regarding {clean_headline}, scaling distributed services reliably remains critical. "
+                f"But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, "
+                f"an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once."
+            )
             snippet = (
                 "# Distributed Idempotency Key Pattern\n"
-                "def process_transaction(db, redis_client, tx_id, amount):\n"
-                "    if not redis_client.set(f'idemp:{tx_id}', 'locked', nx=True, ex=60):\n"
-                "        return {'status': 'duplicate_request_ignored'}\n"
-                "    return db.execute_transfer(tx_id, amount)"
+                "def process_payment(redis_client, idempotency_key, amount):\n"
+                "    # Atomic setnx with 60-second expiration\n"
+                "    is_new = redis_client.set(f'idemp:{idempotency_key}', 'PROCESSED', nx=True, ex=60)\n"
+                "    if not is_new:\n"
+                "        return {'status': 'ignored_duplicate_request'}\n"
+                "    return {'status': 'processed', 'amount': amount}"
             )
-            complexity = {"time": "O(1) atomic check", "paradigm": "Distributed Consensus & Idempotency"}
-            tip = "Always bring up network partitions and at-least-once message delivery semantics in system design."
-            tags = ["#SystemDesign", "#CloudArchitecture", "#Concurrency", "#Backend", "#BTechPrep"]
+            complexity = {"time_or_memory": "O(1) atomic lock verification", "paradigm": "Distributed Consensus & Idempotency"}
+            tip = "Always highlight the trade-offs between at-least-once delivery vs exactly-once processing."
+            tags = ["#DistributedSystems", "#Microservices", "#SystemDesign", "#Cloud", "#Backend"]
 
         return {
             "id": f"radar_{date_stamp}",
             "track": track,
             "day": day_name,
-            "title": clean_title[:75],
-            "subtitle": f"Key technical takeaways from trending software and research ({now.strftime('%B %Y')})",
-            "summary": (
-                f"Recent engineering developments highlight major improvements in {track.lower()}. "
-                f"This architectural shift focuses on eliminating latency bottlenecks and improving fault-tolerant state management."
-            ),
+            "title": concept_title,
+            "subtitle": subtitle,
+            "summary": hook,
             "key_points": [
-                "Bottleneck Elimination: Replaces legacy blocking operations with asynchronous, zero-copy primitives.",
-                "Resource Efficiency: Maximizes hardware utilization across memory hierarchy and cache lines.",
-                "Production Reliability: Embeds strict telemetry and idempotency guarantees for distributed scale."
+                "Underlying Mechanism: Solves critical performance or reliability constraints without brute-force hardware overhead.",
+                "Architectural Trade-off: Balances computational throughput against state synchrony and memory footprint.",
+                "Engineering Application: Universally deployed across modern enterprise scale and high-load production systems."
             ],
             "code_snippet": snippet,
             "complexity": complexity,
             "interview_tip": tip,
             "tags": tags,
+            "source_headline": clean_headline,
             "source_url": url,
             "curator": "Autonomous Tech Radar"
         }

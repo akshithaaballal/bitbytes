@@ -67,7 +67,7 @@ textarea { resize: vertical; }
 .next-concept-card { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-top: 8px; }
 .concept-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .badge-track { background: var(--ink); color: #fff; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: .03em; }
-.badge-radar { background: #4f46e5; color: #fff; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: .04em; }
+.badge-radar { background: #059669; color: #fff; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; letter-spacing: .04em; }
 .concept-id { font-size: 12px; color: var(--muted); font-family: monospace; }
 .concept-title { margin: 4px 0 6px; font-size: 16px; font-weight: 600; color: var(--ink); }
 .concept-subtitle { margin: 0 0 6px; font-size: 13px; color: var(--cobalt); font-weight: 500; }

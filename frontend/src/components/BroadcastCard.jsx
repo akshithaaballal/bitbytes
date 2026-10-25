@@ -120,9 +120,14 @@ export default function BroadcastCard({ onBroadcastComplete }) {
                   • Engine: <code>{result.post.curation_engine}</code>
                 </div>
               )}
+              {result.post?.source_headline && (
+                <div>
+                  • News Hook: <i>{result.post.source_headline}</i>
+                </div>
+              )}
               {result.post?.source_url && (
                 <div>
-                  • Web Source:{' '}
+                  • Source URL:{' '}
                   <a
                     href={result.post.source_url}
                     target="_blank"

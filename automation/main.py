@@ -1,7 +1,8 @@
 """
 BitBytes Daily Post Orchestrator.
-Coordinates content selection, image generation, and multi-channel publishing
-(Telegram, GitHub, Instagram) with rotation tracking and dry-run testing.
+Coordinates Autonomous Tech Radar (Firecrawl + LLM) with Content Bank fallback,
+image generation, and multi-channel publishing (Telegram, GitHub, Instagram)
+with rotation tracking and deduplication.
 """
 
 import os
@@ -29,15 +30,19 @@ from publishers.instagram_publisher import publish_to_instagram
 try:
     from crawlers.tech_radar import harvest_autonomous_post
 except Exception as e:
+    print(f"[Warning] Could not import harvest_autonomous_post: {e}")
     harvest_autonomous_post = None
+
 
 def load_post_by_path(path: str) -> dict:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
+
 def get_all_posts(content_dir: str) -> list:
     files = sorted(glob.glob(os.path.join(content_dir, "day_*.json")))
     return [load_post_by_path(f) for f in files]
+
 
 def load_history(history_path: str) -> list:
     if os.path.exists(history_path):
@@ -48,60 +53,64 @@ def load_history(history_path: str) -> list:
             return []
     return []
 
+
 def save_history(history_path: str, history: list):
     with open(history_path, "w", encoding="utf-8") as f:
         json.dump(history, f, indent=2)
+
 
 def pick_next_post(posts: list, history: list) -> dict:
     if not posts:
         raise ValueError("No posts found in content_bank directory.")
     if not history:
         return posts[0]
-        
+
     last_posted_id = history[-1].get("post_id")
-    # Find index of last posted
     for idx, post in enumerate(posts):
         if post.get("id") == last_posted_id:
             next_idx = (idx + 1) % len(posts)
             return posts[next_idx]
-            
+
     return posts[0]
+
 
 def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar: bool = None):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     load_dotenv(os.path.join(base_dir, ".env"))
-    
+
     content_dir = os.path.join(base_dir, "content_bank")
     history_path = os.path.join(base_dir, "history.json")
-    
+
     posts = get_all_posts(content_dir)
     history = load_history(history_path)
     radar_enabled = use_radar if use_radar is not None else (os.getenv("USE_AI_RADAR", "true").lower() == "true")
-    
+
     if specific_post_id:
         target = next((p for p in posts if p.get("id") == specific_post_id), None)
         if not target:
             print(f"[ERROR] Post with id '{specific_post_id}' not found.")
-            return
+            return {"success": False, "error": f"Post '{specific_post_id}' not found"}
         post = target
     elif radar_enabled and harvest_autonomous_post:
         try:
             print("\n🛰️ Mode: Autonomous Tech Radar (Firecrawl + LLM)")
             post = harvest_autonomous_post(history)
         except Exception as err:
-            print(f"⚠️ Autonomous Radar encounter: {err}. Falling back to content bank...")
+            print(f"⚠️ Autonomous Radar fallback triggered: {err}")
             post = pick_next_post(posts, history) if posts else None
     else:
         if not posts:
             print("[ERROR] No post templates found in content_bank.")
-            return
+            return {"success": False, "error": "No post templates found"}
         post = pick_next_post(posts, history)
-        
+
     print(f"\n=======================================================")
-    print(f"🚀 BITBYTES DAILY PIPELINE: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"🚀 BITBYTES PIPELINE: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Topic: {post.get('title')} [{post.get('track')}]")
+    if post.get("source_headline"):
+        print(f"News Hook Source: {post.get('source_headline')}")
     print(f"=======================================================\n")
-    
+
     # 1. Generate Social Card
     print("🎨 Step 1: Rendering 1080x1080 Social Infographic Card...")
     try:
@@ -110,12 +119,12 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar:
     except Exception as exc:
         print(f"   ⚠️ Could not render card: {exc}")
         image_path = None
-        
+
     # 2. Publish to Git / Knowledge Base
     print("\n📚 Step 2: Archiving to GitHub Markdown & INDEX.md...")
     git_result = publish_to_git(post, base_dir)
     print(f"   ✅ Archived file: {git_result.get('relative_path')}")
-    
+
     # 3. Publish to Telegram
     print("\n📱 Step 3: Broadcasting to Telegram Channel...")
     if dry_run or os.getenv("SIMULATE_MODE", "").lower() == "true":
@@ -129,14 +138,14 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar:
             print(f"   ℹ️ Telegram skipped: {telegram_result.get('error')}")
         else:
             print(f"   ❌ Telegram failed: {telegram_result.get('error')}")
-            
+
     # 4. Publish to Instagram
     print("\n📸 Step 4: Dispatching to Instagram...")
     if dry_run or os.getenv("SIMULATE_MODE", "").lower() == "true":
         print("   [DRY RUN] Skipping actual Instagram network request.")
         instagram_result = {"success": True, "simulated": True}
     else:
-        public_url = os.getenv("PUBLIC_IMAGE_URL") # Required for IG Graph API
+        public_url = os.getenv("PUBLIC_IMAGE_URL")
         instagram_result = publish_to_instagram(post, public_image_url=public_url)
         if instagram_result.get("success"):
             print(f"   ✅ Instagram posted! Post ID: {instagram_result.get('post_id')}")
@@ -144,8 +153,8 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar:
             print(f"   ℹ️ Instagram skipped: {instagram_result.get('error')}")
         else:
             print(f"   ❌ Instagram failed: {instagram_result.get('error')}")
-            
-    # 5. Log History
+
+    # 5. Log History with full provenance
     if not dry_run:
         history = load_history(history_path)
         history.append({
@@ -154,6 +163,7 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar:
             "track": post.get("track"),
             "title": post.get("title"),
             "source": post.get("curation_engine", "Content Bank"),
+            "source_headline": post.get("source_headline", ""),
             "source_url": post.get("source_url", ""),
             "git": git_result.get("success", False),
             "telegram": telegram_result.get("success", False),
@@ -172,6 +182,7 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar:
         "image_path": image_path
     }
 
+
 def get_next_post_summary() -> dict:
     base_dir = os.path.dirname(os.path.abspath(__file__))
     load_dotenv(os.path.join(base_dir, ".env"))
@@ -180,14 +191,14 @@ def get_next_post_summary() -> dict:
     posts = get_all_posts(content_dir)
     history = load_history(history_path)
     radar_active = os.getenv("USE_AI_RADAR", "true").lower() == "true"
-    
+
     if radar_active:
         return {
             "id": "live_tech_radar",
-            "title": "Live Autonomous Tech Radar",
+            "title": "Live Autonomous AI Radar",
             "track": "AI & Core CS (Real-Time Feed)",
             "subtitle": "Continuously scraping trending research & systems breakthroughs via Firecrawl + LLM",
-            "summary": "Every broadcast dynamically searches Hacker News, GitHub Trending, and arXiv, synthesizes code & insights, and eliminates topic duplication.",
+            "summary": "Every broadcast dynamically searches Hacker News, arXiv, and Firecrawl to extract the core Computer Science concept with the 'As you heard [news], what is [Concept]?' hook. Topics never repeat.",
             "tags": ["#LiveWeb", "#Firecrawl", "#GeminiLLM", "#NeverRepeating", "#BTechEngineering"],
             "radar_enabled": True,
             "history_count": len(history)
@@ -205,11 +216,12 @@ def get_next_post_summary() -> dict:
         "history_count": len(history)
     }
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="BitBytes Daily Post Orchestrator")
     parser.add_argument("--dry-run", action="store_true", help="Simulate publishing without external API calls")
     parser.add_argument("--post", type=str, help="Specify post ID to run (e.g. day_01)")
     parser.add_argument("--radar", action="store_true", help="Force autonomous radar mode (Firecrawl + LLM)")
     args = parser.parse_args()
-    
+
     run_pipeline(dry_run=args.dry_run, specific_post_id=args.post, use_radar=args.radar if args.radar else None)
