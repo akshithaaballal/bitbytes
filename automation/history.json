@@ -880,5 +880,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-25T10:20:51.677325",
+    "post_id": "radar_20261025_1020",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Meta Ignores Brazilian Court Order to End Bolsonaro Favoritism",
+    "source_url": "https://www.panamericandispatch.org/p/meta-ignores-brazilian-court-order",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
