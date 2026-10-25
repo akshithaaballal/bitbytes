@@ -8,3 +8,5 @@ __pycache__/
 BitBytesData_*.txt
 .venv/
 venv/
+automation/generated_images/
+*.png

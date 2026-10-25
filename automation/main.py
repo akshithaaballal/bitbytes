@@ -111,14 +111,19 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar:
         print(f"News Hook Source: {post.get('source_headline')}")
     print(f"=======================================================\n")
 
-    # 1. Generate Social Card
-    print("🎨 Step 1: Rendering 1080x1080 Social Infographic Card...")
-    try:
-        image_path = render_social_card(post)
-        print(f"   ✅ Card generated successfully at: {image_path}")
-    except Exception as exc:
-        print(f"   ⚠️ Could not render card: {exc}")
-        image_path = None
+    # 1. Image Generation (Optional via GENERATE_IMAGE=true)
+    generate_image = os.getenv("GENERATE_IMAGE", "false").lower() == "true"
+    image_path = None
+    if generate_image:
+        print("🎨 Step 1: Dynamically Rendering 1080x1080 Social Infographic Card...")
+        try:
+            image_path = render_social_card(post)
+            print(f"   ✅ Card dynamically generated at: {image_path}")
+        except Exception as exc:
+            print(f"   ⚠️ Could not render card: {exc}")
+            image_path = None
+    else:
+        print("📝 Step 1: Image generation disabled (broadcasting rich clean technical text to Telegram)")
 
     # 2. Publish to Git / Knowledge Base
     print("\n📚 Step 2: Archiving to GitHub Markdown & INDEX.md...")
