@@ -916,5 +916,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-25T20:18:33.129958",
+    "post_id": "radar_20261025_2018",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Dolly Parton's Imagination Library",
+    "source_url": "https://imaginationlibrary.com/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
