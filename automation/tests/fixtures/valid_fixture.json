@@ -1,0 +1,6 @@
+{
+  "title": "Cerebras Wafer-Scale Linear Attention and KV-Cache Elimination",
+  "url": "https://www.cerebras.ai/blog/how-we-deploy-trillion-parameter-frontier-models-on-cerebras",
+  "text": "Cerebras has announced the deployment of trillion-parameter frontier models on wafer-scale clusters. By replacing quadratic softmax attention with linear associative operators, inference latency drops dramatically while eliminating the memory footprint of past tokens. The hardware utilizes massive on-chip SRAM instead of external DRAM buses to sustain high memory bandwidth.",
+  "source_count": 4
+}
