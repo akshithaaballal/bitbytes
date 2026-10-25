@@ -928,5 +928,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-25T22:54:52.103207",
+    "post_id": "radar_20261025_2254",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "What goes into making an animated film?",
+    "source_url": "https://www.disneyanimation.com/process/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
