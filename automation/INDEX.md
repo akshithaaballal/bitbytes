@@ -89,3 +89,4 @@
 | 2026-10-25 13:17 | **Sunday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-25_1317_radar_20261025_1317.md) |
 | 2026-10-25 13:24 | **Wednesday** | AI & Machine Learning | [Linear Attention Mechanisms in Transformers](archive/2026-10-25_1324_linear-attention-mechanisms-transformers.md) |
 | 2026-10-25 10:20 | **Sunday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-25_1020_radar_20261025_1020.md) |
+| 2026-10-25 14:39 | **Sunday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-25_1439_radar_20261025_1439.md) |

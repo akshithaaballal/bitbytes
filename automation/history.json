@@ -892,5 +892,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-25T14:39:52.194455",
+    "post_id": "radar_20261025_1439",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Tool book of a Nuremberg knight from 1505",
+    "source_url": "https://loeffelholz-codex.org/en/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
