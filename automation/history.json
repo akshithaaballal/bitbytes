@@ -940,5 +940,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-26T00:50:24.661830",
+    "post_id": "radar_20261026_0050",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "F-Zero X on Nintendo 3DS",
+    "source_url": "https://hypnotize.works/gdx-3ds/postmortem/index.html",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
