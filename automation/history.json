@@ -964,5 +964,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-26T11:48:46.505951",
+    "post_id": "radar_20261026_1148",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Switzerland. Block by block. At 1:1 scale",
+    "source_url": "https://blocks.manifold3d.ch/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
