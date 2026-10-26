@@ -988,5 +988,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-26T22:02:58.992275",
+    "post_id": "radar_20261026_2202",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Working with academic communities to build scientific understanding",
+    "source_url": "https://openai.com/index/building-scientific-understanding-with-academic-communities/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
