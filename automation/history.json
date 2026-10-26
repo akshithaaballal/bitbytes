@@ -952,5 +952,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-26T05:34:04.252142",
+    "post_id": "radar_20261026_0534",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "US Wages Share of GDI at 75 Year Low",
+    "source_url": "https://fred.stlouisfed.org/series/W270RE1A156NBEA",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
