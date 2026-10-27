@@ -101,3 +101,4 @@
 | 2026-10-27 01:41 | **Tuesday** | Distributed Systems & Cloud | [Distributed Idempotency & Two-Phase Locking](archive/2026-10-27_0141_radar_20261027_0141.md) |
 | 2026-10-27 06:59 | **Tuesday** | Core Operating Systems | [Kernel Space vs. User Space Protection Rings](archive/2026-10-27_0659_radar_20261027_0659.md) |
 | 2026-10-27 13:00 | **Tuesday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-27_1300_radar_20261027_1300.md) |
+| 2026-10-27 19:03 | **Tuesday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-27_1903_radar_20261027_1903.md) |

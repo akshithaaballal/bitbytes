@@ -1036,5 +1036,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-27T19:03:08.879677",
+    "post_id": "radar_20261027_1903",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Genie 4",
+    "source_url": "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
