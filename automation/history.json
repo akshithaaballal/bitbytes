@@ -1012,5 +1012,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-27T06:59:26.412162",
+    "post_id": "radar_20261027_0659",
+    "track": "Core Operating Systems",
+    "title": "Kernel Space vs. User Space Protection Rings",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Oldest GUI application that still runs on Windows 11",
+    "source_url": "https://blog.enlyth.com/posts/oldest-windows-gui-app-win-11/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
