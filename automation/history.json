@@ -1000,5 +1000,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-27T01:41:41.799882",
+    "post_id": "radar_20261027_0141",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "The Exponential Time Hypothesis Is False [pdf]",
+    "source_url": "https://github.com/openai/math/blob/main/preprints/The-Exponential-Time-Hypothesis-is-False-October-25-2026/paper.pdf",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
