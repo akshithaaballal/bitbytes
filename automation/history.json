@@ -1048,5 +1048,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-27T23:19:27.649920",
+    "post_id": "radar_20261027_2319",
+    "track": "Core Operating Systems",
+    "title": "Kernel Space vs. User Space Protection Rings",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Ghostty 1.4",
+    "source_url": "https://ghostty.org/docs/install/release-notes/1-4-0",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
