@@ -1024,5 +1024,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-27T13:00:39.212652",
+    "post_id": "radar_20261027_1300",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Roblox downloaded 145GB models from us (including adult content) without asking",
+    "source_url": "https://open3dlab.com/news/roblox-downloaded-145-gb-of-models-from-our-sites/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
