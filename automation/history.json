@@ -1096,5 +1096,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-28T21:24:59.835377",
+    "post_id": "radar_20261028_2124",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Why is this fingerprinting script creating bioweapons?",
+    "source_url": "https://nullpt.rs/fingerprinting-bioweapons",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
