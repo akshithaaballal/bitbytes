@@ -1084,5 +1084,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-28T16:20:25.909806",
+    "post_id": "radar_20261028_1620",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Ten days later, Git on macOS still trusts the compromised eMudhra certificates",
+    "source_url": "https://emudhra.we-have-a-problem.com/apple.html",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
