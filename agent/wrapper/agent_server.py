@@ -3,6 +3,7 @@ import os
 import json
 import uuid
 import time
+import hmac
 import threading
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -27,22 +28,48 @@ except Exception as e:
     automation_main = None
 
 HOST = "127.0.0.1"
-PORT = 5000
+PORT = int(os.getenv("PORT", 5000))
+AGENT_API_KEY = os.getenv("AGENT_API_KEY", "")
 
-requests = {}
+# In-memory storage bounded to max 200 items
+MAX_STORE_ITEMS = 200
+requests_store = {}
+broadcast_jobs = {}
+broadcast_lock = threading.Lock()
+
+
+def trim_dict(d: dict, max_size: int = MAX_STORE_ITEMS):
+    if len(d) > max_size:
+        keys_to_remove = list(d.keys())[:-max_size]
+        for k in keys_to_remove:
+            d.pop(k, None)
+
 
 def json_response(handler, status, data):
-    body = json.dumps(data).encode("utf-8")
-    handler.send_response(status)
-    handler.send_header("Content-Type", "application/json")
-    handler.send_header("Content-Length", str(len(body)))
-    handler.end_headers()
-    handler.wfile.write(body)
+    try:
+        body = json.dumps(data).encode("utf-8")
+        handler.send_response(status)
+        handler.send_header("Content-Type", "application/json")
+        handler.send_header("Content-Length", str(len(body)))
+        handler.end_headers()
+        handler.wfile.write(body)
+    except (BrokenPipeError, ConnectionResetError):
+        pass
+
+
+def verify_agent_key(handler) -> bool:
+    """Verifies X-Agent-Key header using constant-time comparison."""
+    if not AGENT_API_KEY:
+        # If no key set in env, reject for security
+        return False
+    provided = handler.headers.get("X-Agent-Key", "")
+    return hmac.compare_digest(provided.encode("utf-8"), AGENT_API_KEY.encode("utf-8"))
 
 
 class RealCosmitudeAgentHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
+        # Health check is open
         if self.path == "/health":
             is_connected = bool(Bot.Sessionid)
             return json_response(
@@ -51,10 +78,13 @@ class RealCosmitudeAgentHandler(BaseHTTPRequestHandler):
                 {
                     "ok": True,
                     "bridgeConnected": is_connected,
-                    "agent": "cosmitude",
-                    "forumID": getattr(Bot, "forumID", None)
+                    "agent": "cosmitude"
                 },
             )
+
+        # All other routes require X-Agent-Key
+        if not verify_agent_key(self):
+            return json_response(self, 401, {"error": "Unauthorized: Invalid or missing X-Agent-Key"})
 
         if self.path == "/broadcast/next":
             if not automation_main:
@@ -76,59 +106,99 @@ class RealCosmitudeAgentHandler(BaseHTTPRequestHandler):
             except Exception as err:
                 return json_response(self, 500, {"error": str(err)})
 
+        # Status check for broadcast job: GET /broadcast/status/<jobId>
+        if self.path.startswith("/broadcast/status/"):
+            job_id = self.path.split("/broadcast/status/")[-1].strip()
+            job = broadcast_jobs.get(job_id)
+            if not job:
+                return json_response(self, 404, {"error": "Job not found"})
+            return json_response(self, 200, {
+                "jobId": job_id,
+                "stage": job.get("stage", "crawling"),
+                "result": job.get("result"),
+                "error": job.get("error")
+            })
+
         if self.path.startswith("/requests/"):
             request_id = self.path.split("/")[-1]
-            req = requests.get(request_id)
-
+            req = requests_store.get(request_id)
             if not req:
-                return json_response(
-                    self,
-                    404,
-                    {"error": "Request not found"},
-                )
-
+                return json_response(self, 404, {"error": "Request not found"})
             return json_response(self, 200, req)
 
-        return json_response(
-            self,
-            404,
-            {"error": "Not found"},
-        )
+        return json_response(self, 404, {"error": "Not found"})
 
     def do_POST(self):
+        # All POST routes require X-Agent-Key
+        if not verify_agent_key(self):
+            return json_response(self, 401, {"error": "Unauthorized: Invalid or missing X-Agent-Key"})
+
         if self.path == "/broadcast":
             if not automation_main:
                 return json_response(self, 500, {"error": "Automation engine not loaded"})
+
+            # Concurrency check under threading.Lock
+            acquired = broadcast_lock.acquire(blocking=False)
+            if not acquired:
+                return json_response(self, 409, {"error": "A broadcast job is currently active"})
+
+            dry_run = False
             try:
-                # Trigger the automation pipeline
-                result = automation_main.run_pipeline()
-                if not result.get("success"):
-                    return json_response(self, 500, {"error": "Pipeline run failed", "details": result})
-                
-                # Also log the broadcast event directly on Cosmitude Bridge forum
-                post_title = result["post"].get("title", "Unknown")
-                post_id = result["post"].get("id", "Unknown")
-                bridge_msg = f"Broadcasted: {post_title} [{post_id}] to Telegram channel @csbites"
-                
-                bridge_res = Bot.sendUserRequestBridge("BitBytesData_DataProcessing", bridge_msg)
-                
-                return json_response(self, 200, {
-                    "ok": True,
-                    "success": True,
-                    "post": result["post"],
-                    "telegram": result["telegram"],
-                    "git": result["git"],
-                    "bridge": bridge_res
-                })
-            except Exception as err:
-                return json_response(self, 500, {"error": str(err)})
+                length = int(self.headers.get("Content-Length", 0))
+                if length > 0:
+                    raw = self.rfile.read(length)
+                    data = json.loads(raw.decode("utf-8"))
+                    dry_run = bool(data.get("dry_run", False))
+            except Exception:
+                pass
+
+            job_id = str(uuid.uuid4())
+            broadcast_jobs[job_id] = {
+                "stage": "crawling",
+                "result": None,
+                "error": None,
+                "created_at": time.time()
+            }
+            trim_dict(broadcast_jobs, MAX_STORE_ITEMS)
+
+            def run_job(jid, is_dry):
+                try:
+                    def progress_cb(stg):
+                        if jid in broadcast_jobs:
+                            broadcast_jobs[jid]["stage"] = stg
+
+                    res = automation_main.run_pipeline(dry_run=is_dry, progress_callback=progress_cb)
+                    if res.get("skipped"):
+                        broadcast_jobs[jid]["stage"] = "skipped"
+                        broadcast_jobs[jid]["result"] = res
+                    elif res.get("success"):
+                        broadcast_jobs[jid]["stage"] = "done"
+                        broadcast_jobs[jid]["result"] = res
+                        # Read channel from environment
+                        channel_name = os.getenv("TELEGRAM_CHANNEL") or os.getenv("TELEGRAM_CHANNEL_ID") or "@csbites"
+                        post_title = res.get("post", {}).get("title", "Unknown")
+                        post_id = res.get("post", {}).get("id", "Unknown")
+                        bridge_msg = f"Broadcasted: {post_title} [{post_id}] to Telegram channel {channel_name}"
+                        try:
+                            Bot.sendUserRequestBridge("BitBytesData_DataProcessing", bridge_msg)
+                        except Exception:
+                            pass
+                    else:
+                        broadcast_jobs[jid]["stage"] = "failed"
+                        broadcast_jobs[jid]["error"] = res.get("error", "Broadcast failed")
+                except Exception as exc:
+                    broadcast_jobs[jid]["stage"] = "failed"
+                    broadcast_jobs[jid]["error"] = str(exc)
+                finally:
+                    broadcast_lock.release()
+
+            worker = threading.Thread(target=run_job, args=(job_id, dry_run), daemon=True)
+            worker.start()
+
+            return json_response(self, 202, {"jobId": job_id, "status": "crawling"})
 
         if self.path != "/requests":
-            return json_response(
-                self,
-                404,
-                {"error": "Not found"},
-            )
+            return json_response(self, 404, {"error": "Not found"})
 
         try:
             length = int(self.headers.get("Content-Length", 0))
@@ -145,23 +215,25 @@ class RealCosmitudeAgentHandler(BaseHTTPRequestHandler):
             if bridge_res.get("success"):
                 bridge_id = bridge_res.get("bridgeId")
                 flow_used = bridge_res.get("flow")
-                requests[request_id] = {
+                requests_store[request_id] = {
                     "status": "completed",
                     "output": (
                         f"Bridge Sent to Cosmitude!\n"
                         f"• Bridge ID: {bridge_id}\n"
                         f"• Flow: {flow_used}\n"
-                        f"• Forum: BitBytesData ({Bot.forumID})\n"
+                        f"• Forum: BitBytesData\n"
                         f"• Payload: {message}"
                     ),
                     "error": None,
                 }
             else:
-                requests[request_id] = {
+                requests_store[request_id] = {
                     "status": "failed",
                     "output": None,
                     "error": bridge_res.get("error", "Failed to send bridge to Cosmitude"),
                 }
+
+            trim_dict(requests_store, MAX_STORE_ITEMS)
 
             return json_response(
                 self,
@@ -173,13 +245,10 @@ class RealCosmitudeAgentHandler(BaseHTTPRequestHandler):
             )
 
         except Exception as exc:
-            return json_response(
-                self,
-                400,
-                {"error": str(exc)},
-            )
+            return json_response(self, 400, {"error": str(exc)})
 
     def log_message(self, format, *args):
+        # Minimal logging without session ID
         print("[Cosmitude-Wrapper]", format % args)
 
 
@@ -188,7 +257,8 @@ def initialize_cosmitude():
     try:
         Bot.login()
         if Bot.Sessionid:
-            print(f"[Cosmitude-Wrapper] Successfully connected to Cosmitude! Session: {Bot.Sessionid}")
+            # Stopped logging session ID for security
+            print("[Cosmitude-Wrapper] Successfully connected to Cosmitude.")
         else:
             print("[Cosmitude-Wrapper] Warning: Session ID empty after login.")
     except Exception as exc:
@@ -208,8 +278,7 @@ def sync_loop():
 
 if __name__ == "__main__":
     initialize_cosmitude()
-    
-    # Start background sync thread to listen for forum triggers
+
     sync_thread = threading.Thread(target=sync_loop, daemon=True)
     sync_thread.start()
 
