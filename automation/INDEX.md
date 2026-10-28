@@ -104,3 +104,4 @@
 | 2026-10-27 19:03 | **Tuesday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-27_1903_radar_20261027_1903.md) |
 | 2026-10-27 23:19 | **Tuesday** | Core Operating Systems | [Kernel Space vs. User Space Protection Rings](archive/2026-10-27_2319_radar_20261027_2319.md) |
 | 2026-10-28 02:55 | **Wednesday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-28_0255_radar_20261028_0255.md) |
+| 2026-10-28 09:08 | **Wednesday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-28_0908_radar_20261028_0908.md) |

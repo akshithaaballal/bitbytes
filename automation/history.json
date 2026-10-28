@@ -1072,5 +1072,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-28T09:08:33.466642",
+    "post_id": "radar_20261028_0908",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Ink droplets in motion snag top prize in Nikon Small World contest",
+    "source_url": "https://arstechnica.com/science/2026/10/meet-the-2026-winner-of-nikons-small-world-photomicrography-contest/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
