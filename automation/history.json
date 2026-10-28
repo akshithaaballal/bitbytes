@@ -1060,5 +1060,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-28T02:55:54.970894",
+    "post_id": "radar_20261028_0255",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Git for US Legislation",
+    "source_url": "https://lexifina.com/blog/git-for-the-us-code",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
