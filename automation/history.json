@@ -1108,5 +1108,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-29T01:21:55.114010",
+    "post_id": "radar_20261029_0121",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Qwenputer: A functioning, deterministic RISC-V CPU inside Qwen3.5",
+    "source_url": "https://divagr.com/blog/qwenputer",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
