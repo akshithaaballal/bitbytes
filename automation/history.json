@@ -1156,5 +1156,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-29T23:43:44.453532",
+    "post_id": "radar_20261029_2343",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Binance-hacker-1029 \u2013 $5.6B stolen from Binance",
+    "source_url": "https://arkm.com/explorer/entity/21a94755-f604-45e5-9501-6542e23005e8",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
