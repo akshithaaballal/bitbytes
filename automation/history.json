@@ -1120,5 +1120,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-29T07:46:31.142527",
+    "post_id": "radar_20261029_0746",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "A new faster algorithm to compute 64-bit signed floor division",
+    "source_url": "https://www.benjoffe.com/fast-floordiv",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]

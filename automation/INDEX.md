@@ -108,3 +108,4 @@
 | 2026-10-28 16:20 | **Wednesday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-28_1620_radar_20261028_1620.md) |
 | 2026-10-28 21:24 | **Wednesday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-28_2124_radar_20261028_2124.md) |
 | 2026-10-29 01:21 | **Thursday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-29_0121_radar_20261029_0121.md) |
+| 2026-10-29 07:46 | **Thursday** | Distributed Systems & Cloud | [Distributed Idempotency & Two-Phase Locking](archive/2026-10-29_0746_radar_20261029_0746.md) |
