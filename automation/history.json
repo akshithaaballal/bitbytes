@@ -1144,5 +1144,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-29T19:56:28.909673",
+    "post_id": "radar_20261029_1956",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "The importance of communities around software",
+    "source_url": "https://lumi.codeberg.page/blog/software-community.html",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
