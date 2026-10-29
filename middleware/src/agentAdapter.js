@@ -1,12 +1,4 @@
 // All communication with the Cosmitude Agent lives in this file.
-//
-// IMPORTANT: the generated agent exposes no HTTP interface (it only polls Cosmitude).
-// This adapter targets the PROPOSED local wrapper contract described in the README:
-//   GET  /health          -> { ok, bridgeConnected }
-//   POST /requests        -> body { id, type, message }, any 2xx = accepted
-//   GET  /requests/:id    -> { status: pending|completed|failed, output, error }
-// Paths are fixed here on purpose: the frontend can never choose the agent endpoint.
-// If the wrapper ends up different, change only this file.
 import { config } from './config.js';
 
 export class AgentError extends Error {
@@ -28,8 +20,10 @@ async function call(method, path, body, timeoutMs = config.agentTimeoutMs) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const headers = { 'Content-Type': 'application/json' };
-    if (config.agentApiKey) headers['X-Agent-Key'] = config.agentApiKey;
+    const headers = {
+      'Content-Type': 'application/json',
+      'X-Agent-Key': config.agentApiKey || '',
+    };
     const res = await fetch(config.agentUrl + path, {
       method,
       headers,
@@ -37,7 +31,9 @@ async function call(method, path, body, timeoutMs = config.agentTimeoutMs) {
       signal: controller.signal,
     });
     if (!res.ok) {
-      throw new AgentError(`Cosmitude Agent returned an error (HTTP ${res.status}).`, 502, 'AGENT_ERROR');
+      const errBody = await res.json().catch(() => ({}));
+      const msg = errBody.error || `Cosmitude Agent returned an error (HTTP ${res.status}).`;
+      throw new AgentError(msg, res.status, res.status === 409 ? 'AGENT_BUSY' : 'AGENT_ERROR');
     }
     return await res.json().catch(() => ({}));
   } catch (err) {
@@ -87,6 +83,10 @@ export async function getBroadcastHistory() {
   return await call('GET', '/broadcast/history');
 }
 
-export async function triggerBroadcast() {
-  return await call('POST', '/broadcast', {}, 60000);
+export async function triggerBroadcast(options = {}) {
+  return await call('POST', '/broadcast', options, 60000);
+}
+
+export async function getBroadcastStatus(jobId) {
+  return await call('GET', `/broadcast/status/${encodeURIComponent(jobId)}`);
 }
