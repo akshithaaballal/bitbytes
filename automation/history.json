@@ -1132,5 +1132,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-29T14:44:21.698887",
+    "post_id": "radar_20261029_1444",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Mistral Large 4 (Le Chonk) is now Open Weight",
+    "source_url": "https://mistral.ai/news/mistral-large-4-oss/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
