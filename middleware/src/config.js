@@ -15,4 +15,6 @@ export const config = {
   agentApiKey: process.env.AGENT_API_KEY || '',
   agentTimeoutMs: int(process.env.AGENT_TIMEOUT_MS, 10000),
   requestTimeoutMs: int(process.env.REQUEST_TIMEOUT_MS, 120000),
+  operatorPasscode: process.env.OPERATOR_PASSCODE || '',
+  operatorTokenSecret: process.env.OPERATOR_TOKEN_SECRET || '',
 };

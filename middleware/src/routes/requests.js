@@ -1,8 +1,13 @@
 import { Router } from 'express';
 import { REQUEST_TYPES, createRequest, listRequests, getRequest } from '../services/requestService.js';
+import { requireOperator } from '../auth.js';
 
 const router = Router();
 const wrap = (fn) => (req, res, next) => fn(req, res).catch(next);
+
+// requireOperator on /request* and /requests*
+router.use('/request', requireOperator);
+router.use('/requests', requireOperator);
 
 router.get('/request-types', (req, res) => res.json({ types: REQUEST_TYPES }));
 
