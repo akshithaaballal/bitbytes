@@ -1204,5 +1204,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-30T21:13:40.262324",
+    "post_id": "radar_20261030_2113",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "My favourite PowerMac is a Nintendo Wii",
+    "source_url": "https://virtuallyfun.com/2026/10/29/my-favourite-powermac-is-a-nintendo-wii/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
