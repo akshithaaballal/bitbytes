@@ -1180,5 +1180,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-30T10:32:16.557487",
+    "post_id": "radar_20261030_1032",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "How Do You Take a Picture of a Black Hole?",
+    "source_url": "https://www.quantamagazine.org/how-do-you-take-a-picture-of-a-black-hole-20261029/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]

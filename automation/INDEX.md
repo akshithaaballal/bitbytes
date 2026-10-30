@@ -113,3 +113,4 @@
 | 2026-10-29 19:56 | **Thursday** | Distributed Systems & Cloud | [Distributed Idempotency & Two-Phase Locking](archive/2026-10-29_1956_radar_20261029_1956.md) |
 | 2026-10-29 23:43 | **Thursday** | Distributed Systems & Cloud | [Distributed Idempotency & Two-Phase Locking](archive/2026-10-29_2343_radar_20261029_2343.md) |
 | 2026-10-30 03:23 | **Friday** | Distributed Systems & Cloud | [Distributed Idempotency & Two-Phase Locking](archive/2026-10-30_0323_radar_20261030_0323.md) |
+| 2026-10-30 10:32 | **Friday** | AI & Machine Learning | [Mixture-of-Experts (MoE) Architecture](archive/2026-10-30_1032_radar_20261030_1032.md) |
