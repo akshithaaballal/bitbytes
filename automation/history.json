@@ -1192,5 +1192,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-30T16:51:23.330940",
+    "post_id": "radar_20261030_1651",
+    "track": "AI & Machine Learning",
+    "title": "Mixture-of-Experts (MoE) Architecture",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "AI Isn't Replacing SREs. It's Deskilling Them",
+    "source_url": "https://newsletter.signoz.io/p/ai-isnt-replacing-sres-its-deskilling",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
