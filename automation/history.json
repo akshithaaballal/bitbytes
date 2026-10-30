@@ -1168,5 +1168,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-30T03:23:19.403717",
+    "post_id": "radar_20261030_0323",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Cuis: The Modern Smalltalk-80",
+    "source_url": "https://cuis.st/",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
