@@ -1216,5 +1216,17 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "timestamp": "2026-10-31T01:12:27.851114",
+    "post_id": "radar_20261031_0112",
+    "track": "Distributed Systems & Cloud",
+    "title": "Distributed Idempotency & Two-Phase Locking",
+    "source": "Firecrawl (direct_http) + LLM",
+    "source_headline": "Cloudflare Turnstile solver library (no headless browser required)",
+    "source_url": "https://github.com/chris124567/cfsolve",
+    "git": true,
+    "telegram": true,
+    "instagram": false
   }
 ]
