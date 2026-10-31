@@ -55,12 +55,21 @@ export default function Dashboard() {
     <div className="dashboard-layout">
       <PipelineStatus health={health} />
       <BroadcastCard onBroadcastComplete={() => setHistoryRefreshKey((k) => k + 1)} />
-      <div className="grid">
-        <RequestForm types={types} submitting={submitting} error={error} onSubmit={handleSubmit} />
-        <ResponsePanel request={history.find((r) => r.id === selectedId)} />
-        <HistoryList requests={history} selectedId={selectedId} onSelect={setSelectedId} />
-      </div>
+
+      {/* Audit Log Table */}
       <BroadcastHistory refreshKey={historyRefreshKey} />
+
+      {/* Advanced Cosmitude Bridge Section Collapsed */}
+      <details className="collapsible-wrapper">
+        <summary className="collapsible-summary">Advanced: Cosmitude bridge</summary>
+        <div className="collapsible-content">
+          <div className="grid">
+            <RequestForm types={types} submitting={submitting} error={error} onSubmit={handleSubmit} />
+            <ResponsePanel request={history.find((r) => r.id === selectedId)} />
+            <HistoryList requests={history} selectedId={selectedId} onSelect={setSelectedId} />
+          </div>
+        </div>
+      </details>
     </div>
   );
 }
