@@ -1,98 +1,134 @@
 # BitBytes
 
-Frontend (React + Vite) → Middleware (Express) → Cosmitude Agent (Python) → Cosmitude Bridge
+> Daily technical concepts from production systems for B.Tech CS & AI students.
+> Dispatched twice daily (03:00 & 15:00 UTC) across Telegram, Git archive, and static web feed.
 
-The browser only ever talks to the middleware. All agent-specific code lives in
-`middleware/src/agentAdapter.js`.
-
-## Status of the Cosmitude Agent integration
-
-The generated agent is a polling client: it has no port and no endpoint. The adapter is written
-against a **proposed local wrapper contract** (below), which still has to be built around the agent.
-Until then, `/api/health` reports the agent as "not configured" and requests return HTTP 503.
-
-Proposed wrapper contract (our design, not a Cosmitude API):
-
-| Call | Purpose |
-|---|---|
-| `GET  {AGENT_URL}/health` → `{ "ok": true, "bridgeConnected": true }` | agent + bridge status |
-| `POST {AGENT_URL}/requests` with `{ id, type, message }` → 2xx | hand a request to the agent |
-| `GET  {AGENT_URL}/requests/{id}` → `{ "status": "pending"\|"completed"\|"failed", "output": ..., "error": "..." }` | poll for the Bridge reply |
-
-Every call sends the header `X-Agent-Key: <AGENT_API_KEY>` when that variable is set.
-
-## 1. Install dependencies
-
-```bash
-cd middleware && npm install
-cd ../frontend && npm install
+```
+Frontend (React + Vite) ──> Public Feed (/feed.json)
+         │
+         ▼ (Operator Portal only)
+Middleware (Express) ──> Agent Wrapper (Python) ──> Cosmitude Bridge / Automation Pipeline
 ```
 
-Requires Node.js 18 or newer.
+The public site is a zero-layout-shift static web reader that consumes `frontend/public/feed.json`. It requires no running backend or secrets to serve readers. The Operator Console connects through the Express middleware and Python agent wrapper.
 
-## 2. Configure the middleware
+---
 
+## System Architecture
+
+1. **Automation Pipeline (`automation/`)**:
+   - **Cadence:** Dispatched twice daily (03:00 and 15:00 UTC) via GitHub Actions (`.github/workflows/daily_btech_post.yml`).
+   - **Discovery:** Firecrawl Search and Hacker News (Algolia single-request front page).
+   - **Source Filter:** Whitelisted engineering publications in `automation/sources.json` matched via word-boundary regex and domain matching (`host == d or host.endswith("." + d)`).
+   - **Honest Mention Clustering:** Clusters candidate stories by normalized token Jaccard similarity ($\ge 0.5$). `source_count` measures distinct registrable domains over the trailing 7 days. Topics graduate to publication only after independent cross-domain validation.
+   - **Grounded LLM Curator:** Uses Gemini (`gemini-flash-lite-latest` with `gemini-3-flash-preview` fallback) to distill teachable systems engineering concepts strictly grounded in fetched articles ($800+$ clean characters, up to 12,000 characters analyzed).
+   - **Multi-channel Publishing:** Broadcasts to Telegram channel ([@csbites](https://t.me/csbites)), commits YAML front-matter Markdown to `automation/archive/`, generates `frontend/public/feed.json`, and renders lightweight SVG/PNG social cards.
+   - **Evergreen Fallback:** If live discovery finds no verifiable story, rotates through `automation/content_bank/day_*.json` choosing the post posted longest ago or never, complete with canonical engineering references (e.g. RFC 9293).
+
+2. **Agent Wrapper (`agent/wrapper/agent_server.py`)**:
+   - Hardened HTTP server exposing `/health`, `/requests`, and `/broadcast`.
+   - Protects non-health routes with constant-time `hmac.compare_digest` checking against `X-Agent-Key`.
+   - Concurrency control: `POST /broadcast` acquires a `threading.Lock` and returns HTTP `202 Accepted` with a `jobId`, or `409 Conflict` if a job is active.
+   - Asynchronous job telemetry: Polled via `GET /broadcast/status/<jobId>`.
+   - Never exposes session credentials or internal tokens in logs.
+
+3. **Middleware (`middleware/`)**:
+   - Express API gateway with security headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`).
+   - Operator login (`POST /api/operator/login`): rate-limited to 5 attempts per minute per IP, constant-time `crypto.timingSafeEqual` passcode verification, and signs 8-hour HMAC tokens.
+   - Protected routes guarded by `requireOperator` middleware.
+   - Sanitized `/api/health` output exposing only high-level status.
+
+4. **Frontend (`frontend/`)**:
+   - Built with React and Vite following strict Ponytail minimalism (flat surfaces, 1px hairline borders, single accent color, no gradients or glows, self-hosted IBM Plex Sans and JetBrains Mono Latin woff2 fonts, zero external font requests).
+   - Asymmetric layout: Dominant latest dispatch card and compact archive rows.
+   - Note detail view at `#p/<id>` with one-click code copy, source provenance chip, and breadcrumb navigation.
+   - Single `<main>` on every page, full `:focus-visible` states, and `prefers-reduced-motion` compliance.
+
+---
+
+## Environment Variables
+
+### 1. Automation Pipeline (`automation/.env`)
+| Variable | Description | Default / Example |
+|---|---|---|
+| `TELEGRAM_BOT_TOKEN` | Bot token from @BotFather | Required for live broadcast |
+| `TELEGRAM_CHANNEL_ID` | Telegram channel username or ID | `@csbites` |
+| `GEMINI_API_KEY` | Google Gemini API key | Required for LLM curation |
+| `GEMINI_MODEL` | Primary Gemini model identifier | `gemini-flash-lite-latest` |
+| `GEMINI_MODEL_FALLBACK` | Fallback Gemini model identifier | `gemini-3-flash-preview` |
+| `FIRECRAWL_API_KEY` | Firecrawl scraping API key | Optional (falls back to direct HTTP) |
+| `USE_AI_RADAR` | Enable autonomous live web research | `true` |
+| `GENERATE_IMAGE` | Render social PNG card | `false` |
+| `INSTAGRAM_ACCESS_TOKEN` | Meta Graph API access token | Optional for Instagram |
+| `INSTAGRAM_ACCOUNT_ID` | Instagram Business account ID | Optional for Instagram |
+| `SIMULATE_MODE` | Dry-run mode for local testing | `false` |
+
+### 2. Agent Wrapper (`agent/.env`)
+| Variable | Description | Default / Example |
+|---|---|---|
+| `AGENT_API_KEY` | Secret key required in `X-Agent-Key` header | Set strong random secret |
+| `AGENT_PORT` | Port for agent server | `5000` |
+| `AGENT_HOST` | Host address | `127.0.0.1` |
+| `TELEGRAM_CHANNEL` | Public channel name for Cosmitude bridge log | `@csbites` |
+| `USERNAME` | Cosmitude Bot UUID | Required for Cosmitude Bridge |
+| `PASSWORD` | Cosmitude Bot Password | Required for Cosmitude Bridge |
+| `SERVER_ID` | Cosmitude LLServer ID | Required for Cosmitude Bridge |
+| `FORUM_ID` | Cosmitude Forum ID | Required for Cosmitude Bridge |
+
+### 3. Middleware (`middleware/.env`)
+| Variable | Description | Default / Example |
+|---|---|---|
+| `PORT` | Middleware HTTP port | `4000` |
+| `AGENT_URL` | Upstream Agent URL | `http://127.0.0.1:5000` |
+| `AGENT_API_KEY` | Must match `AGENT_API_KEY` in `agent/.env` | Shared secret |
+| `OPERATOR_PASSCODE` | Passcode for operator console login | Set strong random secret |
+| `OPERATOR_TOKEN_SECRET` | Secret key used to sign HMAC tokens (8h) | Set strong random secret |
+| `FRONTEND_ORIGIN` | Allowed CORS origins (comma-separated) | `http://localhost:5173` |
+
+### 4. Frontend (`frontend/.env`)
+| Variable | Description | Default / Example |
+|---|---|---|
+| `VITE_API_BASE` | Base URL for middleware API requests | `""` (proxied by Vite) |
+
+---
+
+## Local Development Quickstart
+
+### 1. Install Dependencies
 ```bash
-cd middleware
-cp .env.example .env
-# edit .env: set AGENT_URL (and AGENT_API_KEY if the wrapper requires one)
+# Frontend
+cd frontend && npm install
+
+# Middleware
+cd ../middleware && npm install
+
+# Automation & Agent
+cd ../automation && pip install -r requirements.txt -r requirements-dev.txt
+cd ../agent && pip install requests python-dotenv
 ```
 
-The frontend needs no secrets. Optionally set `VITE_API_BASE` in `frontend/.env` to point at a
-middleware on another origin; by default the Vite dev server proxies `/api` to `http://localhost:4000`.
-
-## 3. Start the Cosmitude Agent
-
+### 2. Run Automation Tests
 ```bash
-pip install requests
-python <your-generated-agent-file>.py
+pytest automation/tests/
 ```
 
-The generated file runs a login + 10-second sync loop and listens on no port. Start the wrapper
-instead once it exists (not built yet).
-
-## 4. Start the middleware
-
+### 3. Dry-Run the Pipeline Locally
 ```bash
-cd middleware
-npm run dev
+python automation/main.py --dry-run
 ```
 
-## 5. Start the frontend
+### 4. Start Local Services
+- **Terminal 1 (Agent Wrapper):**
+  ```bash
+  cd agent/wrapper && python agent_server.py
+  ```
+- **Terminal 2 (Middleware):**
+  ```bash
+  cd middleware && npm run dev
+  ```
+- **Terminal 3 (Frontend):**
+  ```bash
+  cd frontend && npm run dev
+  ```
 
-```bash
-cd frontend
-npm run dev
-```
-
-Open http://localhost:5173.
-
-## 6. Test
-
-```bash
-curl http://localhost:4000/api/health
-
-curl -X POST http://localhost:4000/api/request \
-  -H "Content-Type: application/json" \
-  -d '{"type":"general","message":"Hello from curl"}'
-
-curl http://localhost:4000/api/requests
-```
-
-## Troubleshooting
-
-| Symptom | Likely cause |
-|---|---|
-| "Cannot reach the BitBytes middleware" | Middleware not running, or not on port 4000. |
-| "Cosmitude Agent adapter is not configured yet" (503) | `AGENT_URL` is empty in `middleware/.env`. |
-| "Cosmitude Agent is unavailable." (503) | Nothing is listening at `AGENT_URL`, or the URL/port is wrong. |
-| "Cosmitude Agent timed out." (504) | Agent is up but slow; raise `AGENT_TIMEOUT_MS`. |
-| "Cosmitude Agent returned an error" (502) | Agent answered with a non-2xx status; check the agent's own logs. |
-| CORS error in the browser console | Frontend origin is not in `FRONTEND_ORIGIN`. |
-| Request stays "Waiting" then fails with "timed out" | Bridge never replied within `REQUEST_TIMEOUT_MS`. |
-
-## Security notes
-
-- Keep `middleware/.env` out of git (already in `.gitignore`).
-- The generated agent contains hardcoded credentials. Do not commit it, and move them to environment variables when you build the wrapper.
-- The frontend cannot choose the agent URL or path; both are fixed server-side.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
