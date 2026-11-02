@@ -80,6 +80,14 @@ Check the generated 1080x1080 card in `automation/generated_images/day_01.png` a
 
 ## ⏰ Automated Cloud Scheduling (GitHub Actions)
 
-A workflow is ready at `.github/workflows/daily_btech_post.yml`:
-- Runs completely free in the cloud every day at **08:00 AM IST** (`02:30 UTC`).
-- Simply add your `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHANNEL_ID` to your GitHub Repository under **Settings > Secrets and variables > Actions**.
+A workflow runs at `.github/workflows/daily_btech_post.yml`:
+- Runs in the cloud twice daily at **03:00 UTC and 15:00 UTC**.
+- Concurrency control ensures runs never overlap.
+- Updates `automation/archive/`, `automation/INDEX.md`, `automation/history.json`, and `frontend/public/feed.json`.
+- Required GitHub Actions Secrets:
+  - `TELEGRAM_BOT_TOKEN`: Telegram Bot API token from `@BotFather`.
+  - `TELEGRAM_CHANNEL_ID`: Channel username (e.g. `@csbites`).
+  - `FIRECRAWL_API_KEY`: API key for web extraction.
+  - `GEMINI_API_KEY`: Google Gemini API key.
+  - `GEMINI_MODEL`: (Optional) Primary model (default: `gemini-flash-lite-latest`).
+  - `INSTAGRAM_ACCESS_TOKEN` / `INSTAGRAM_ACCOUNT_ID`: (Optional) Meta Graph API credentials.
