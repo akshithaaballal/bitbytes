@@ -25,20 +25,25 @@ The public site is a zero-layout-shift static web reader that consumes `frontend
    - **Multi-channel Publishing:** Broadcasts to Telegram channel ([@csbites](https://t.me/csbites)), commits YAML front-matter Markdown to `automation/archive/`, generates `frontend/public/feed.json`, and renders lightweight SVG/PNG social cards.
    - **Evergreen Fallback:** If live discovery finds no verifiable story, rotates through `automation/content_bank/day_*.json` choosing the post posted longest ago or never, complete with canonical engineering references (e.g. RFC 9293).
 
-2. **Agent Wrapper (`agent/wrapper/agent_server.py`)**:
+2. **Cosmitude Bridge Telemetry & Research Reports (`automation/publishers/bridge_reporter.py`)**:
+   - **Structured Reports:** Whenever the pipeline runs (whether published, skipped, or failed), a complete structured report is dispatched to Cosmitude Bridge (`BitBytesData_DataProcessing` flow).
+   - **Telemetry Fields:** Each report includes the execution timestamp, topic title, curation engine, original source URL, cross-domain source count, publication statuses across Telegram/Git/Instagram, skipped reason, and lesson summary.
+   - **Durable Local Queue:** If Cosmitude Bridge is offline or credentials are missing, reports are persisted to `automation/bridge_queue.json` and automatically flushed when bridge connectivity is restored.
+
+3. **Agent Wrapper (`agent/wrapper/agent_server.py`)**:
    - Hardened HTTP server exposing `/health`, `/requests`, and `/broadcast`.
    - Protects non-health routes with constant-time `hmac.compare_digest` checking against `X-Agent-Key`.
    - Concurrency control: `POST /broadcast` acquires a `threading.Lock` and returns HTTP `202 Accepted` with a `jobId`, or `409 Conflict` if a job is active.
    - Asynchronous job telemetry: Polled via `GET /broadcast/status/<jobId>`.
    - Never exposes session credentials or internal tokens in logs.
 
-3. **Middleware (`middleware/`)**:
+4. **Middleware (`middleware/`)**:
    - Express API gateway with security headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`).
    - Operator login (`POST /api/operator/login`): rate-limited to 5 attempts per minute per IP, constant-time `crypto.timingSafeEqual` passcode verification, and signs 8-hour HMAC tokens.
    - Protected routes guarded by `requireOperator` middleware.
    - Sanitized `/api/health` output exposing only high-level status.
 
-4. **Frontend (`frontend/`)**:
+5. **Frontend (`frontend/`)**:
    - Built with React and Vite following strict Ponytail minimalism (flat surfaces, 1px hairline borders, single accent color, no gradients or glows, self-hosted IBM Plex Sans and JetBrains Mono Latin woff2 fonts, zero external font requests).
    - Asymmetric layout: Dominant latest dispatch card and compact archive rows.
    - Note detail view at `#p/<id>` with one-click code copy, source provenance chip, and breadcrumb navigation.
