@@ -24,7 +24,7 @@ from publishers.telegram_publisher import publish_to_telegram, build_telegram_me
 from publishers.git_publisher import publish_to_git
 from publishers.image_generator import render_social_card
 from publishers.instagram_publisher import publish_to_instagram
-from publishers.bridge_reporter import build_research_report, send_report_to_bridge, flush_pending_reports
+from publishers.bridge_reporter import send_bridge_report
 
 # Import Radar & Feed Generator
 try:
@@ -198,8 +198,14 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar:
             })
             save_history(history_path, history)
             generate_feed_json(base_dir)
-        rep = build_research_report({"skipped": True, "skipped_reason": skipped_reason, "engine": engine_used})
-        send_report_to_bridge(rep)
+        bridge_report = {
+            "timestamp": now_utc.isoformat(),
+            "status": "skipped",
+            "topic": None,
+            "engine": engine_used,
+            "skipped_reason": skipped_reason
+        }
+        send_bridge_report(bridge_report)
         return {"success": True, "skipped": True, "skipped_reason": skipped_reason}
 
     # Force compute day in code
@@ -309,17 +315,20 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar:
         generate_feed_json(base_dir)
         print("📄 Static feed.json updated at frontend/public/feed.json.")
 
-    # Send telemetry report to Cosmitude Bridge (and local durable queue)
-    rep = build_research_report(
-        {"post": post, "skipped": False, "engine": engine_used},
-        {
-            "telegram": telegram_result.get("success", False),
-            "git": git_result.get("success", False),
-            "instagram": instagram_result.get("success", False)
-        }
-    )
-    send_report_to_bridge(rep)
-    flush_pending_reports()
+    # 7. Cosmitude Bridge Telemetry & Research Report
+    bridge_report = {
+        "timestamp": now_utc.isoformat(),
+        "status": "published",
+        "topic": post.get("title"),
+        "engine": engine_used,
+        "source_url": post.get("source", {}).get("url") or post.get("source_url"),
+        "source_count": post.get("source_count", 1),
+        "telegram_status": "delivered" if telegram_result.get("success") else "failed",
+        "git_status": "archived" if git_result.get("success") else "failed",
+        "instagram_status": "posted" if instagram_result.get("success") else "skipped",
+        "summary": post.get("summary")
+    }
+    bridge_res = send_bridge_report(bridge_report)
 
     if progress_callback:
         progress_callback("done")
@@ -332,6 +341,7 @@ def run_pipeline(dry_run: bool = False, specific_post_id: str = None, use_radar:
         "git": git_result,
         "instagram": instagram_result,
         "image_path": image_path,
+        "bridge": bridge_res,
         "engine": engine_used
     }
 

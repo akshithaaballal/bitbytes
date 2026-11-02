@@ -1,7 +1,7 @@
 """
-BitBytes Cosmitude Bridge Telemetry Reporter.
-Formats execution and research reports, sends them to Cosmitude Bridge via Bot.py
-if connected, and persists to a durable queue (automation/reports/) for guaranteed delivery.
+BitBytes Cosmitude Bridge Telemetry & Research Reporter.
+Formats execution and research reports, sends them to Cosmitude Bridge via agent/Bot.py,
+and provides a durable local retry queue when the Bridge is offline.
 """
 
 import os
@@ -10,163 +10,123 @@ import json
 import time
 from datetime import datetime, timezone
 
-# Add agent directory to sys.path if not present
-agent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "agent"))
-if agent_dir not in sys.path:
-    sys.path.append(agent_dir)
-
-QUEUE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "reports"))
-QUEUE_FILE = os.path.join(QUEUE_DIR, "pending_queue.json")
+# Path to local durable queue
+QUEUE_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "bridge_queue.json")
 
 
-def ensure_queue_dir():
-    os.makedirs(QUEUE_DIR, exist_ok=True)
-
-
-def build_research_report(post_or_result: dict, execution_context: dict = None) -> dict:
-    now_utc = datetime.now(timezone.utc).isoformat()
-    ctx = execution_context or {}
-
-    is_skipped = post_or_result.get("skipped", False)
-    post = post_or_result.get("post") or post_or_result
-
-    engine_name = post.get("engine") or ctx.get("engine", "autonomous_radar")
-    origin = (
-        "Content Bank Fallback"
-        if "fallback" in str(engine_name) or "content_bank" in str(engine_name)
-        else "Live Autonomous Research"
-    )
-
-    source_info = post.get("source") if isinstance(post.get("source"), dict) else {}
-
-    report = {
-        "report_id": f"rep_{int(time.time())}",
-        "timestamp": now_utc,
-        "status": "skipped" if is_skipped else "published",
-        "origin": origin,
-        "topic": post.get("title", "N/A"),
-        "track": post.get("track", "Systems Engineering"),
-        "engine": engine_name,
-        "source": {
-            "title": source_info.get("title") or post.get("source_headline"),
-            "url": source_info.get("url") or post.get("source_url"),
-            "domain": source_info.get("domain"),
-            "source_count": post.get("source_count", 1),
-        },
-        "scraping": {
-            "success": not is_skipped,
-            "method": source_info.get("engine", "Firecrawl / HTTP Direct"),
-        },
-        "llm_generation": {
-            "status": "success" if not is_skipped else "skipped",
-            "model": os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest"),
-        },
-        "publishing": {
-            "telegram": ctx.get("telegram", True),
-            "git": ctx.get("git", True),
-            "instagram": ctx.get("instagram", False),
-        },
-        "skipped_reason": post_or_result.get("skipped_reason"),
-        "error": post_or_result.get("error"),
-    }
-    return report
-
-
-def send_report_to_bridge(report: dict) -> dict:
-    """
-    Attempts delivery to Cosmitude Bridge. If unavailable, queues locally.
-    """
-    ensure_queue_dir()
-
-    # Save individual archive copy
-    report_file = os.path.join(QUEUE_DIR, f"{report['report_id']}.json")
-    try:
-        with open(report_file, "w", encoding="utf-8") as f:
-            json.dump(report, f, indent=2)
-    except Exception as e:
-        print(f"[Bridge-Reporter] Could not write report file: {e}")
-
-    # Format human-readable summary message for Cosmitude Forum flow
-    msg_lines = [
-        f"BitBytes Research Report [{report['report_id']}]",
-        f"Status: {report['status'].upper()}",
-        f"Origin: {report['origin']}",
-        f"Topic: {report['topic']} ({report['track']})",
-    ]
-    if report.get("source", {}).get("title"):
-        msg_lines.append(f"Source: {report['source']['title']} ({report['source']['url']})")
-    if report.get("skipped_reason"):
-        msg_lines.append(f"Notice: {report['skipped_reason']}")
-
-    message = "\n".join(msg_lines)
-
-    # Attempt sending via Bot.py
-    bridge_success = False
-    bridge_result = None
-    try:
-        import Bot
-        if getattr(Bot, "Sessionid", None):
-            res = Bot.sendUserRequestBridge("BitBytesData_CompletionTracking", message)
-            if res.get("success"):
-                bridge_success = True
-                bridge_result = res
-                print(f"[Bridge-Reporter] Report successfully delivered to Cosmitude Bridge (ID: {res.get('bridgeId')})")
-    except Exception as exc:
-        print(f"[Bridge-Reporter] Bridge unavailable ({exc}). Queuing for retry.")
-
-    if not bridge_success:
-        # Enqueue for durable retry
+def _load_queue():
+    if os.path.exists(QUEUE_FILE):
         try:
-            pending = []
-            if os.path.exists(QUEUE_FILE):
-                with open(QUEUE_FILE, "r", encoding="utf-8") as qf:
-                    pending = json.load(qf)
-            pending.append(report)
-            with open(QUEUE_FILE, "w", encoding="utf-8") as qf:
-                json.dump(pending, qf, indent=2)
-            print(f"[Bridge-Reporter] Report safely queued locally ({len(pending)} pending in queue).")
-        except Exception as e:
-            print(f"[Bridge-Reporter] Queue error: {e}")
+            with open(QUEUE_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
+
+
+def _save_queue(queue):
+    try:
+        with open(QUEUE_FILE, "w", encoding="utf-8") as f:
+            json.dump(queue, f, indent=2)
+    except Exception as e:
+        print(f"[Bridge-Reporter] Warning: Could not save queue: {e}")
+
+
+def _get_bot():
+    """Dynamically import Bot from agent/ directory."""
+    try:
+        agent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "agent"))
+        if agent_dir not in sys.path:
+            sys.path.insert(0, agent_dir)
+        import Bot
+        return Bot
+    except Exception as e:
+        return None
+
+
+def send_bridge_report(report: dict) -> dict:
+    """
+    Attempts delivery to Cosmitude Bridge.
+    If unavailable, persists report to local durable queue for retry.
+    """
+    report["timestamp"] = report.get("timestamp") or datetime.now(timezone.utc).isoformat()
+    
+    # 1. Format payload
+    summary_line = f"[{report.get('status', 'RUN').upper()}] {report.get('topic') or report.get('title') or 'Research Run'}"
+    formatted_msg = (
+        f"BitBytes Research Report\n"
+        f"• Timestamp: {report['timestamp']}\n"
+        f"• Status: {report.get('status', 'unknown')}\n"
+        f"• Topic: {report.get('topic') or report.get('title') or 'N/A'}\n"
+        f"• Engine: {report.get('engine', 'autonomous_radar')}\n"
+        f"• Source: {report.get('source_url', 'N/A')}\n"
+        f"• Source Count: {report.get('source_count', 1)}\n"
+        f"• Telegram: {report.get('telegram_status', 'pending')}\n"
+        f"• Git Archive: {report.get('git_status', 'pending')}\n"
+        f"• Instagram: {report.get('instagram_status', 'pending')}\n"
+    )
+    if report.get("skipped_reason"):
+        formatted_msg += f"• Skipped Reason: {report['skipped_reason']}\n"
+    if report.get("summary"):
+        formatted_msg += f"• Summary: {report['summary'][:200]}...\n"
+
+    # 2. Try sending via Bot
+    bot = _get_bot()
+    delivered = False
+    bridge_id = None
+    delivery_error = None
+
+    if bot and hasattr(bot, "sendUserRequestBridge"):
+        try:
+            res = bot.sendUserRequestBridge("BitBytesData_DataProcessing", formatted_msg)
+            if res.get("success"):
+                delivered = True
+                bridge_id = res.get("bridgeId")
+                print(f"[Bridge-Reporter] Report successfully delivered to Cosmitude Bridge (ID: {bridge_id})")
+            else:
+                delivery_error = res.get("error", "Unknown error from Bridge")
+        except Exception as exc:
+            delivery_error = str(exc)
+    else:
+        delivery_error = "Cosmitude Bot agent not initialized or credentials missing"
+
+    # 3. If delivered, flush any older queued reports
+    if delivered:
+        queue = _load_queue()
+        if queue:
+            print(f"[Bridge-Reporter] Flushing {len(queue)} pending reports from local queue...")
+            remaining = []
+            for item in queue:
+                try:
+                    q_res = bot.sendUserRequestBridge("BitBytesData_DataProcessing", item.get("message", ""))
+                    if not q_res.get("success"):
+                        remaining.append(item)
+                except Exception:
+                    remaining.append(item)
+            _save_queue(remaining)
+        return {
+            "delivered": True,
+            "bridgeId": bridge_id,
+            "queued": False
+        }
+
+    # 4. If delivery failed, queue locally
+    queue = _load_queue()
+    queue.append({
+        "timestamp": report["timestamp"],
+        "report": report,
+        "message": formatted_msg,
+        "failed_reason": delivery_error
+    })
+    # Keep queue bounded to last 100 items
+    if len(queue) > 100:
+        queue = queue[-100:]
+    _save_queue(queue)
+    print(f"[Bridge-Reporter] Bridge unavailable ({delivery_error}). Report safely queued locally ({len(queue)} pending).")
 
     return {
-        "delivered": bridge_success,
-        "bridge_result": bridge_result,
-        "queued": not bridge_success,
-        "report": report,
+        "delivered": False,
+        "queued": True,
+        "reason": delivery_error,
+        "pending_count": len(queue)
     }
-
-
-def flush_pending_reports():
-    """Flushes locally queued reports if Bridge session is active."""
-    if not os.path.exists(QUEUE_FILE):
-        return 0
-
-    try:
-        import Bot
-        if not getattr(Bot, "Sessionid", None):
-            return 0
-    except Exception:
-        return 0
-
-    try:
-        with open(QUEUE_FILE, "r", encoding="utf-8") as qf:
-            pending = json.load(qf)
-        if not pending:
-            return 0
-
-        flushed = []
-        for rep in pending:
-            msg = f"Flushed Report [{rep['report_id']}]: {rep['topic']} - Status: {rep['status']}"
-            res = Bot.sendUserRequestBridge("BitBytesData_CompletionTracking", msg)
-            if not res.get("success"):
-                break
-            flushed.append(rep)
-
-        remaining = pending[len(flushed):]
-        with open(QUEUE_FILE, "w", encoding="utf-8") as qf:
-            json.dump(remaining, qf, indent=2)
-
-        return len(flushed)
-    except Exception as e:
-        print(f"[Bridge-Reporter] Error flushing reports: {e}")
-        return 0
