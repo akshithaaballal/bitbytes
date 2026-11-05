@@ -764,3 +764,5 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 <!-- note 404 -->
 
 <!-- note 405 -->
+
+<!-- note 406 -->
