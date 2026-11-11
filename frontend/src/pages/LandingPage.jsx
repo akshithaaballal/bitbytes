@@ -63,8 +63,14 @@ export default function LandingPage({ searchInputRef, onGoToOperator }) {
   // Load feed.json
   useEffect(() => {
     setFeedLoading(true);
-    fetch(`${import.meta.env.BASE_URL}feed.json`)
-      .then((res) => (res.ok ? res.json() : null))
+    const feedUrl = `${import.meta.env.BASE_URL}feed.json`.replace(/^\.\/\//, './');
+    fetch(feedUrl)
+      .then((res) => {
+        if (!res.ok) {
+          return fetch('/feed.json').then((r) => (r.ok ? r.json() : null));
+        }
+        return res.json();
+      })
       .then((data) => {
         if (data && Array.isArray(data.posts)) {
           setFeedPosts(data.posts);
