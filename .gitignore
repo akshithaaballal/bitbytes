@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.vite/
 .env
 .env.*
 !.env.example
@@ -13,4 +14,6 @@ automation/generated_images/
 !frontend/public/*.svg
 !frontend/public/fonts/*
 .pytest_cache/
+.cache/
+automation/.cache/
 automation/bridge_queue.json
