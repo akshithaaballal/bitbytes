@@ -1,0 +1,22 @@
+{
+  "name": "bitbytes",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bite-sized computer science and distributed systems notes for B.Tech CS students",
+  "type": "module",
+  "workspaces": [
+    "frontend",
+    "middleware"
+  ],
+  "scripts": {
+    "test": "npm --prefix middleware test",
+    "test:all": "npm --prefix middleware test && python -m pytest automation/tests -q",
+    "build": "npm --prefix frontend run build",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:middleware": "npm --prefix middleware run dev",
+    "dev:agent": "python agent/wrapper/agent_server.py"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
