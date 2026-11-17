@@ -1,0 +1,94 @@
+name: Pipeline Heartbeat Monitor
+
+on:
+  schedule:
+    # Runs daily at 04:00 UTC (~09:30 IST)
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check_heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify Recent History Entry (< 36 Hours)
+        id: verify_heartbeat
+        run: |
+          python -c "
+          import json, os, sys
+          from datetime import datetime, timezone, timedelta
+
+          history_path = 'automation/history.json'
+          if not os.path.exists(history_path):
+              print('[ERROR] history.json not found.')
+              sys.exit(1)
+
+          with open(history_path, 'r', encoding='utf-8') as f:
+              history = json.load(f)
+
+          if not history:
+              print('[ERROR] history.json is empty.')
+              sys.exit(1)
+
+          last_entry = history[-1]
+          ts_str = last_entry.get('timestamp', '')
+          if not ts_str:
+              print('[ERROR] Last history entry lacks timestamp.')
+              sys.exit(1)
+
+          if ts_str.endswith('Z'):
+              ts_str = ts_str[:-1] + '+00:00'
+          last_dt = datetime.fromisoformat(ts_str)
+          if last_dt.tzinfo is None:
+              last_dt = last_dt.replace(tzinfo=timezone.utc)
+
+          now = datetime.now(timezone.utc)
+          age_hours = (now - last_dt).total_seconds() / 3600.0
+
+          print(f'Last entry ID: {last_entry.get(\"id\") or last_entry.get(\"post_id\")}')
+          print(f'Last published at: {last_dt.isoformat()}')
+          print(f'Age: {age_hours:.1f} hours')
+
+          # Fail if newest entry is older than 36 hours
+          if age_hours > 36.0:
+              print(f'[FAIL] Heartbeat failed: Last post is {age_hours:.1f}h old (> 36h threshold).')
+              sys.exit(1)
+
+          print('[OK] Heartbeat passed: Pipeline active within 36 hours.')
+          "
+
+      - name: Create Alert Issue on Heartbeat Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🚨 Heartbeat Alert: Automation Pipeline Stalled (> 36h since last post)';
+            const body = `### Automation Heartbeat Alert
+            
+            The automated heartbeat check detected that no new post has been published in \`automation/history.json\` for over **36 hours**.
+            
+            - **Workflow Run:** https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
+            - **Target Schedule:** Twice daily (03:00 and 15:00 UTC)
+            
+            Please inspect the latest workflow logs in GitHub Actions and refer to \`docs/runbook.md\` for recovery steps.`;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['bug', 'automated-alert']
+            });
