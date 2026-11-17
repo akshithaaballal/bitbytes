@@ -1,16 +1,39 @@
 # BitBytes
 
-> Daily technical concepts from production systems for B.Tech CS & AI students.
-> Dispatched twice daily (03:00 & 15:00 UTC) across Telegram, Git archive, and static web feed.
+> Bite-sized computer science and distributed systems notes for B.Tech CS & AI students.
+> Dispatched twice daily (03:00 & 15:00 UTC / 8:30 AM & 8:30 PM IST) across Telegram, Git archive, and static web feed.
+
+BitBytes reimagines technical learning for Gen Z students: bite-sized systems engineering notes formatted as a swipeable, social-style conceptual feed. Each note covers real production mechanisms—from kernel protection rings to linear attention in transformers—distilled into 3–5 bite-sized slides with code snippets, diagrams, and primary source provenance.
 
 ```
-Frontend (React + Vite) ──> Public Feed (/feed.json)
-         │
-         ▼ (Operator Portal only)
-Middleware (Express) ──> Agent Wrapper (Python) ──> Cosmitude Bridge / Automation Pipeline
-```
+┌────────────────────────────────────────────────────────┐
+│                   Reader Clients                       │
+│    Mobile & Desktop Web (React / Vite Static PWA)      │
+└───────────────────────────┬────────────────────────────┘
+                            │ Reads static /feed.json
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│            Static Assets & Archive (GitHub)            │
+│       frontend/public/feed.json  •  archive/*.md       │
+└───────────────────────────▲────────────────────────────┘
+                            │ Commits & updates feed
+┌───────────────────────────┴────────────────────────────┐
+│      Twice-Daily Automated Pipeline (GitHub Actions)    │
+│  T1 Search/HN ──> T2 RSS ──> T3 arXiv ──> Content Bank  │
+│  Pillow Card Renderer ──> Telegram Channel (@csbites)  │
+└────────────────────────────────────────────────────────┘
 
-The public site is a zero-layout-shift static web reader that consumes `frontend/public/feed.json`. It requires no running backend or secrets to serve readers. The Operator Console connects through the Express middleware and Python agent wrapper.
+┌────────────────────────────────────────────────────────┐
+│                   Operator Portal                      │
+│     Protected Dashboard for Manual Dispatches & Sync   │
+│             │                                          │
+│             ▼                                          │
+│     Express Middleware (Auth & Rate Limiting)          │
+│             │                                          │
+│             ▼                                          │
+│     Python Agent Wrapper (Cosmitude Bridge & Sync)     │
+└────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -102,6 +125,10 @@ The public site is a zero-layout-shift static web reader that consumes `frontend
 
 ## Local Development Quickstart
 
+### Prerequisites
+- **Node.js:** `>= 18`
+- **Python:** `3.11` (pinned via `.python-version` to match CI runner runtime)
+
 ### 1. Install Dependencies
 ```bash
 # Frontend
@@ -110,11 +137,11 @@ cd frontend && npm install
 # Middleware
 cd ../middleware && npm install
 
-# Automation
+# Automation (Python 3.11)
 cd ../automation && pip install -r requirements.txt -r requirements-dev.txt
 
 # Agent
-cd ../agent && pip install requests python-dotenv
+cd ../agent && pip install -r requirements.txt
 ```
 
 ### 2. Run Automation & Middleware Tests
@@ -146,3 +173,17 @@ python automation/main.py --dry-run
   ```
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## Troubleshooting Guide
+
+| Issue | Symptoms | Root Cause | Resolution |
+|---|---|---|---|
+| **CI step 5 fails with exit code 1** | Pytest fails at `test_send_record_payload_keys` in ~16s | `BitBytesData_*.txt` is gitignored; absent on clean CI runner | Resolved via bundled `agent/BitBytesData_Admin_fallback.json` fallback schema. |
+| **Node 20 deprecation warning** | Warning on `actions/checkout` or `actions/setup-python` | GitHub Actions runner deprecating Node 20 | Set `env: FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'` at workflow level. |
+| **Operator login returns 401** | `Invalid operator passcode` | `OPERATOR_PASSCODE` in `middleware/.env` does not match input | Verify and match passcode in `middleware/.env`. |
+| **Middleware returns 503** | `Cosmitude Agent is unavailable` | Agent wrapper not running or wrong `AGENT_URL` | Start `python agent/wrapper/agent_server.py` and ensure `AGENT_URL=http://127.0.0.1:5001`. |
+| **Telegram broadcast skipped** | Pipeline logs `Telegram skipped` | `TELEGRAM_BOT_TOKEN` or `TELEGRAM_CHANNEL_ID` empty | Configure repository secrets in GitHub Settings → Secrets and variables → Actions. |
+| **Social card font failure** | Infographic image text rendering error | TTF fonts not found in system paths | The repository bundles `DejaVuSans.ttf` and `DejaVuSansMono.ttf` under `automation/assets/fonts/`. |
+
