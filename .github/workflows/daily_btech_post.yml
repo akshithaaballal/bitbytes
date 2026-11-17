@@ -10,8 +10,12 @@ concurrency:
   group: bitbytes-post
   cancel-in-progress: false
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 permissions:
   contents: write
+  issues: write
 
 jobs:
   publish_daily_post:
@@ -39,8 +43,13 @@ jobs:
           pip install -r automation/requirements-dev.txt
 
       - name: Run Test Suite
+        env:
+          COSMITUDE_USERNAME: dummy_user
+          COSMITUDE_PASSWORD: dummy_pass
+          COSMITUDE_SERVER_ID: dummy_server
+          COSMITUDE_FORUM_ID: dummy_forum
         run: |
-          pytest automation/tests/
+          pytest automation/tests/ -v --tb=short
 
       - name: Sync Cosmitude Forum Details
         continue-on-error: true
@@ -58,7 +67,7 @@ jobs:
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL || 'gemini-flash-lite-latest' }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || secrets.GEMINI_MODEL || 'gemini-flash-lite-latest' }}
           USE_AI_RADAR: "true"
           GENERATE_IMAGE: "true"
           COSMITUDE_USERNAME: ${{ secrets.COSMITUDE_USERNAME }}
@@ -97,9 +106,24 @@ jobs:
         run: |
           git config --global user.name "BitBytes Daily Bot"
           git config --global user.email "bot@bitbytes.dev"
-          git add -A automation/archive/ automation/INDEX.md automation/history.json automation/candidate_tracker.json frontend/public/feed.json
+          git add -A automation/archive/ automation/INDEX.md automation/history.json automation/candidate_tracker.json automation/status.json frontend/public/status.json frontend/public/feed.json
           if ! git diff --staged --quiet; then
             git commit -m "chore(daily): automated post archive & feed update [skip ci]"
             git pull --rebase --autostash origin main
             git push origin HEAD:main
           fi
+
+      - name: Alert Maintainer on Pipeline Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Daily Post Pipeline Failed (#${context.runNumber})`;
+            const body = `### Daily Post Automation Failure\n\nThe workflow run failed at commit \`${context.sha.substring(0, 7)}\`.\n\n- **Run URL:** https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n- **Trigger:** \`${context.eventName}\`\n\nPlease check step logs and refer to \`docs/runbook.md\`.`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['bug', 'automated-alert']
+            });
