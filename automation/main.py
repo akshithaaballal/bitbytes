@@ -70,6 +70,50 @@ def save_history(history_path: str, history: list):
         json.dump(history, f, indent=2)
 
 
+def save_pipeline_status(
+    base_dir: str,
+    outcome: str,
+    post: dict = None,
+    engine: str = "",
+    error_msg: str = None,
+    skip_reason: str = None
+):
+    """Publishes a compact status.json for frontend status monitors."""
+    now_iso = datetime.now(timezone.utc).isoformat()
+    status_data = {
+        "last_run": now_iso,
+        "last_success": now_iso if outcome in ("published", "fallback_published") else None,
+        "last_post_id": post.get("id") if post else None,
+        "last_post_title": post.get("title") if post else None,
+        "last_post_track": post.get("track") if post else None,
+        "outcome": outcome,
+        "engine": engine,
+        "last_error": error_msg,
+        "last_skip_reason": skip_reason
+    }
+
+    auto_status_path = os.path.join(base_dir, "status.json")
+    if os.path.exists(auto_status_path) and not status_data["last_success"]:
+        try:
+            with open(auto_status_path, "r", encoding="utf-8") as f:
+                prev = json.load(f)
+                status_data["last_success"] = prev.get("last_success")
+        except Exception:
+            pass
+
+    targets = [
+        auto_status_path,
+        os.path.join(base_dir, "..", "frontend", "public", "status.json")
+    ]
+    for path in targets:
+        try:
+            os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+            with open(path, "w", encoding="utf-8") as sf:
+                json.dump(status_data, sf, indent=2)
+        except Exception as err:
+            print(f"[Warning] Could not write status.json to {path}: {err}")
+
+
 def pick_next_post(posts: list, history: list) -> dict:
     """
     Chooses the bank post posted longest ago (or never) by scanning the entire history.
@@ -96,6 +140,36 @@ def pick_next_post(posts: list, history: list) -> dict:
     return oldest_post
 
 
+def log_env_summary():
+    """
+    Diagnostic logger: Echoes presence of all key environment variables
+    WITHOUT leaking sensitive secrets or token values.
+    """
+    inspected_vars = [
+        "TELEGRAM_BOT_TOKEN",
+        "TELEGRAM_CHANNEL_ID",
+        "GEMINI_API_KEY",
+        "GEMINI_MODEL",
+        "FIRECRAWL_API_KEY",
+        "USE_AI_RADAR",
+        "GENERATE_IMAGE",
+        "COSMITUDE_USERNAME",
+        "COSMITUDE_PASSWORD",
+        "COSMITUDE_SERVER_ID",
+        "COSMITUDE_FORUM_ID",
+        "GITHUB_ACTIONS",
+        "GITHUB_STEP_SUMMARY"
+    ]
+    print("\n🔍 [Pipeline Diagnostic] Environment Variables Presence Check:")
+    for var in inspected_vars:
+        val = os.getenv(var)
+        if val and val.strip():
+            print(f"   • {var:25s}: [SET] (len={len(val.strip())})")
+        else:
+            print(f"   • {var:25s}: [NOT SET]")
+    print("")
+
+
 def run_pipeline(
     dry_run: bool = False,
     specific_post_id: str = None,
@@ -106,6 +180,7 @@ def run_pipeline(
 ):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     load_dotenv(os.path.join(base_dir, ".env"))
+    log_env_summary()
 
     content_dir = os.path.join(base_dir, "content_bank")
     history_path = os.path.join(base_dir, "history.json")
@@ -267,6 +342,7 @@ def run_pipeline(
             })
             save_history(history_path, history)
             generate_feed_json(base_dir)
+            save_pipeline_status(base_dir, outcome="skipped", engine=engine_used, skip_reason=skipped_reason)
 
         is_simulated = dry_run or os.getenv("SIMULATE_MODE", "").lower() == "true"
         bridge_res = None
@@ -395,6 +471,8 @@ def run_pipeline(
         print(f"\n💾 Rotation history updated ({len(history)} total posts recorded).")
         generate_feed_json(base_dir)
         print("📄 Static feed.json updated at frontend/public/feed.json.")
+        outcome_status = "fallback_published" if fallback_used else "published"
+        save_pipeline_status(base_dir, outcome=outcome_status, post=post, engine=engine_used)
 
     # 6. Cosmitude Bridge Telemetry & Research Report (ONLY in real runs, not dry-run)
     bridge_res = None
@@ -425,6 +503,7 @@ def run_pipeline(
         progress_callback("done")
 
     print("\n🎉 Pipeline execution completed successfully!\n")
+    is_skipped = telegram_result.get("skipped", False)
     return {
         "success": telegram_ok if not is_simulated else True,
         "post": post,
@@ -435,7 +514,9 @@ def run_pipeline(
         "engine": engine_used,
         "fallback_used": fallback_used,
         "fallback_reason": fallback_reason,
-        "attempts": attempts
+        "attempts": attempts,
+        "skipped": is_skipped,
+        "skipped_reason": telegram_result.get("error") if is_skipped else None
     }
 
 
@@ -467,13 +548,24 @@ if __name__ == "__main__":
     parser.add_argument("--fixture", type=str, help="Path to fixture article for testing/verification")
     args = parser.parse_args()
 
-    res = run_pipeline(
-        dry_run=args.dry_run,
-        specific_post_id=args.post,
-        use_radar=args.radar if args.radar else None,
-        fixture_path=args.fixture,
-        force_evergreen=args.evergreen
-    )
+    try:
+        res = run_pipeline(
+            dry_run=args.dry_run,
+            specific_post_id=args.post,
+            use_radar=args.radar if args.radar else None,
+            fixture_path=args.fixture,
+            force_evergreen=args.evergreen
+        )
+    except Exception as exc:
+        print(f"\n❌ [FATAL] Unhandled exception in BitBytes pipeline: {exc}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
+        try:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            save_pipeline_status(base_dir, outcome="error", error_msg=str(exc))
+        except Exception:
+            pass
+        sys.exit(1)
 
     # Write GITHUB_STEP_SUMMARY if running in GitHub Actions
     summary_file = os.getenv("GITHUB_STEP_SUMMARY")
@@ -499,5 +591,6 @@ if __name__ == "__main__":
 
     # Fail the job on unexpected errors, not on a skipped run
     if not res.get("success") and not res.get("skipped"):
+        print("[ERROR] Pipeline terminated unsuccessfully without a valid skip reason.", file=sys.stderr)
         sys.exit(1)
     sys.exit(0)
