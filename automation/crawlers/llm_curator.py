@@ -96,6 +96,12 @@ TASK:
             models_to_try.append(self.gemini_fallback)
 
         for model in models_to_try:
+            if model == self.gemini_fallback and model != self.gemini_model:
+                logger.warning(
+                    f"⚠️ Using fallback model '{model}' — the primary model "
+                    f"'{self.gemini_model}' was unavailable. Note: preview models "
+                    f"may be retired without notice."
+                )
             # Try SDK first
             res = self._call_gemini_sdk(model, user_prompt)
             if res:
