@@ -7,7 +7,7 @@ export const TELEGRAM_URL = 'https://t.me/csbites';
 export const TELEGRAM_WEB_URL = 'https://telegram.me/csbites';
 export const TELEGRAM_APP_URL = 'tg://resolve?domain=csbites';
 export const GITHUB_REPO_URL = 'https://github.com/akshithaaballal/bitbytes';
-export const DISPATCH_CADENCE = 'New bites at 8:30 AM & 8:30 PM IST';
+export const DISPATCH_CADENCE = 'Twice daily drops (~8:30 AM & 8:30 PM IST)';
 
 // Telegram community real verified stats
 export const STATS_COMMUNITY_SUBSCRIBERS = '1.2k+';
