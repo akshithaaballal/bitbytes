@@ -90,3 +90,21 @@ export async function triggerBroadcast(options = {}) {
 export async function getBroadcastStatus(jobId) {
   return await call('GET', `/broadcast/status/${encodeURIComponent(jobId)}`);
 }
+
+export async function mirrorReaderUser(user) {
+  return await call('POST', '/reader/users', user).catch((err) => {
+    console.warn(`[agentAdapter] Failed to mirror reader user to wrapper: ${err.message}`);
+  });
+}
+
+export async function mirrorReaderProgress(progressData) {
+  return await call('POST', '/reader/progress', progressData).catch((err) => {
+    console.warn(`[agentAdapter] Failed to mirror reader progress to wrapper: ${err.message}`);
+  });
+}
+
+export async function deleteReaderUser(username) {
+  return await call('DELETE', `/reader/users/${encodeURIComponent(username)}`).catch((err) => {
+    console.warn(`[agentAdapter] Failed to delete reader user on wrapper: ${err.message}`);
+  });
+}

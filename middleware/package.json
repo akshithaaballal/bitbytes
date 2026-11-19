@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "test": "node test/test_auth.js"
+    "test": "node test/test_auth.js && node test/test_reader_auth.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -16,4 +16,7 @@ automation/generated_images/
 .pytest_cache/
 .cache/
 automation/.cache/
+middleware/data/
+*.db
+*.sqlite
 automation/bridge_queue.json

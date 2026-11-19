@@ -4,9 +4,12 @@ import { config } from './config.js';
 import { AgentError } from './agentAdapter.js';
 import { ValidationError } from './services/requestService.js';
 import { checkPasscode, signToken, checkLoginRateLimit } from './auth.js';
+import { parseCookies } from './cookieAuth.js';
 import healthRoutes from './routes/health.js';
 import requestRoutes from './routes/requests.js';
 import broadcastRoutes from './routes/broadcast.js';
+import readerAuthRoutes from './routes/readerAuth.js';
+import readerProgressRoutes from './routes/readerProgress.js';
 
 const app = express();
 
@@ -28,7 +31,8 @@ app.use('/api', (req, res, next) => {
   next();
 });
 
-app.use(cors({ origin: config.frontendOrigins }));
+app.use(cors({ origin: config.frontendOrigins, credentials: true }));
+app.use(parseCookies);
 app.use(express.json({ limit: '16kb' }));
 app.use((req, res, next) => {
   const start = Date.now();
@@ -65,6 +69,8 @@ app.post('/api/operator/login', (req, res) => {
   return res.json({ ok: true, token, expires_in: 8 * 3600 });
 });
 
+app.use('/api/auth', readerAuthRoutes);
+app.use('/api/progress', readerProgressRoutes);
 app.use('/api', healthRoutes);
 app.use('/api', requestRoutes);
 app.use('/api', broadcastRoutes);
