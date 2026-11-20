@@ -3,11 +3,39 @@ import Navigation from './components/Navigation.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import OperatorLogin from './components/OperatorLogin.jsx';
+import ReaderAuthModal from './components/ReaderAuthModal.jsx';
 import { isOperatorAuthenticated, clearOperatorAuth } from './services/api.js';
+import { getMe, logout as readerLogout, deleteAccount as readerDeleteAccount } from './services/readerAuth.js';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('landing');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [showReaderAuth, setShowReaderAuth] = useState(false);
   const searchInputRef = useRef(null);
+
+  // Check reader session on initial page load
+  useEffect(() => {
+    let mounted = true;
+    getMe()
+      .then((res) => {
+        if (mounted && res && res.user) {
+          setCurrentUser(res.user);
+          setShowReaderAuth(false);
+        }
+      })
+      .catch(() => {
+        // Not authenticated: prompt reader auth modal
+        if (mounted) {
+          setCurrentUser(null);
+          setShowReaderAuth(true);
+        }
+      })
+      .finally(() => {
+        if (mounted) setAuthChecked(true);
+      });
+    return () => { mounted = false; };
+  }, []);
 
   // Focus search input on '/' shortcut (ignoring modifier keys, inputs, textareas, selects, and contenteditable)
   useEffect(() => {
@@ -100,6 +128,22 @@ export default function App() {
     setCurrentView('landing');
   }
 
+  async function handleReaderLogout() {
+    try {
+      await readerLogout();
+    } catch {}
+    setCurrentUser(null);
+    setShowReaderAuth(true);
+  }
+
+  async function handleReaderDeleteAccount() {
+    try {
+      await readerDeleteAccount();
+    } catch {}
+    setCurrentUser(null);
+    setShowReaderAuth(true);
+  }
+
   function handleFocusSearch() {
     if (currentView !== 'landing') {
       setCurrentView('landing');
@@ -120,10 +164,24 @@ export default function App() {
 
       {/* Public Landing View */}
       {currentView === 'landing' && (
-        <LandingPage
-          searchInputRef={searchInputRef}
-          onGoToOperator={handleGoToOperator}
-        />
+        <>
+          <LandingPage
+            searchInputRef={searchInputRef}
+            onGoToOperator={handleGoToOperator}
+            currentUser={currentUser}
+            onLogout={handleReaderLogout}
+            onDeleteAccount={handleReaderDeleteAccount}
+          />
+          {showReaderAuth && (
+            <ReaderAuthModal
+              onAuthSuccess={(user) => {
+                setCurrentUser(user);
+                setShowReaderAuth(false);
+              }}
+              onGoToOperator={handleGoToOperator}
+            />
+          )}
+        </>
       )}
 
       {/* Operator Gateway */}

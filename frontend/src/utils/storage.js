@@ -1,3 +1,5 @@
+import { recordActivity } from './progressSync.js';
+
 /**
  * Safe localStorage utilities for likes, saves, reading history, streaks, and theme.
  * All operations are wrapped in try/catch to gracefully handle private browsing / sandbox restrictions.
@@ -41,6 +43,7 @@ export function togglePostLike(postId) {
     set.delete(postId);
   } else {
     set.add(postId);
+    recordActivity(postId, 'like');
   }
   safeSet(STORAGE_KEYS.LIKES, Array.from(set));
   return set.has(postId);
@@ -58,6 +61,7 @@ export function togglePostSave(postId) {
     set.delete(postId);
   } else {
     set.add(postId);
+    recordActivity(postId, 'save');
   }
   safeSet(STORAGE_KEYS.SAVES, Array.from(set));
   return set.has(postId);
@@ -75,6 +79,7 @@ export function markPostAsRead(postId) {
   if (!set.has(postId)) {
     set.add(postId);
     safeSet(STORAGE_KEYS.READ_POSTS, Array.from(set));
+    recordActivity(postId, 'read');
     // Trigger custom event so unread rings update reactively across components
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('bitbytes:post-read', { detail: { postId } }));

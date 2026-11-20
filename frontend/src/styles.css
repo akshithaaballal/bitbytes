@@ -2925,3 +2925,608 @@ button:focus-visible, a:focus-visible, input:focus-visible {
     transition: none !important;
   }
 }
+
+/* ==========================================================================
+   Reader Auth Modal & Dialogs
+   ========================================================================== */
+.reader-auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(18, 17, 16, 0.88);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.reader-auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-card, #1D1C1A);
+  border: 2px solid var(--border, #2E2C28);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0px #000;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-brand-header {
+  text-align: center;
+}
+
+.auth-badge-glyph {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.auth-brand-title {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary, #F5F2EB);
+}
+
+.auth-brand-tagline {
+  font-size: 13px;
+  color: var(--text-muted, #9E9A90);
+  margin: 4px 0 0 0;
+}
+
+.auth-mode-tabs {
+  display: flex;
+  border: 2px solid var(--border, #2E2C28);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-muted, #9E9A90);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.auth-tab-btn.is-active {
+  background: var(--text-primary, #F5F2EB);
+  color: #161514;
+}
+
+.auth-error-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #EF4444;
+  color: #FCA5A5;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auth-form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.auth-field-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary, #D1CDC4);
+}
+
+.auth-toggle-pwd-btn {
+  background: none;
+  border: none;
+  color: var(--accent, #CCFF00);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.auth-input-control {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid var(--border, #2E2C28);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--text-primary, #F5F2EB);
+  font-family: var(--font-body, inherit);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.auth-input-control:focus {
+  border-color: var(--accent, #CCFF00);
+}
+
+.auth-checkbox-row {
+  display: flex;
+  align-items: center;
+}
+
+.auth-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary, #D1CDC4);
+  cursor: pointer;
+}
+
+.auth-dpdp-notice-box {
+  background: rgba(204, 255, 0, 0.05);
+  border: 1px solid rgba(204, 255, 0, 0.25);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+
+.dpdp-pill {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(204, 255, 0, 0.15);
+  color: var(--accent, #CCFF00);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.dpdp-text {
+  margin: 6px 0 8px 0;
+  line-height: 1.4;
+  color: var(--text-muted, #9E9A90);
+}
+
+.dpdp-consent-row {
+  align-items: flex-start;
+}
+
+.dpdp-consent-text {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.auth-submit-btn {
+  background: var(--accent, #CCFF00);
+  color: #161514;
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0px #000;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-weight: 700;
+  font-size: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #000;
+}
+
+.auth-submit-btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #000;
+}
+
+.auth-footer-help {
+  text-align: center;
+  padding-top: 6px;
+  border-top: 1px solid var(--border, #2E2C28);
+}
+
+.auth-operator-link {
+  background: none;
+  border: none;
+  color: var(--text-muted, #9E9A90);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.auth-operator-link:hover {
+  color: var(--accent, #CCFF00);
+}
+
+/* ==========================================================================
+   Activity Calendar Component
+   ========================================================================== */
+.calendar-feature-root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.calendar-metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.calendar-card {
+  background: var(--bg-card, #1D1C1A);
+  border: 2px solid var(--border, #2E2C28);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calendar-month-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-nav-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border, #2E2C28);
+  border-radius: 4px;
+  color: var(--text-primary, #F5F2EB);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.calendar-month-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calendar-month-title {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.calendar-today-btn {
+  background: none;
+  border: 1px solid var(--border, #2E2C28);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent, #CCFF00);
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.calendar-weekdays-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+
+.calendar-weekday-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted, #9E9A90);
+  text-transform: uppercase;
+}
+
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day-btn {
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border, #2E2C28);
+  border-radius: 4px;
+  color: var(--text-secondary, #D1CDC4);
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+}
+
+.calendar-day-btn:hover {
+  border-color: var(--accent, #CCFF00);
+}
+
+.calendar-day-btn.is-today {
+  outline: 2px solid var(--accent, #CCFF00);
+  font-weight: 700;
+}
+
+.calendar-day-btn.is-selected {
+  box-shadow: 0 0 0 2px #fff inset;
+}
+
+.calendar-day-btn.activity-level-0 {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.calendar-day-btn.activity-level-1 {
+  background: rgba(204, 255, 0, 0.25);
+  color: #fff;
+}
+
+.calendar-day-btn.activity-level-3 {
+  background: var(--accent, #CCFF00);
+  color: #161514;
+  font-weight: 700;
+}
+
+.activity-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  position: absolute;
+  bottom: 3px;
+}
+
+.calendar-legend-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted, #9E9A90);
+  margin-top: 4px;
+}
+
+.legend-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid var(--border, #2E2C28);
+}
+
+.calendar-day-detail-drawer {
+  background: var(--bg-card, #1D1C1A);
+  border: 2px solid var(--border, #2E2C28);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-drawer-header h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.drawer-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted, #9E9A90);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.drawer-posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drawer-post-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border, #2E2C28);
+}
+
+.drawer-track-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.drawer-post-title {
+  flex: 1;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drawer-view-btn {
+  background: none;
+  border: 1px solid var(--border, #2E2C28);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--accent, #CCFF00);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.drawer-empty-text {
+  font-size: 13px;
+  color: var(--text-muted, #9E9A90);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Account Management & Deletion Modal
+   ========================================================================== */
+.profile-account-card {
+  background: var(--bg-card, #1D1C1A);
+  border: 2px solid var(--border, #2E2C28);
+  border-radius: 8px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.account-card-sub {
+  font-size: 13px;
+  color: var(--text-muted, #9E9A90);
+  margin: 0;
+}
+
+.account-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.btn-export-data,
+.btn-logout-reader,
+.btn-delete-account-trigger {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-export-data {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border, #2E2C28);
+  color: var(--text-primary, #F5F2EB);
+}
+
+.btn-logout-reader {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border, #2E2C28);
+  color: var(--text-secondary, #D1CDC4);
+}
+
+.btn-delete-account-trigger {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid #EF4444;
+  color: #F87171;
+  margin-left: auto;
+}
+
+.delete-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.delete-modal-card {
+  max-width: 420px;
+  width: 100%;
+  background: var(--bg-card, #1D1C1A);
+  border: 2px solid #EF4444;
+  border-radius: 8px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.delete-modal-title {
+  margin: 0;
+  color: #F87171;
+  font-size: 18px;
+}
+
+.delete-modal-text {
+  font-size: 13px;
+  color: var(--text-secondary, #D1CDC4);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.delete-modal-instruction {
+  font-size: 13px;
+  margin: 4px 0 0 0;
+}
+
+.delete-modal-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid #EF4444;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.delete-modal-error {
+  color: #F87171;
+  font-size: 12px;
+}
+
+.delete-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-cancel-delete {
+  background: transparent;
+  border: 1px solid var(--border, #2E2C28);
+  color: var(--text-secondary, #D1CDC4);
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-confirm-delete {
+  background: #EF4444;
+  border: 2px solid #000;
+  color: #fff;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+

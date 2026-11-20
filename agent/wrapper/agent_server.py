@@ -36,6 +36,8 @@ MAX_STORE_ITEMS = 200
 MAX_BODY_BYTES = 64 * 1024  # 64 KB
 requests_store = {}
 broadcast_jobs = {}
+reader_users = {}
+reader_progress = {}
 broadcast_lock = threading.Lock()
 store_lock = threading.Lock()
 
@@ -217,6 +219,38 @@ class RealCosmitudeAgentHandler(BaseHTTPRequestHandler):
 
             return json_response(self, 202, {"jobId": job_id, "status": "crawling"})
 
+        if self.path == "/reader/users":
+            try:
+                raw = self.rfile.read(content_length) if content_length > 0 else b"{}"
+                user_data = json.loads(raw.decode("utf-8"))
+                username = user_data.get("username")
+                if username:
+                    with store_lock:
+                        reader_users[username] = user_data
+                        trim_dict(reader_users)
+                    return json_response(self, 200, {"ok": True, "stored": True})
+                return json_response(self, 400, {"error": "Missing username"})
+            except Exception as exc:
+                return json_response(self, 500, {"error": str(exc)})
+
+        if self.path == "/reader/progress":
+            try:
+                raw = self.rfile.read(content_length) if content_length > 0 else b"{}"
+                payload = json.loads(raw.decode("utf-8"))
+                username = payload.get("username")
+                events = payload.get("events", [])
+                if username:
+                    with store_lock:
+                        if username not in reader_progress:
+                            reader_progress[username] = []
+                        reader_progress[username].extend(events)
+                        if len(reader_progress[username]) > 500:
+                            reader_progress[username] = reader_progress[username][-500:]
+                    return json_response(self, 200, {"ok": True, "stored": len(events)})
+                return json_response(self, 400, {"error": "Missing username"})
+            except Exception as exc:
+                return json_response(self, 500, {"error": str(exc)})
+
         if self.path != "/requests":
             return json_response(self, 404, {"error": "Not found"})
 
@@ -265,6 +299,19 @@ class RealCosmitudeAgentHandler(BaseHTTPRequestHandler):
 
         except Exception as exc:
             return json_response(self, 400, {"error": str(exc)})
+
+    def do_DELETE(self):
+        if not verify_agent_key(self):
+            return json_response(self, 401, {"error": "Unauthorized: Invalid or missing X-Agent-Key"})
+
+        if self.path.startswith("/reader/users/"):
+            username = self.path[len("/reader/users/"):].strip()
+            with store_lock:
+                reader_users.pop(username, None)
+                reader_progress.pop(username, None)
+            return json_response(self, 200, {"ok": True, "deleted": True})
+
+        return json_response(self, 404, {"error": "Not found"})
 
     def log_message(self, format, *args):
         # Minimal logging without session ID

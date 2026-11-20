@@ -27,7 +27,13 @@ import PostDetailModal from '../components/PostDetailModal.jsx';
 const INITIAL_PAGE_SIZE = 8;
 const PAGE_STEP = 8;
 
-export default function LandingPage({ searchInputRef, onGoToOperator }) {
+export default function LandingPage({
+  searchInputRef,
+  onGoToOperator,
+  currentUser = null,
+  onLogout,
+  onDeleteAccount,
+}) {
   const [feedPosts, setFeedPosts] = useState([]);
   const [feedLoading, setFeedLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('feed');
@@ -343,9 +349,17 @@ export default function LandingPage({ searchInputRef, onGoToOperator }) {
               savedCount={savedPosts.length}
               likedCount={likedSet.size}
               currentTheme={currentTheme}
+              currentUser={currentUser}
+              allPosts={feedPosts}
               onToggleTheme={handleToggleTheme}
               onSurpriseMe={handleSurpriseMe}
               onGoToOperator={onGoToOperator}
+              onLogout={onLogout}
+              onDeleteAccount={onDeleteAccount}
+              onSelectPost={(id) => {
+                setActivePostId(id);
+                window.location.hash = `#p/${id}`;
+              }}
             />
           )}
         </main>
