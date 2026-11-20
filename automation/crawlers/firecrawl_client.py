@@ -69,7 +69,37 @@ class FirecrawlClient:
         Scrapes a target web URL using Firecrawl API (SDK / REST).
         Falls back to direct HTTP extraction.
         Rejects candidates with cleaned text < 800 characters without placeholders.
+        Caches scraped markdown locally so retries do not re-bill.
         """
+        cache_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".cache")
+        cache_file = os.path.join(cache_dir, "scraped_articles.json")
+        try:
+            if os.path.exists(cache_file):
+                with open(cache_file, "r", encoding="utf-8") as cf:
+                    cache_data = json.load(cf)
+                    if target_url in cache_data:
+                        return cache_data[target_url]
+        except Exception:
+            pass
+
+        result = self._do_scrape_url(target_url)
+
+        if result.get("success") and result.get("markdown"):
+            try:
+                os.makedirs(cache_dir, exist_ok=True)
+                cache_data = {}
+                if os.path.exists(cache_file):
+                    with open(cache_file, "r", encoding="utf-8") as cf:
+                        cache_data = json.load(cf)
+                cache_data[target_url] = result
+                with open(cache_file, "w", encoding="utf-8") as cf:
+                    json.dump(cache_data, cf)
+            except Exception:
+                pass
+
+        return result
+
+    def _do_scrape_url(self, target_url: str) -> dict:
         if self.api_key:
             # 1. Try SDK first
             if self._app:
