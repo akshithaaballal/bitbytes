@@ -165,6 +165,10 @@ def validate_grounding(post: dict, article_text: str, past_titles: list) -> tupl
         quote = item.get("quote", "").strip()
         if not quote:
             return False, "Empty quote in source_claims"
+        # Enforce max 25 words per quote
+        word_count = len(quote.split())
+        if word_count > 25:
+            return False, f"Quote too long ({word_count} words > 25 max): '{quote[:50]}...'"
         norm_quote = " ".join(quote.lower().split())
         if norm_quote not in norm_article:
             return False, f"Quote hallucinated (not found in article text): '{quote[:50]}...'"
@@ -180,6 +184,30 @@ def validate_grounding(post: dict, article_text: str, past_titles: list) -> tupl
     if score < 0.7:
         reason = relevance.get("reason", "Low relevance") if isinstance(relevance, dict) else "Low relevance"
         return False, f"Relevance score {score} < 0.7: {reason}"
+
+    # Syntax-check Python code snippets
+    snippet = post.get("code_snippet", "")
+    if snippet and isinstance(snippet, str):
+        # Only validate if not explicitly pseudocode
+        if not any(marker in snippet.lower() for marker in ["pseudocode", "pseudo-code", "//"]):
+            import ast
+            try:
+                cleaned_code = snippet
+                if "```" in cleaned_code:
+                    lines = cleaned_code.split("\n")
+                    py_lines = []
+                    inside = False
+                    for l in lines:
+                        if l.strip().startswith("```"):
+                            inside = not inside
+                            continue
+                        if inside:
+                            py_lines.append(l)
+                    if py_lines:
+                        cleaned_code = "\n".join(py_lines)
+                ast.parse(cleaned_code)
+            except SyntaxError as syn_err:
+                return False, f"Invalid Python syntax in code_snippet: {syn_err}"
 
     # Check title deduplication against last 30 posts
     title = post.get("title", "").strip().lower()
