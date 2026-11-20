@@ -12,8 +12,27 @@ from datetime import datetime, timezone
 from urllib.parse import urlparse
 
 
+# In-memory cache for parsed archive markdown files: {path: (mtime, parsed_data)}
+_ARCHIVE_CACHE = {}
+
+
 def parse_archive_markdown(file_path: str) -> dict:
-    """Extracts structured fields from an archive markdown file."""
+    """Extracts structured fields from an archive markdown file with mtime caching."""
+    if not os.path.exists(file_path):
+        return {
+            "title": "", "track": "", "subtitle": "", "summary": "",
+            "key_points": [], "code_snippet": "", "complexity": {},
+            "interview_tip": "", "source_url": "", "source_title": "",
+            "source_domain": "", "telegram_url": ""
+        }
+
+    try:
+        mtime = os.path.getmtime(file_path)
+        if file_path in _ARCHIVE_CACHE and _ARCHIVE_CACHE[file_path][0] == mtime:
+            return dict(_ARCHIVE_CACHE[file_path][1])
+    except Exception:
+        pass
+
     data = {
         "title": "",
         "track": "",
@@ -102,6 +121,11 @@ def parse_archive_markdown(file_path: str) -> dict:
             data["interview_tip"] = clean_tip
 
     except Exception as e:
+        pass
+
+    try:
+        _ARCHIVE_CACHE[file_path] = (os.path.getmtime(file_path), data)
+    except Exception:
         pass
 
     return data
@@ -273,4 +297,46 @@ def generate_feed_json(base_dir: str = None) -> str:
     with open(feed_path, "w", encoding="utf-8") as f:
         json.dump(feed_data, f, indent=2)
 
+    # Also generate standard RSS 2.0 feed
+    generate_rss_xml(posts_list, public_dir)
+
     return feed_path
+
+
+def generate_rss_xml(posts: list, public_dir: str) -> str:
+    """Generates standard RSS 2.0 XML feed at frontend/public/rss.xml."""
+    rss_path = os.path.join(public_dir, "rss.xml")
+    items_xml = []
+    for p in posts[:50]:
+        title = (p.get("title") or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        desc = (p.get("summary") or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        link = p.get("archive_url") or "https://akshithaaballal.github.io/bitbytes/"
+        guid = p.get("id") or link
+        pub_date = p.get("date") or datetime.now(timezone.utc).isoformat()
+        items_xml.append(f"""    <item>
+      <title>{title}</title>
+      <description>{desc}</description>
+      <link>{link}</link>
+      <guid isPermaLink="false">{guid}</guid>
+      <pubDate>{pub_date}</pubDate>
+    </item>""")
+
+    channel_items = "\n".join(items_xml)
+    rss_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BitBytes — B.Tech Computer Science Micro-Lessons</title>
+    <link>https://akshithaaballal.github.io/bitbytes/</link>
+    <description>Bite-sized CS mental models dropped twice daily. Zero fluff, pure engineering.</description>
+    <language>en-us</language>
+    <atom:link href="https://akshithaaballal.github.io/bitbytes/rss.xml" rel="self" type="application/rss+xml" />
+{channel_items}
+  </channel>
+</rss>
+"""
+    try:
+        with open(rss_path, "w", encoding="utf-8") as rf:
+            rf.write(rss_content)
+    except Exception as e:
+        print(f"[Warning] Could not write rss.xml: {e}")
+    return rss_path
