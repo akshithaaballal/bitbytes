@@ -7,6 +7,30 @@
 
 /* Self-hosted Latin Fonts */
 @font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-700.woff2') format('woff2');
+}
+
+@font-face {
   font-family: 'IBM Plex Sans';
   font-style: normal;
   font-weight: 400;
@@ -2886,9 +2910,18 @@ button:focus-visible, a:focus-visible, input:focus-visible {
    Motion Preference
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .story-progress-fill,
+  .track-motif-svg,
+  .story-heart-pop {
+    animation: none !important;
+    transition: none !important;
   }
 }
