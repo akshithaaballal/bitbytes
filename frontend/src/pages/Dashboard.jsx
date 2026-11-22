@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import PipelineStatus from '../components/PipelineStatus.jsx';
 import BroadcastCard from '../components/BroadcastCard.jsx';
 import RequestForm from '../components/RequestForm.jsx';
@@ -17,24 +17,69 @@ export default function Dashboard() {
   const [submitError, setSubmitError] = useState('');
   const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
 
-  const refreshHealth = useCallback(() => getHealth().then(setHealth).catch(() => setHealth(null)), []);
-  const refreshHistory = useCallback(() => getRequests().then((d) => setHistory(d.requests)).catch(() => {}), []);
+  // Abort controllers to cancel stale in-flight fetches
+  const healthAbortRef = useRef(null);
+  const historyAbortRef = useRef(null);
+  const pendingPollRef = useRef(null);
+
   const handleBroadcastComplete = useCallback(() => setHistoryRefreshKey((k) => k + 1), []);
 
+  // --- Abortable health poll (every 30 s) ---
+  const fetchHealth = useCallback(() => {
+    if (healthAbortRef.current) healthAbortRef.current.abort();
+    const ac = new AbortController();
+    healthAbortRef.current = ac;
+    getHealth({ signal: ac.signal })
+      .then(setHealth)
+      .catch(() => setHealth(null))
+      .finally(() => { healthAbortRef.current = null; });
+  }, []);
+
+  // --- Abortable history fetch (deduplicates overlapping calls) ---
+  const fetchHistory = useCallback(() => {
+    if (historyAbortRef.current) return; // skip if one is already in flight
+    const ac = new AbortController();
+    historyAbortRef.current = ac;
+    getRequests({ signal: ac.signal })
+      .then((d) => setHistory(d.requests))
+      .catch(() => {})
+      .finally(() => { historyAbortRef.current = null; });
+  }, []);
+
+  // --- Initial load + 30 s health timer ---
   useEffect(() => {
     getTypes().then((d) => setTypes(d.types)).catch((e) => setTypesError(e.message));
-    refreshHealth();
-    refreshHistory();
-    const timer = setInterval(refreshHealth, 10000);
-    return () => clearInterval(timer);
-  }, [refreshHealth, refreshHistory]);
+    fetchHealth();
+    fetchHistory();
+    const healthTimer = setInterval(fetchHealth, 30_000);
+    const historyTimer = setInterval(fetchHistory, 15_000);
+    return () => {
+      clearInterval(healthTimer);
+      clearInterval(historyTimer);
+      if (healthAbortRef.current) healthAbortRef.current.abort();
+      if (historyAbortRef.current) historyAbortRef.current.abort();
+    };
+  }, [fetchHealth, fetchHistory]);
 
-  const hasPending = history.some((r) => r.status === 'pending');
+  // --- Pending-request back-off poll (5 s → 10 s → 20 s → 30 s cap) ---
+  const hasPending = useMemo(() => history.some((r) => r.status === 'pending'), [history]);
   useEffect(() => {
     if (!hasPending) return undefined;
-    const timer = setInterval(refreshHistory, 2500);
-    return () => clearInterval(timer);
-  }, [hasPending, refreshHistory]);
+    let delay = 5000;
+    const tick = () => {
+      fetchHistory();
+      delay = Math.min(delay * 2, 30_000);
+      pendingPollRef.current = setTimeout(tick, delay);
+    };
+    pendingPollRef.current = setTimeout(tick, delay);
+    return () => clearTimeout(pendingPollRef.current);
+  }, [hasPending, fetchHistory]);
+
+  // Memoize selected request to avoid repeated .find() on every render
+  const selectedRequest = useMemo(
+    () => history.find((r) => r.id === selectedId),
+    [history, selectedId],
+  );
 
   async function handleSubmit(payload) {
     setSubmitting(true);
@@ -47,8 +92,8 @@ export default function Dashboard() {
       setSubmitError(e.message);
       return false;
     } finally {
-      await refreshHistory();
-      refreshHealth();
+      fetchHistory();
+      fetchHealth();
       setSubmitting(false);
     }
   }
@@ -67,7 +112,7 @@ export default function Dashboard() {
         <div className="collapsible-content">
           <div className="grid">
             <RequestForm types={types} submitting={submitting} error={submitError || typesError} onSubmit={handleSubmit} />
-            <ResponsePanel request={history.find((r) => r.id === selectedId)} />
+            <ResponsePanel request={selectedRequest} />
             <HistoryList requests={history} selectedId={selectedId} onSelect={setSelectedId} />
           </div>
         </div>
