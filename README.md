@@ -9,31 +9,88 @@ BitBytes reimagines technical learning for Gen Z students: bite-sized systems en
 ┌────────────────────────────────────────────────────────┐
 │                   Reader Clients                       │
 │    Mobile & Desktop Web (React / Vite Static PWA)      │
-└───────────────────────────┬────────────────────────────┘
-                            │ Reads static /feed.json
-                            ▼
-┌────────────────────────────────────────────────────────┐
-│            Static Assets & Archive (GitHub)            │
-│       frontend/public/feed.json  •  archive/*.md       │
-└───────────────────────────▲────────────────────────────┘
-                            │ Commits & updates feed
-┌───────────────────────────┴────────────────────────────┐
-│      Twice-Daily Automated Pipeline (GitHub Actions)    │
-│  T1 Search/HN ──> T2 RSS ──> T3 arXiv ──> Content Bank  │
-│  Pillow Card Renderer ──> Telegram Channel (@csbites)  │
-└────────────────────────────────────────────────────────┘
+│  - Mandatory Reader Login / Signup Gate                │
+│  - Cross-device Progress & Streak Sync                 │
+│  - Calendar Activity View & Offline Queue              │
+└───────────────┬────────────────────────┬───────────────┘
+                │ Reads /feed.json       │ Auth & Progress
+                ▼                        ▼
+┌───────────────────────────────┐ ┌──────────────────────────────────────┐
+│  Static Assets & Archive (GH) │ │         Express Middleware           │
+│  frontend/public/feed.json    │ │  - SQLite ACID Store (WAL Mode)      │
+│  automation/archive/*.md      │ │  - Scrypt Password Hashing           │
+└───────────────▲───────────────┘ │  - Refresh Token Rotation & Families │
+                │ Updates feed    │  - Rate Limiting & Lockout Guard     │
+┌───────────────┴───────────────┐ └──────────────────┬───────────────────┘
+│  Twice-Daily Pipeline (GHA)   │                    │ Async Mirroring
+│  Search/RSS/arXiv -> Telegram │                    ▼
+│  Social Card Renderer         │ ┌──────────────────────────────────────┐
+│  Cosmitude Bridge Telemetry   │ │  Python Agent Wrapper & Cosmitude    │
+└───────────────────────────────┘ │  Mirror Storage (/reader/*)          │
+                                  └──────────────────────────────────────┘
 
 ┌────────────────────────────────────────────────────────┐
 │                   Operator Portal                      │
 │     Protected Dashboard for Manual Dispatches & Sync   │
-│             │                                          │
-│             ▼                                          │
-│     Express Middleware (Auth & Rate Limiting)          │
-│             │                                          │
-│             ▼                                          │
-│     Python Agent Wrapper (Cosmitude Bridge & Sync)     │
+│     Separate HMAC Session & Dedicated Passcode Auth    │
 └────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Reader Accounts & Progress Sync Architecture
+
+BitBytes features a private, cross-device reading tracker for students. Readers authenticate via a privacy-compliant account gate with seamless activity synchronization.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Reader as Reader Client (Browser)
+    participant MW as Express Middleware (Auth API)
+    participant DB as SQLite DB (Local Source of Truth)
+    participant Wrapper as Python Agent Wrapper
+    participant Bridge as Cosmitude Bridge
+
+    Note over Reader,MW: Authentication & Session Establishment
+    Reader->>MW: POST /api/auth/signup or /login (username, password, rememberMe)
+    MW->>DB: Query user & verify scrypt hash (constant-time)
+    MW->>DB: Insert rotated refresh token hash & create session
+    MW-->>Wrapper: Async mirror user registration (POST /reader/users)
+    Wrapper-->>Bridge: Asynchronous backup replication
+    MW-->>Reader: HTTP 200 + Set-Cookie (bitbytes_access: 15m, bitbytes_refresh: 30d/session)
+
+    Note over Reader,MW: Progress Tracking & Cross-Device Sync
+    Reader->>MW: POST /api/progress/events (read / like / save events with idempotent IDs)
+    MW->>DB: Upsert progress records & update activity timestamp
+    MW-->>Wrapper: Async mirror progress batch (POST /reader/progress)
+    MW-->>Reader: HTTP 200 { success: true }
+
+    Note over Reader,MW: Profile & Activity Calendar
+    Reader->>MW: GET /api/progress
+    MW->>DB: Calculate read counts, likes, saves & streak stats (time-zone aware)
+    MW-->>Reader: Return reading history, streaks & active dates
+```
+
+### Storage Decision: Local SQLite + Asynchronous Bridge Mirroring
+- **Analysis:** The Cosmitude Bridge operates via a ~10-second polling client loop (`syncUserData` / `clienntSync`) optimized for forum message flows rather than low-latency, transactional CRUD operations. Synchronous auth flows require sub-100ms response times.
+- **Implementation:** BitBytes uses **Local SQLite** (`node:sqlite` in WAL mode) as the authoritative, synchronous source of truth for reader credentials, sessions, and activity logs. All user creations, updates, and progress events are asynchronously mirrored to the Python Agent Wrapper (`/reader/users`, `/reader/progress`) and Cosmitude Bridge as a durable backup log.
+
+### Session Management & "Remember Me"
+- **Access Tokens:** Short-lived HMAC-SHA256 tokens (15-minute expiration) delivered in `httpOnly`, `Secure` (in production), `SameSite=Lax` cookies (`bitbytes_access`).
+- **Refresh Tokens:** Cryptographically random 256-bit entropy tokens, stored strictly as SHA-256 hashes in the database.
+  - **With "Remember me" checked:** Refresh cookie expires in **30 days**.
+  - **Without "Remember me":** Refresh cookie is a temporary **browser session cookie**.
+- **Rotation & Family Revocation:** Refresh tokens rotate on every single exchange (`POST /api/auth/refresh`). If an already-rotated token is reused (indicating token theft or replay), its entire token family is immediately revoked, forcing re-authentication.
+
+### Static `feed.json` Gating Caveat
+> [!NOTE]
+> `feed.json` and note archives are distributed as static files for high performance, CDN caching, and offline PWA resilience. The reader login modal is a client-side personalization, streak tracking, and engagement gate. It does not provide cryptographic DRM or server-side paywalling of static educational content.
+
+### DPDP Act Compliance & Data Sovereignty
+- **Consent:** Explicit consent checkbox acknowledging privacy practices under India's Digital Personal Data Protection (DPDP) Act 2023.
+- **Minimal Collection:** No personal identifiable information (PII) required—readers register with a handle and password only.
+- **Export My Data:** Complete self-service JSON data export via `GET /api/auth/export-my-data`.
+- **Right to Erasure:** Complete account and progress deletion via `DELETE /api/auth/delete-account`, with cascading removal from local SQLite and mirrored deletion upstream.
 
 ---
 
@@ -113,6 +170,9 @@ BitBytes reimagines technical learning for Gen Z students: bite-sized systems en
 | `AGENT_API_KEY` | Must match `AGENT_API_KEY` in `agent/.env` | Shared secret |
 | `OPERATOR_PASSCODE` | Passcode for operator console login | Required (no fallback) |
 | `OPERATOR_TOKEN_SECRET` | Secret key used to sign HMAC tokens (8h) | Required (no fallback) |
+| `USER_TOKEN_SECRET` | Secret key used to sign reader session tokens | 32+ character random string |
+| `COOKIE_DOMAIN` | Optional cookie domain for subdomains | Empty (host-only) |
+| `DATABASE_PATH` | Path to persistent SQLite database | `data/bitbytes.db` |
 | `TRUST_PROXY` | Enable reverse proxy IP resolution | `false` |
 | `FRONTEND_ORIGIN` | Allowed CORS origins (comma-separated) | `http://localhost:5180` |
 
@@ -144,13 +204,16 @@ cd ../automation && pip install -r requirements.txt -r requirements-dev.txt
 cd ../agent && pip install -r requirements.txt
 ```
 
-### 2. Run Automation & Middleware Tests
+### 2. Run Test Suites
 ```bash
-# Automation tests
-pytest automation/tests/
+# Frontend component & build checks
+cd frontend && npm run build
 
-# Middleware auth tests
+# Middleware operator & reader authentication tests
 npm --prefix middleware test
+
+# Automation pipeline tests (with dummy Cosmitude credentials)
+$env:COSMITUDE_USERNAME='d'; $env:COSMITUDE_PASSWORD='d'; $env:COSMITUDE_SERVER_ID='d'; $env:COSMITUDE_FORUM_ID='d'; python -m pytest automation/tests -q
 ```
 
 ### 3. Dry-Run the Pipeline Locally
