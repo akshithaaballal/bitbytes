@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BitBytes — B.Tech Computer Science Micro-Lessons</title>
+    <link>https://akshithaaballal.github.io/bitbytes/</link>
+    <description>Bite-sized CS mental models dropped twice daily. Zero fluff, pure engineering.</description>
+    <language>en-us</language>
+    <atom:link href="https://akshithaaballal.github.io/bitbytes/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kernel Space vs. User Space Protection Rings</title>
+      <description>As you might have heard recently, widespread system outages highlighted in F/OSS Comics #13: BSD Unix, Part 3 – The Beginning of BSD Unix raised questions about OS stability. But what actually is *Kernel Space vs. User Space Isolation*? Let's learn about this: modern CPUs enforce hardware privilege levels where user applications run in restricted Ring 3 without direct hardware access, while the OS kernel operates in privileged Ring 0. A crash in Ring 3 terminates only that app, but an unhandled fault in Ring 0 triggers a full system crash (BSOD or Kernel Panic).</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-11-02_0313_radar_20261102_0313.md</link>
+      <guid isPermaLink="false">radar_20261102_0313</guid>
+      <pubDate>2026-11-02T03:13:13.252535</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding Nibnib: Image compression with extreme decompression speed, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-11-01_2317_radar_20261101_2317.md</link>
+      <guid isPermaLink="false">radar_20261101_2317</guid>
+      <pubDate>2026-11-01T23:17:36.507752</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding Show HN: HackerBooks – HackerTube, but for books mentioned on HN, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-11-01_1957_radar_20261101_1957.md</link>
+      <guid isPermaLink="false">radar_20261101_1957</guid>
+      <pubDate>2026-11-01T19:57:11.885779</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding Novellas with Groff, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-11-01_1533_radar_20261101_1533.md</link>
+      <guid isPermaLink="false">radar_20261101_1533</guid>
+      <pubDate>2026-11-01T15:33:38.624049</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding Running a bootstrapped SaaS for 20 years with my brother, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-11-01_0821_radar_20261101_0821.md</link>
+      <guid isPermaLink="false">radar_20261101_0821</guid>
+      <pubDate>2026-11-01T08:21:04.176385</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around An Italian farmer found some unknown seeds in his attic and planted them have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-11-01_0136_radar_20261101_0136.md</link>
+      <guid isPermaLink="false">radar_20261101_0136</guid>
+      <pubDate>2026-11-01T01:36:49.636198</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around HackerTube: YouTube built from videos recommended by HN have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-31_2200_radar_20261031_2200.md</link>
+      <guid isPermaLink="false">radar_20261031_2200</guid>
+      <pubDate>2026-10-31T22:00:48.200850</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Molly (Signal fork) has not been updated since 3 months and is vulnerable have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-31_1816_radar_20261031_1816.md</link>
+      <guid isPermaLink="false">radar_20261031_1816</guid>
+      <pubDate>2026-10-31T18:16:58.340493</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Serbia just elected the world's brainiest parliament have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-31_1359_radar_20261031_1359.md</link>
+      <guid isPermaLink="false">radar_20261031_1359</guid>
+      <pubDate>2026-10-31T13:59:42.081395</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around The $6.3B Binance hack was pulled off in just 20 minutes have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-31_0741_radar_20261031_0741.md</link>
+      <guid isPermaLink="false">radar_20261031_0741</guid>
+      <pubDate>2026-10-31T07:41:22.815761</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding Cloudflare Turnstile solver library (no headless browser required), scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-31_0112_radar_20261031_0112.md</link>
+      <guid isPermaLink="false">radar_20261031_0112</guid>
+      <pubDate>2026-10-31T01:12:27.851114</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding My favourite PowerMac is a Nintendo Wii, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-30_2113_radar_20261030_2113.md</link>
+      <guid isPermaLink="false">radar_20261030_2113</guid>
+      <pubDate>2026-10-30T21:13:40.262324</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around AI Isn't Replacing SREs. It's Deskilling Them have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-30_1651_radar_20261030_1651.md</link>
+      <guid isPermaLink="false">radar_20261030_1651</guid>
+      <pubDate>2026-10-30T16:51:23.330940</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around How Do You Take a Picture of a Black Hole? have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-30_1032_radar_20261030_1032.md</link>
+      <guid isPermaLink="false">radar_20261030_1032</guid>
+      <pubDate>2026-10-30T10:32:16.557487</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding Cuis: The Modern Smalltalk-80, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-30_0323_radar_20261030_0323.md</link>
+      <guid isPermaLink="false">radar_20261030_0323</guid>
+      <pubDate>2026-10-30T03:23:19.403717</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding Binance-hacker-1029 – $5.6B stolen from Binance, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-29_2343_radar_20261029_2343.md</link>
+      <guid isPermaLink="false">radar_20261029_2343</guid>
+      <pubDate>2026-10-29T23:43:44.453532</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding The importance of communities around software, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-29_1956_radar_20261029_1956.md</link>
+      <guid isPermaLink="false">radar_20261029_1956</guid>
+      <pubDate>2026-10-29T19:56:28.909673</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Mistral Large 4 (Le Chonk) is now Open Weight have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-29_1444_radar_20261029_1444.md</link>
+      <guid isPermaLink="false">radar_20261029_1444</guid>
+      <pubDate>2026-10-29T14:44:21.698887</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding A new faster algorithm to compute 64-bit signed floor division, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-29_0746_radar_20261029_0746.md</link>
+      <guid isPermaLink="false">radar_20261029_0746</guid>
+      <pubDate>2026-10-29T07:46:31.142527</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Qwenputer: A functioning, deterministic RISC-V CPU inside Qwen3.5 have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-29_0121_radar_20261029_0121.md</link>
+      <guid isPermaLink="false">radar_20261029_0121</guid>
+      <pubDate>2026-10-29T01:21:55.114010</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Why is this fingerprinting script creating bioweapons? have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-28_2124_radar_20261028_2124.md</link>
+      <guid isPermaLink="false">radar_20261028_2124</guid>
+      <pubDate>2026-10-28T21:24:59.835377</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Ten days later, Git on macOS still trusts the compromised eMudhra certificates have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-28_1620_radar_20261028_1620.md</link>
+      <guid isPermaLink="false">radar_20261028_1620</guid>
+      <pubDate>2026-10-28T16:20:25.909806</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Ink droplets in motion snag top prize in Nikon Small World contest have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-28_0908_radar_20261028_0908.md</link>
+      <guid isPermaLink="false">radar_20261028_0908</guid>
+      <pubDate>2026-10-28T09:08:33.466642</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Git for US Legislation have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-28_0255_radar_20261028_0255.md</link>
+      <guid isPermaLink="false">radar_20261028_0255</guid>
+      <pubDate>2026-10-28T02:55:54.970894</pubDate>
+    </item>
+    <item>
+      <title>Kernel Space vs. User Space Protection Rings</title>
+      <description>As you might have heard recently, widespread system outages highlighted in Ghostty 1.4 raised questions about OS stability. But what actually is *Kernel Space vs. User Space Isolation*? Let's learn about this: modern CPUs enforce hardware privilege levels where user applications run in restricted Ring 3 without direct hardware access, while the OS kernel operates in privileged Ring 0. A crash in Ring 3 terminates only that app, but an unhandled fault in Ring 0 triggers a full system crash (BSOD or Kernel Panic).</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-27_2319_radar_20261027_2319.md</link>
+      <guid isPermaLink="false">radar_20261027_2319</guid>
+      <pubDate>2026-10-27T23:19:27.649920</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Genie 4 have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-27_1903_radar_20261027_1903.md</link>
+      <guid isPermaLink="false">radar_20261027_1903</guid>
+      <pubDate>2026-10-27T19:03:08.879677</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Roblox downloaded 145GB models from us (including adult content) without asking have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-27_1300_radar_20261027_1300.md</link>
+      <guid isPermaLink="false">radar_20261027_1300</guid>
+      <pubDate>2026-10-27T13:00:39.212652</pubDate>
+    </item>
+    <item>
+      <title>Kernel Space vs. User Space Protection Rings</title>
+      <description>As you might have heard recently, widespread system outages highlighted in Oldest GUI application that still runs on Windows 11 raised questions about OS stability. But what actually is *Kernel Space vs. User Space Isolation*? Let's learn about this: modern CPUs enforce hardware privilege levels where user applications run in restricted Ring 3 without direct hardware access, while the OS kernel operates in privileged Ring 0. A crash in Ring 3 terminates only that app, but an unhandled fault in Ring 0 triggers a full system crash (BSOD or Kernel Panic).</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-27_0659_radar_20261027_0659.md</link>
+      <guid isPermaLink="false">radar_20261027_0659</guid>
+      <pubDate>2026-10-27T06:59:26.412162</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding The Exponential Time Hypothesis Is False [pdf], scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-27_0141_radar_20261027_0141.md</link>
+      <guid isPermaLink="false">radar_20261027_0141</guid>
+      <pubDate>2026-10-27T01:41:41.799882</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding Working with academic communities to build scientific understanding, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-26_2202_radar_20261026_2202.md</link>
+      <guid isPermaLink="false">radar_20261026_2202</guid>
+      <pubDate>2026-10-26T22:02:58.992275</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Sebastian Raschka's from-scratch video course on building reasoning models have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-26_1750_radar_20261026_1750.md</link>
+      <guid isPermaLink="false">radar_20261026_1750</guid>
+      <pubDate>2026-10-26T17:50:28.934622</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Switzerland. Block by block. At 1:1 scale have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-26_1148_radar_20261026_1148.md</link>
+      <guid isPermaLink="false">radar_20261026_1148</guid>
+      <pubDate>2026-10-26T11:48:46.505951</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding US Wages Share of GDI at 75 Year Low, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-26_0534_radar_20261026_0534.md</link>
+      <guid isPermaLink="false">radar_20261026_0534</guid>
+      <pubDate>2026-10-26T05:34:04.252142</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding F-Zero X on Nintendo 3DS, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-26_0050_radar_20261026_0050.md</link>
+      <guid isPermaLink="false">radar_20261026_0050</guid>
+      <pubDate>2026-10-26T00:50:24.661830</pubDate>
+    </item>
+    <item>
+      <title>Distributed Idempotency &amp; Two-Phase Locking</title>
+      <description>As you might have heard recently in discussions regarding What goes into making an animated film?, scaling distributed services reliably remains critical. But what actually is *Distributed Idempotency*? Let's learn about this: in a distributed network where requests can be retried due to packet loss, an idempotent endpoint guarantees that receiving the exact same payload multiple times produces the identical side-effect as executing it once.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-25_2254_radar_20261025_2254.md</link>
+      <guid isPermaLink="false">radar_20261025_2254</guid>
+      <pubDate>2026-10-25T22:54:52.103207</pubDate>
+    </item>
+    <item>
+      <title>Mixture-of-Experts (MoE) Architecture</title>
+      <description>As you might have heard recently, discussions around Meta Ignores Brazilian Court Order to End Bolsonaro Favoritism have been surging across the AI community. But what actually is *Mixture-of-Experts (MoE)*? Let's learn about this: instead of activating all billions of parameters for every single token, MoE systems use a lightweight Router Gate to dynamically dispatch each token to only top-k expert subnetworks, drastically slashing computation while maintaining high representation capacity.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-25_1020_radar_20261025_1020.md</link>
+      <guid isPermaLink="false">radar_20261025_1020</guid>
+      <pubDate>2026-10-25T10:20:51.677325</pubDate>
+    </item>
+    <item>
+      <title>Linear Attention Mechanisms in Transformers</title>
+      <description>As you might have heard recently, Cerebras demonstrated how it deploys trillion-parameter models like Kimi K3 across dozens of wafer-scale chips by exploiting hybrid linear-attention layers that require zero KV cache. But what actually is *Linear Attention*? Let's learn about this: Standard softmax attention computes quadratic token-to-token interactions and stores every past Key and Value tensor in memory, causing memory usage to surge linearly with context length. Linear attention avoids the non-linear softmax operation by using kernel feature maps, allowing matrix multiplications to be reordered via the associative property. This collapses historical context into a fixed-size recurrent memory tensor, enabling O(1) inference memory per token regardless of context length.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-25_1324_linear-attention-mechanisms-transformers.md</link>
+      <guid isPermaLink="false">linear-attention-mechanisms-transformers</guid>
+      <pubDate>2026-10-25T13:24:49.507639</pubDate>
+    </item>
+    <item>
+      <title>Caching Strategies: Cache-Aside vs Write-Through</title>
+      <description>Caching places high-frequency data in lightning-fast in-memory stores (like Redis or Memcached) to prevent exhausting your primary database.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-25_0528_day_02.md</link>
+      <guid isPermaLink="false">day_02_202610250528</guid>
+      <pubDate>2026-10-25T05:28:48.381400</pubDate>
+    </item>
+    <item>
+      <title>Mastering the Two-Pointer Technique</title>
+      <description>The Two-Pointer approach reduces brute-force O(N^2) pair searches to linear O(N) time by moving pointers inward or outward based on condition checks.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-25_0039_day_01.md</link>
+      <guid isPermaLink="false">day_01_202610250039</guid>
+      <pubDate>2026-10-25T00:39:45.836251</pubDate>
+    </item>
+    <item>
+      <title>Weekly Challenge: The 25 Horses Puzzle</title>
+      <description>You have 25 horses and a race track with 5 lanes. What is the minimum number of races needed to find the top 3 fastest horses without a stopwatch?</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-24_2205_day_07.md</link>
+      <guid isPermaLink="false">day_07_202610242205</guid>
+      <pubDate>2026-10-24T22:05:07.003539</pubDate>
+    </item>
+    <item>
+      <title>How B-Tree Indexes Speed Up SQL Queries 1000x</title>
+      <description>Without an index, the database executes a Full Table Scan O(N), checking millions of rows. A B-Tree index acts like a book index, finding targets in logarithmic O(log N) disk reads.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-24_1908_day_06.md</link>
+      <guid isPermaLink="false">day_06_202610241908</guid>
+      <pubDate>2026-10-24T19:08:12.552522</pubDate>
+    </item>
+    <item>
+      <title>TCP vs UDP: 3-Way Handshake vs Blazing Speed</title>
+      <description>TCP guarantees reliable, ordered packet delivery with flow and congestion control. UDP prioritizes minimum latency with zero handshake overhead.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-24_1619_day_05.md</link>
+      <guid isPermaLink="false">day_05_202610241619</guid>
+      <pubDate>2026-10-24T16:19:58.399667</pubDate>
+    </item>
+    <item>
+      <title>When &amp; How to use Git Cherry-Pick</title>
+      <description>git cherry-pick allows you to apply a specific commit from one branch onto your current branch without merging the entire history.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-24_1219_day_04.md</link>
+      <guid isPermaLink="false">day_04_202610241219</guid>
+      <pubDate>2026-10-24T12:19:10.977067</pubDate>
+    </item>
+    <item>
+      <title>Process vs Thread Explained Visually</title>
+      <description>A Process is an executing program with its own dedicated memory space, whereas a Thread is a lightweight unit of execution within that process.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-24_0742_day_03.md</link>
+      <guid isPermaLink="false">day_03_202610240742</guid>
+      <pubDate>2026-10-24T07:42:22.952487</pubDate>
+    </item>
+    <item>
+      <title>Caching Strategies: Cache-Aside vs Write-Through</title>
+      <description>Caching places high-frequency data in lightning-fast in-memory stores (like Redis or Memcached) to prevent exhausting your primary database.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-24_0223_day_02.md</link>
+      <guid isPermaLink="false">day_02_202610240223</guid>
+      <pubDate>2026-10-24T02:23:03.677234</pubDate>
+    </item>
+    <item>
+      <title>Mastering the Two-Pointer Technique</title>
+      <description>The Two-Pointer approach reduces brute-force O(N^2) pair searches to linear O(N) time by moving pointers inward or outward based on condition checks.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_2338_day_01.md</link>
+      <guid isPermaLink="false">day_01_202610232338</guid>
+      <pubDate>2026-10-23T23:38:28.115424</pubDate>
+    </item>
+    <item>
+      <title>Weekly Challenge: The 25 Horses Puzzle</title>
+      <description>You have 25 horses and a race track with 5 lanes. What is the minimum number of races needed to find the top 3 fastest horses without a stopwatch?</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_2045_day_07.md</link>
+      <guid isPermaLink="false">day_07_202610232045</guid>
+      <pubDate>2026-10-23T20:45:56.553456</pubDate>
+    </item>
+    <item>
+      <title>How B-Tree Indexes Speed Up SQL Queries 1000x</title>
+      <description>Without an index, the database executes a Full Table Scan O(N), checking millions of rows. A B-Tree index acts like a book index, finding targets in logarithmic O(log N) disk reads.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_1734_day_06.md</link>
+      <guid isPermaLink="false">day_06_202610231734</guid>
+      <pubDate>2026-10-23T17:34:35.987399</pubDate>
+    </item>
+    <item>
+      <title>TCP vs UDP: 3-Way Handshake vs Blazing Speed</title>
+      <description>TCP guarantees reliable, ordered packet delivery with flow and congestion control. UDP prioritizes minimum latency with zero handshake overhead.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_1215_day_05.md</link>
+      <guid isPermaLink="false">day_05_202610231215</guid>
+      <pubDate>2026-10-23T12:15:12.727909</pubDate>
+    </item>
+    <item>
+      <title>When &amp; How to use Git Cherry-Pick</title>
+      <description>git cherry-pick allows you to apply a specific commit from one branch onto your current branch without merging the entire history.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_0641_day_04.md</link>
+      <guid isPermaLink="false">day_04_202610230641</guid>
+      <pubDate>2026-10-23T06:41:26.936496</pubDate>
+    </item>
+  </channel>
+</rss>
