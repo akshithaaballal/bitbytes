@@ -11,7 +11,14 @@ if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-const DB_PATH = process.env.DATABASE_PATH || path.join(DATA_DIR, 'bitbytes.db');
+let rawPath = process.env.DATABASE_PATH || path.join(DATA_DIR, 'bitbytes.db');
+// If DATABASE_PATH is misconfigured with a remote URL (such as libsql://... or https://...),
+// node:sqlite requires a local file path. Fall back safely to the local database file.
+if (rawPath.startsWith('libsql://') || rawPath.startsWith('http://') || rawPath.startsWith('https://')) {
+  console.warn(`[db] Notice: Remote URL provided in DATABASE_PATH (${rawPath}). node:sqlite requires a local file path; falling back to local database.`);
+  rawPath = path.join(DATA_DIR, 'bitbytes.db');
+}
+const DB_PATH = rawPath;
 const dbDir = path.dirname(DB_PATH);
 if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });

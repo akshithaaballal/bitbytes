@@ -37,6 +37,8 @@ const isAllowedOrigin = (origin, callback) => {
   try {
     const parsed = new URL(origin);
     if (parsed.hostname.endsWith('.vercel.app')) return callback(null, true);
+    if (parsed.hostname.endsWith('.onrender.com')) return callback(null, true);
+    if (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') return callback(null, true);
   } catch {
     // ignore parse errors
   }
@@ -44,6 +46,7 @@ const isAllowedOrigin = (origin, callback) => {
 };
 
 app.use(cors({ origin: isAllowedOrigin, credentials: true }));
+app.options('*', cors({ origin: isAllowedOrigin, credentials: true }));
 app.use(parseCookies);
 app.use(express.json({ limit: '16kb' }));
 app.use((req, res, next) => {

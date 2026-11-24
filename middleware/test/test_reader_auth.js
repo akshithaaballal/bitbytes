@@ -35,6 +35,15 @@ if (existingAlice) {
   assert.ok(verifyPassword('supersecretpass10', found.password_hash), 'Correct password matches');
   assert.strictEqual(verifyPassword('wrongpassword99', found.password_hash), false, 'Wrong password rejected');
 
+  // Attempting to signup again with different case should throw 'Username already taken'
+  assert.throws(() => createUser('Test_Alice', 'anotherpassword10'), /Username already taken/);
+  assert.throws(() => createUser('TEST_ALICE', 'anotherpassword10'), /Username already taken/);
+
+  // Non-existent user returns undefined (not empty object or truthy)
+  assert.strictEqual(findUserByUsername('non_existent_user_123'), undefined);
+  assert.strictEqual(findUserByUsername(''), undefined);
+  assert.strictEqual(findUserByUsername(null), undefined);
+
   console.log('✅ User creation and scrypt password hashing passed');
 }
 
