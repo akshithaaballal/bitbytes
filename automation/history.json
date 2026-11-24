@@ -1341,5 +1341,71 @@
       "path": "archive/2026-11-24_0853_radar_20261124_0853.md"
     },
     "skipped_reason": null
+  },
+  {
+    "id": "day_03",
+    "timestamp": "2026-11-24T13:06:48.898529+00:00",
+    "track": "Core CS: Operating Systems",
+    "title": "Process vs Thread Explained Visually",
+    "subtitle": "The #1 favorite question asked in university exams & technical rounds",
+    "summary": "A Process is an executing program with its own dedicated memory space, whereas a Thread is a lightweight unit of execution within that process.",
+    "source": null,
+    "references": [
+      {
+        "title": "Linux Programmer's Manual: clone(2)",
+        "url": "https://man7.org/linux/man-pages/man2/clone.2.html"
+      }
+    ],
+    "source_count": 1,
+    "engine": "content_bank_fallback",
+    "fallback_used": true,
+    "fallback_reason": "All tiers exhausted: T1 filtered_out (30 raw leads); T2 attempts exhausted (5 tried); T3 no_candidates (0 raw leads)",
+    "attempts": [
+      {
+        "url": "https://blog.cloudflare.com/open-clairic/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/dns-targeted-zone-builds/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://simonwillison.net/2026/Nov/23/glm-54/",
+        "domain": "simonwillison.net",
+        "engine": "direct_http",
+        "chars": 3171,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://lwn.net/Articles/1108900/",
+        "domain": "lwn.net",
+        "engine": "direct_http",
+        "chars": 0,
+        "reject_reason": "thin_content"
+      }
+    ],
+    "telegram": {
+      "ok": true,
+      "message_id": 146,
+      "url": "https://t.me/csbites/146"
+    },
+    "git": {
+      "ok": true,
+      "path": "archive/2026-10-24_0742_day_03.md"
+    },
+    "skipped_reason": null
   }
 ]
