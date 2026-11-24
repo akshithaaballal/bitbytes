@@ -35,11 +35,19 @@ _missing_cosmitude = [k for k, v in [
     ('COSMITUDE_SERVER_ID', SERVER_ID),
     ('COSMITUDE_FORUM_ID', forumID),
 ] if not v]
-if _missing_cosmitude:
-    raise RuntimeError(
-        f"Missing required Cosmitude environment variables: {', '.join(_missing_cosmitude)}. "
-        f"Define them in agent/.env or system environment."
-    )
+
+def check_cosmitude_credentials():
+    missing = [k for k, v in [
+        ('COSMITUDE_USERNAME', USER_NAME),
+        ('COSMITUDE_PASSWORD', PASSWORD),
+        ('COSMITUDE_SERVER_ID', SERVER_ID),
+        ('COSMITUDE_FORUM_ID', forumID),
+    ] if not v]
+    if missing:
+        raise RuntimeError(
+            f"Missing required Cosmitude environment variables: {', '.join(missing)}. "
+            f"Define them in agent/.env or system environment."
+        )
 
 Sessionid = ''
 username = ''
@@ -264,12 +272,29 @@ def send_record(flow_name: str, values: dict[int, str], retry_on_auth_fail: bool
         if not Sessionid:
             login()
 
-        # // DEBT: Reads cached Admin.txt from disk; getForumDetails() refreshes it in CI
+        # // DEBT: Reads cached Admin.txt from disk; falls back to bundled schema if unavailable
         admin_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'BitBytesData_BitBytesData_Admin.txt')
+        fallback_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'BitBytesData_Admin_fallback.json')
         if not os.path.exists(admin_path):
             getForumDetails()
-        with open(admin_path, 'r', encoding='utf-8') as f:
-            admin_data = json.load(f)
+
+        admin_data = None
+        if os.path.exists(admin_path):
+            try:
+                with open(admin_path, 'r', encoding='utf-8') as f:
+                    admin_data = json.load(f)
+            except Exception:
+                admin_data = None
+
+        if not admin_data and os.path.exists(fallback_path):
+            try:
+                with open(fallback_path, 'r', encoding='utf-8') as f:
+                    admin_data = json.load(f)
+            except Exception:
+                admin_data = None
+
+        if not admin_data:
+            return {'success': False, 'bridgeId': None, 'errorCode': -1, 'error': f"Admin schema not found for flow {flow_name}"}
 
         template_id = admin_data.get('TemplateID', '4c707a3b-a18a-4ca2-96fb-64c9aaf25d95')
         admin_flow = admin_data.get('AdminFlow', {})

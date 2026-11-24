@@ -96,6 +96,36 @@ def pick_next_post(posts: list, history: list) -> dict:
     return oldest_post
 
 
+def log_env_summary():
+    """
+    Diagnostic logger: Echoes presence of all key environment variables
+    WITHOUT leaking sensitive secrets or token values.
+    """
+    inspected_vars = [
+        "TELEGRAM_BOT_TOKEN",
+        "TELEGRAM_CHANNEL_ID",
+        "GEMINI_API_KEY",
+        "GEMINI_MODEL",
+        "FIRECRAWL_API_KEY",
+        "USE_AI_RADAR",
+        "GENERATE_IMAGE",
+        "COSMITUDE_USERNAME",
+        "COSMITUDE_PASSWORD",
+        "COSMITUDE_SERVER_ID",
+        "COSMITUDE_FORUM_ID",
+        "GITHUB_ACTIONS",
+        "GITHUB_STEP_SUMMARY"
+    ]
+    print("\n🔍 [Pipeline Diagnostic] Environment Variables Presence Check:")
+    for var in inspected_vars:
+        val = os.getenv(var)
+        if val and val.strip():
+            print(f"   • {var:25s}: [SET] (len={len(val.strip())})")
+        else:
+            print(f"   • {var:25s}: [NOT SET]")
+    print("")
+
+
 def run_pipeline(
     dry_run: bool = False,
     specific_post_id: str = None,
@@ -106,6 +136,7 @@ def run_pipeline(
 ):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     load_dotenv(os.path.join(base_dir, ".env"))
+    log_env_summary()
 
     content_dir = os.path.join(base_dir, "content_bank")
     history_path = os.path.join(base_dir, "history.json")
@@ -425,6 +456,7 @@ def run_pipeline(
         progress_callback("done")
 
     print("\n🎉 Pipeline execution completed successfully!\n")
+    is_skipped = telegram_result.get("skipped", False)
     return {
         "success": telegram_ok if not is_simulated else True,
         "post": post,
@@ -435,7 +467,9 @@ def run_pipeline(
         "engine": engine_used,
         "fallback_used": fallback_used,
         "fallback_reason": fallback_reason,
-        "attempts": attempts
+        "attempts": attempts,
+        "skipped": is_skipped,
+        "skipped_reason": telegram_result.get("error") if is_skipped else None
     }
 
 
@@ -467,13 +501,19 @@ if __name__ == "__main__":
     parser.add_argument("--fixture", type=str, help="Path to fixture article for testing/verification")
     args = parser.parse_args()
 
-    res = run_pipeline(
-        dry_run=args.dry_run,
-        specific_post_id=args.post,
-        use_radar=args.radar if args.radar else None,
-        fixture_path=args.fixture,
-        force_evergreen=args.evergreen
-    )
+    try:
+        res = run_pipeline(
+            dry_run=args.dry_run,
+            specific_post_id=args.post,
+            use_radar=args.radar if args.radar else None,
+            fixture_path=args.fixture,
+            force_evergreen=args.evergreen
+        )
+    except Exception as exc:
+        print(f"\n❌ [FATAL] Unhandled exception in BitBytes pipeline: {exc}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
 
     # Write GITHUB_STEP_SUMMARY if running in GitHub Actions
     summary_file = os.getenv("GITHUB_STEP_SUMMARY")
@@ -499,5 +539,6 @@ if __name__ == "__main__":
 
     # Fail the job on unexpected errors, not on a skipped run
     if not res.get("success") and not res.get("skipped"):
+        print("[ERROR] Pipeline terminated unsuccessfully without a valid skip reason.", file=sys.stderr)
         sys.exit(1)
     sys.exit(0)

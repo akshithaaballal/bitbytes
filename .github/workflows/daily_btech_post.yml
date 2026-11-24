@@ -10,6 +10,9 @@ concurrency:
   group: bitbytes-post
   cancel-in-progress: false
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 permissions:
   contents: write
 
@@ -39,8 +42,13 @@ jobs:
           pip install -r automation/requirements-dev.txt
 
       - name: Run Test Suite
+        env:
+          COSMITUDE_USERNAME: dummy_user
+          COSMITUDE_PASSWORD: dummy_pass
+          COSMITUDE_SERVER_ID: dummy_server
+          COSMITUDE_FORUM_ID: dummy_forum
         run: |
-          pytest automation/tests/
+          pytest automation/tests/ -v --tb=short
 
       - name: Sync Cosmitude Forum Details
         continue-on-error: true

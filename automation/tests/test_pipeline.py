@@ -11,6 +11,12 @@ import os
 import sys
 import pytest
 
+# Ensure dummy env vars exist for offline testing
+os.environ.setdefault("COSMITUDE_USERNAME", "dummy_user")
+os.environ.setdefault("COSMITUDE_PASSWORD", "dummy_pass")
+os.environ.setdefault("COSMITUDE_SERVER_ID", "dummy_server")
+os.environ.setdefault("COSMITUDE_FORUM_ID", "dummy_forum")
+
 # Ensure automation root is in sys.path
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 AUTOMATION_DIR = os.path.dirname(TEST_DIR)
