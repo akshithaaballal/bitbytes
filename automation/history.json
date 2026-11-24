@@ -1407,5 +1407,106 @@
       "path": "archive/2026-10-24_0742_day_03.md"
     },
     "skipped_reason": null
+  },
+  {
+    "id": "day_04",
+    "timestamp": "2026-11-24T23:42:27.668350+00:00",
+    "track": "Developer Tools & Git",
+    "title": "When & How to use Git Cherry-Pick",
+    "subtitle": "Pick specific commits across branches like a Senior Engineer",
+    "summary": "git cherry-pick allows you to apply a specific commit from one branch onto your current branch without merging the entire history.",
+    "source": null,
+    "references": [
+      {
+        "title": "Git Reference: git-cherry-pick",
+        "url": "https://git-scm.com/docs/git-cherry-pick"
+      }
+    ],
+    "source_count": 1,
+    "engine": "content_bank_fallback",
+    "fallback_used": true,
+    "fallback_reason": "All tiers exhausted: T1 filtered_out (29 raw leads); T2 attempts exhausted (5 tried); T3 attempts exhausted (5 tried)",
+    "attempts": [
+      {
+        "url": "https://blog.cloudflare.com/open-clairic/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/dns-targeted-zone-builds/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://simonwillison.net/2026/Nov/24/llm-inflection-points/",
+        "domain": "simonwillison.net",
+        "engine": "direct_http",
+        "chars": 7928,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://simonwillison.net/2026/Nov/23/glm-54/",
+        "domain": "simonwillison.net",
+        "engine": "direct_http",
+        "chars": 3268,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.31240v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1101,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.31223v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1085,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.31211v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1114,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.31193v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1097,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.31166v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1082,
+        "reject_reason": "llm_error: rejected or empty output"
+      }
+    ],
+    "telegram": {
+      "ok": true,
+      "message_id": 148,
+      "url": "https://t.me/csbites/148"
+    },
+    "git": {
+      "ok": true,
+      "path": "archive/2026-10-13_1217_day_04.md"
+    },
+    "skipped_reason": null
   }
 ]

@@ -122,3 +122,4 @@
 | 2026-11-02 03:13 | **Monday** | Core Operating Systems | [Kernel Space vs. User Space Protection Rings](archive/2026-11-02_0313_radar_20261102_0313.md) | Content Bank |
 | 2026-11-24 08:53 | **Tuesday** | Distributed Systems | [Leaderless Distributed Consensus Algorithms](archive/2026-11-24_0853_radar_20261124_0853.md) | [cloudflare.com](https://blog.cloudflare.com/choosing-quepaxa) |
 | 2026-11-24 13:07 | **Tuesday** | Core CS: Operating Systems | [Process vs Thread Explained Visually](archive/2026-10-24_0742_day_03.md) | Content Bank |
+| 2026-11-24 23:42 | **Tuesday** | Developer Tools & Git | [When & How to use Git Cherry-Pick](archive/2026-10-13_1217_day_04.md) | Content Bank |
