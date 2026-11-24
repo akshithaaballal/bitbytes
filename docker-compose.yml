@@ -47,7 +47,7 @@ services:
       sh -c "npm install &&
              npm run dev -- --host 0.0.0.0"
     ports:
-      - "5173:5173"
+      - "5180:5180"
     depends_on:
       - middleware
     restart: unless-stopped

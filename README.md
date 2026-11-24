@@ -114,7 +114,7 @@ BitBytes reimagines technical learning for Gen Z students: bite-sized systems en
 | `OPERATOR_PASSCODE` | Passcode for operator console login | Required (no fallback) |
 | `OPERATOR_TOKEN_SECRET` | Secret key used to sign HMAC tokens (8h) | Required (no fallback) |
 | `TRUST_PROXY` | Enable reverse proxy IP resolution | `false` |
-| `FRONTEND_ORIGIN` | Allowed CORS origins (comma-separated) | `http://localhost:5173` |
+| `FRONTEND_ORIGIN` | Allowed CORS origins (comma-separated) | `http://localhost:5180` |
 
 ### 4. Frontend (`frontend/.env`)
 | Variable | Description | Default / Example |
@@ -172,7 +172,7 @@ python automation/main.py --dry-run
   cd frontend && npm run dev
   ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open [http://localhost:5180](http://localhost:5180) in your browser.
 
 ---
 

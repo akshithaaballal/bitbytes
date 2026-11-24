@@ -5,7 +5,7 @@ export default defineConfig({
   base: process.env.VITE_BASE || './',
   plugins: [react()],
   server: {
-    port: 5173,
+    port: parseInt(process.env.PORT || '5180', 10),
     host: '0.0.0.0',
     proxy: { '/api': 'http://localhost:4000' },
   },
