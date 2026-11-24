@@ -45,7 +45,7 @@ router.post('/signup', verifyCsrf, async (req, res) => {
     });
   }
 
-  const cleanUsername = username.trim();
+  const cleanUsername = username.trim().toLowerCase();
   if (!/^[a-zA-Z0-9_.-]+$/.test(cleanUsername)) {
     return res.status(400).json({
       error: { code: 'INVALID_USERNAME', message: 'Username can only contain alphanumeric characters, hyphens, and underscores.' },

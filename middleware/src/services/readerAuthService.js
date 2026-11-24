@@ -203,15 +203,37 @@ export function clearFailedAttempts(key) {
 // 5. User Operations
 // -------------------------------------------------------------
 export function findUserByUsername(username) {
-  return db.prepare('SELECT * FROM readers WHERE username = ? COLLATE NOCASE').get(username);
+  if (!username || typeof username !== 'string') return undefined;
+  const clean = username.trim().toLowerCase();
+  try {
+    const row = db.prepare('SELECT id, username, password_hash, created_at, updated_at, preferences FROM readers WHERE LOWER(username) = ?').get(clean);
+    if (!row || typeof row !== 'object' || !row.id || !row.username) return undefined;
+    if (String(row.username).toLowerCase() !== clean) return undefined;
+    return row;
+  } catch (err) {
+    console.error('[readerAuthService] findUserByUsername error:', err);
+    return undefined;
+  }
 }
 
 export function findUserById(id) {
-  return db.prepare('SELECT id, username, created_at, preferences FROM readers WHERE id = ?').get(id);
+  if (!id || typeof id !== 'string') return undefined;
+  try {
+    const row = db.prepare('SELECT id, username, created_at, preferences FROM readers WHERE id = ?').get(id.trim());
+    if (!row || typeof row !== 'object' || !row.id) return undefined;
+    return row;
+  } catch (err) {
+    console.error('[readerAuthService] findUserById error:', err);
+    return undefined;
+  }
 }
 
 export function createUser(username, password) {
-  const existing = findUserByUsername(username);
+  if (!username || typeof username !== 'string') {
+    throw new Error('Invalid username');
+  }
+  const clean = username.trim().toLowerCase();
+  const existing = findUserByUsername(clean);
   if (existing) {
     throw new Error('Username already taken');
   }
@@ -224,9 +246,9 @@ export function createUser(username, password) {
   db.prepare(`
     INSERT INTO readers (id, username, password_hash, created_at, updated_at, preferences)
     VALUES (?, ?, ?, ?, ?, ?)
-  `).run(id, username.trim(), passwordHash, now, now, defaultPrefs);
+  `).run(id, clean, passwordHash, now, now, defaultPrefs);
 
-  return { id, username: username.trim(), created_at: now, preferences: defaultPrefs };
+  return { id, username: clean, created_at: now, preferences: defaultPrefs };
 }
 
 export function deleteUserAccount(userId) {

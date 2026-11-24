@@ -55,7 +55,11 @@ export default function ReaderAuthModal({ onAuthSuccess, onGoToOperator }) {
         onAuthSuccess(res.user);
       }
     } catch (err) {
-      setErrorMsg(err.message || 'Authentication failed. Please check credentials.');
+      if (err.message && err.message.toLowerCase().includes('failed to fetch')) {
+        setErrorMsg('Unable to reach the server. The backend may still be spinning up from cold start—please wait a few seconds and try again.');
+      } else {
+        setErrorMsg(err.message || 'Authentication failed. Please check credentials.');
+      }
     } finally {
       setLoading(false);
     }

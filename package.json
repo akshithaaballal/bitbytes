@@ -9,6 +9,7 @@
     "middleware"
   ],
   "scripts": {
+    "start": "npm --prefix middleware start",
     "test": "npm --prefix middleware test",
     "test:all": "npm --prefix middleware test && python -m pytest automation/tests -q",
     "build": "npm --prefix frontend run build",
@@ -17,6 +18,6 @@
     "dev:agent": "python agent/wrapper/agent_server.py"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   }
 }
