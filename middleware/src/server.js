@@ -31,13 +31,40 @@ app.use('/api', (req, res, next) => {
   next();
 });
 
-app.use(cors({ origin: config.frontendOrigins, credentials: true }));
+const isAllowedOrigin = (origin, callback) => {
+  if (!origin) return callback(null, true);
+  if (config.frontendOrigins.includes(origin)) return callback(null, true);
+  try {
+    const parsed = new URL(origin);
+    if (parsed.hostname.endsWith('.vercel.app')) return callback(null, true);
+  } catch {
+    // ignore parse errors
+  }
+  return callback(null, false);
+};
+
+app.use(cors({ origin: isAllowedOrigin, credentials: true }));
 app.use(parseCookies);
 app.use(express.json({ limit: '16kb' }));
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => console.log(`${req.method} ${req.path} ${res.statusCode} ${Date.now() - start}ms`));
   next();
+});
+
+// Root welcome / status endpoint
+app.get('/', (req, res) => {
+  res.json({
+    ok: true,
+    service: 'bitbytes-middleware',
+    status: 'online',
+    frontend: 'https://bitbytes-ten.vercel.app',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth',
+      progress: '/api/progress'
+    }
+  });
 });
 
 // Operator Login Endpoint
