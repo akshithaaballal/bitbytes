@@ -41,8 +41,8 @@ export function StoryAvatar({
             cy="38"
             r={radius}
             fill="none"
-            stroke="var(--story-ring-bg, #2E2C28)"
-            strokeWidth="2.5"
+            stroke="var(--story-ring-bg, #E4DFD4)"
+            strokeWidth="2"
           />
           {/* Segmented active ring */}
           <circle
@@ -50,8 +50,8 @@ export function StoryAvatar({
             cy="38"
             r={radius}
             fill="none"
-            stroke={isUnread ? config.color : 'var(--text-muted, #7E7C74)'}
-            strokeWidth={isUnread ? '3.5' : '2'}
+            stroke={isUnread ? config.color : 'var(--text-muted, #827F77)'}
+            strokeWidth={isUnread ? '2' : '1.5'}
             strokeDasharray={`${dashLength} ${gap}`}
             strokeLinecap="round"
             transform="rotate(-90 38 38)"
@@ -63,8 +63,8 @@ export function StoryAvatar({
         <div
           className="story-inner-badge"
           style={{
-            borderColor: isUnread ? config.color : 'var(--border, #2E2C28)',
-            backgroundColor: isUnread ? config.bgTint : 'var(--bg-surface-secondary, #201F1D)',
+            borderColor: isUnread ? config.color : 'var(--border-subtle)',
+            backgroundColor: isUnread ? config.bgTint : 'var(--bg-surface-secondary)',
           }}
         >
           <span
