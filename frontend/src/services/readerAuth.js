@@ -3,7 +3,7 @@
  * Sends cookies with credentials: 'include' and CSRF header X-Requested-With
  */
 
-const API_BASE = '/api';
+const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/+$/, '') + '/api';
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',

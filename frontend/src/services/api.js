@@ -40,7 +40,7 @@ async function http(path, options = {}) {
   try {
     res = await fetch(BASE + path, { ...options, headers });
   } catch {
-    throw new Error('Cannot reach the BitBytes middleware. Check that it is running on port 4000.');
+    throw new Error('Cannot reach the BitBytes middleware. Check that it is running and accessible.');
   }
   const data = await res.json().catch(() => null);
   if (!res.ok) {

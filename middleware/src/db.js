@@ -12,6 +12,10 @@ if (!fs.existsSync(DATA_DIR)) {
 }
 
 const DB_PATH = process.env.DATABASE_PATH || path.join(DATA_DIR, 'bitbytes.db');
+const dbDir = path.dirname(DB_PATH);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
 export const db = new DatabaseSync(DB_PATH);
 
 // Enable WAL mode and foreign key constraints

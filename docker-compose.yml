@@ -11,22 +11,25 @@ services:
       - AGENT_PORT=5001
       - PYTHONUNBUFFERED=1
     command: >
-      sh -c "pip install -r agent/requirements.txt &&
+      sh -c "pip install -r agent/requirements.txt -r automation/requirements.txt &&
              python agent/wrapper/agent_server.py"
     ports:
       - "5001:5001"
     restart: unless-stopped
 
   middleware:
-    image: node:20-alpine
+    image: node:22-alpine
     working_dir: /app/middleware
     volumes:
       - .:/app
     environment:
       - PORT=4000
+      - NODE_ENV=production
       - AGENT_URL=http://agent-wrapper:5001
       - OPERATOR_PASSCODE=${OPERATOR_PASSCODE:-dev-operator-passcode}
       - OPERATOR_TOKEN_SECRET=${OPERATOR_TOKEN_SECRET:-dev-token-secret-at-least-32-chars-long}
+      - USER_TOKEN_SECRET=${USER_TOKEN_SECRET:-dev-user-token-secret-at-least-32-chars}
+      - FRONTEND_ORIGIN=${FRONTEND_ORIGIN:-http://localhost:5180,http://127.0.0.1:5180}
     command: >
       sh -c "npm install &&
              node src/server.js"
@@ -37,7 +40,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: node:20-alpine
+    image: node:22-alpine
     working_dir: /app/frontend
     volumes:
       - .:/app

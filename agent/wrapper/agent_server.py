@@ -27,7 +27,7 @@ except Exception as e:
     print(f"[Cosmitude-Wrapper] Warning importing automation: {e}")
     automation_main = None
 
-HOST = os.getenv("AGENT_HOST", "127.0.0.1")
+HOST = os.getenv("AGENT_HOST", "0.0.0.0")
 PORT = int(os.getenv("AGENT_PORT", 5001))
 AGENT_API_KEY = os.getenv("AGENT_API_KEY", "")
 

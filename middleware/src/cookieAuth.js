@@ -32,13 +32,16 @@ export function serializeCookie(name, val, options = {}) {
 export function setAuthCookies(res, { accessToken, refreshToken, rememberMe, domain }) {
   const isProd = process.env.NODE_ENV === 'production';
   const cookieDomain = process.env.COOKIE_DOMAIN || domain || undefined;
+  const configuredSameSite = process.env.COOKIE_SAMESITE || 'Lax';
+  const isCrossSite = configuredSameSite.toLowerCase() === 'none';
+  const isSecure = isProd || isCrossSite || process.env.COOKIE_SECURE === 'true';
 
   // 1. Access Token Cookie: short-lived (15 min)
   const accessCookie = serializeCookie('bitbytes_access', accessToken, {
     maxAge: 15 * 60 * 1000,
     httpOnly: true,
-    secure: isProd,
-    sameSite: 'Lax',
+    secure: isSecure,
+    sameSite: configuredSameSite,
     domain: cookieDomain,
     path: '/',
   });
@@ -46,8 +49,8 @@ export function setAuthCookies(res, { accessToken, refreshToken, rememberMe, dom
   // 2. Refresh Token Cookie: 30 days if rememberMe, else session cookie (no maxAge)
   const refreshOpts = {
     httpOnly: true,
-    secure: isProd,
-    sameSite: 'Lax',
+    secure: isSecure,
+    sameSite: configuredSameSite,
     domain: cookieDomain,
     path: '/',
   };

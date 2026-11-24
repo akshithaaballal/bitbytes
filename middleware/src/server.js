@@ -69,6 +69,7 @@ app.post('/api/operator/login', (req, res) => {
   return res.json({ ok: true, token, expires_in: 8 * 3600 });
 });
 
+app.use('/health', healthRoutes);
 app.use('/api/auth', readerAuthRoutes);
 app.use('/api/progress', readerProgressRoutes);
 app.use('/api', healthRoutes);
