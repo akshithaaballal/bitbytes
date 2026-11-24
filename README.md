@@ -102,6 +102,10 @@ The public site is a zero-layout-shift static web reader that consumes `frontend
 
 ## Local Development Quickstart
 
+### Prerequisites
+- **Node.js:** `>= 18`
+- **Python:** `3.11` (pinned via `.python-version` to match CI runner runtime)
+
 ### 1. Install Dependencies
 ```bash
 # Frontend
@@ -110,11 +114,11 @@ cd frontend && npm install
 # Middleware
 cd ../middleware && npm install
 
-# Automation
+# Automation (Python 3.11)
 cd ../automation && pip install -r requirements.txt -r requirements-dev.txt
 
 # Agent
-cd ../agent && pip install requests python-dotenv
+cd ../agent && pip install -r requirements.txt
 ```
 
 ### 2. Run Automation & Middleware Tests
