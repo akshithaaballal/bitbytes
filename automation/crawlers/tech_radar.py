@@ -154,7 +154,12 @@ def validate_grounding(post: dict, article_text: str, past_titles: list) -> tupl
     if post.get("reject") is True:
         return False, f"LLM rejected article: {post.get('reject_reason', 'Not teachable CS/AI concept')}"
 
-    norm_article = " ".join(article_text.lower().split())
+    def clean_typography(s: str) -> str:
+        s = s.replace("“", '"').replace("”", '"').replace("‘", "'").replace("’", "'")
+        s = s.replace("—", "-").replace("–", "-")
+        return s
+
+    norm_article = clean_typography(" ".join(article_text.lower().split()))
 
     # Check source_claims quotes verbatim presence
     claims = post.get("source_claims", [])
@@ -165,11 +170,22 @@ def validate_grounding(post: dict, article_text: str, past_titles: list) -> tupl
         quote = item.get("quote", "").strip()
         if not quote:
             return False, "Empty quote in source_claims"
-        # Enforce max 25 words per quote
+
+        # Normalize typography for quote matching
+        norm_quote = clean_typography(" ".join(quote.lower().split()))
+
+        # Enforce max 25 words per quote (auto-trim if quote is slightly over but grounded)
         word_count = len(quote.split())
         if word_count > 25:
-            return False, f"Quote too long ({word_count} words > 25 max): '{quote[:50]}...'"
-        norm_quote = " ".join(quote.lower().split())
+            trimmed = " ".join(quote.split()[:25])
+            norm_trimmed = clean_typography(" ".join(trimmed.lower().split()))
+            if norm_trimmed in norm_article:
+                item["quote"] = trimmed
+                quote = trimmed
+                norm_quote = norm_trimmed
+            else:
+                return False, f"Quote too long ({word_count} words > 25 max): '{quote[:50]}...'"
+
         if norm_quote not in norm_article:
             return False, f"Quote hallucinated (not found in article text): '{quote[:50]}...'"
 

@@ -7,6 +7,13 @@
     <language>en-us</language>
     <atom:link href="https://akshithaaballal.github.io/bitbytes/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Leaderless Distributed Consensus Algorithms</title>
+      <description>As you might have heard, Cloudflare adopted an unusual consensus algorithm called QuePaxa for their global control plane, Meerkat, to survive high-latency and volatile wide-area networks. So what is Leaderless Distributed Consensus? Unlike traditional protocols like Paxos or Raft that route all proposals through a single leader to avoid ballot collisions, leaderless algorithms allow multiple nodes to propose values concurrently. By eliminating strict leader dependencies and avoiding error-prone timeout-based leader elections, these systems maintain liveness even when network links exhibit unpredictable latency spikes.</description>
+      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-11-24_0853_radar_20261124_0853.md</link>
+      <guid isPermaLink="false">radar_20261124_0853</guid>
+      <pubDate>2026-11-24T08:52:53.212418+00:00</pubDate>
+    </item>
+    <item>
       <title>Kernel Space vs. User Space Protection Rings</title>
       <description>As you might have heard recently, widespread system outages highlighted in F/OSS Comics #13: BSD Unix, Part 3 – The Beginning of BSD Unix raised questions about OS stability. But what actually is *Kernel Space vs. User Space Isolation*? Let's learn about this: modern CPUs enforce hardware privilege levels where user applications run in restricted Ring 3 without direct hardware access, while the OS kernel operates in privileged Ring 0. A crash in Ring 3 terminates only that app, but an unhandled fault in Ring 0 triggers a full system crash (BSOD or Kernel Panic).</description>
       <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-11-02_0313_radar_20261102_0313.md</link>
@@ -348,13 +355,6 @@
       <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_1215_day_05.md</link>
       <guid isPermaLink="false">day_05_202610231215</guid>
       <pubDate>2026-10-23T12:15:12.727909</pubDate>
-    </item>
-    <item>
-      <title>When &amp; How to use Git Cherry-Pick</title>
-      <description>git cherry-pick allows you to apply a specific commit from one branch onto your current branch without merging the entire history.</description>
-      <link>https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_0641_day_04.md</link>
-      <guid isPermaLink="false">day_04_202610230641</guid>
-      <pubDate>2026-10-23T06:41:26.936496</pubDate>
     </item>
   </channel>
 </rss>

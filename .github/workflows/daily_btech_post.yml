@@ -48,6 +48,9 @@ jobs:
           COSMITUDE_PASSWORD: dummy_pass
           COSMITUDE_SERVER_ID: dummy_server
           COSMITUDE_FORUM_ID: dummy_forum
+          AGENT_API_KEY: test_secret_key
+          COSMITUDE_API_KEY: dummy_key
+          COSMITUDE_BASE_URL: http://127.0.0.1:5001
         run: |
           pytest automation/tests/ -v --tb=short
 

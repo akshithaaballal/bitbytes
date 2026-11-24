@@ -1289,5 +1289,57 @@
     "git": true,
     "telegram": true,
     "instagram": false
+  },
+  {
+    "id": "radar_20261124_0853",
+    "timestamp": "2026-11-24T08:52:53.212418+00:00",
+    "track": "Distributed Systems",
+    "title": "Leaderless Distributed Consensus Algorithms",
+    "subtitle": "Avoiding destructive interference and metastable failures in wide-area network consensus by dropping the single-leader constraint.",
+    "summary": "As you might have heard, Cloudflare adopted an unusual consensus algorithm called QuePaxa for their global control plane, Meerkat, to survive high-latency and volatile wide-area networks. So what is Leaderless Distributed Consensus? Unlike traditional protocols like Paxos or Raft that route all proposals through a single leader to avoid ballot collisions, leaderless algorithms allow multiple nodes to propose values concurrently. By eliminating strict leader dependencies and avoiding error-prone timeout-based leader elections, these systems maintain liveness even when network links exhibit unpredictable latency spikes.",
+    "source": {
+      "title": "Choosing QuePaxa, an unusual\u00a0consensus algorithm",
+      "url": "https://blog.cloudflare.com/choosing-quepaxa",
+      "domain": "cloudflare.com",
+      "fetched_at": "2026-11-24T08:53:13.709820+00:00"
+    },
+    "references": [],
+    "source_count": 1,
+    "engine": "t2_rssfeeds (direct_http)",
+    "fallback_used": false,
+    "fallback_reason": null,
+    "attempts": [
+      {
+        "url": "https://blog.cloudflare.com/open-clairic/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "grounding_rejected: Quote hallucinated (not found in article text): 'For ordinary text and number extraction fields, we...'"
+      },
+      {
+        "url": "https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "grounding_rejected: Quote hallucinated (not found in article text): 'A harness performs every step of the OODA loop by ...'"
+      },
+      {
+        "url": "https://blog.cloudflare.com/choosing-quepaxa/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": null
+      }
+    ],
+    "telegram": {
+      "ok": true,
+      "message_id": 144,
+      "url": "https://t.me/csbites/144"
+    },
+    "git": {
+      "ok": true,
+      "path": "archive/2026-11-24_0853_radar_20261124_0853.md"
+    },
+    "skipped_reason": null
   }
 ]

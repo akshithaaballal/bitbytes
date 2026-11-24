@@ -423,14 +423,11 @@ def run_pipeline(
     telegram_ok = bool(telegram_result.get("success", False))
     post["telegram_url"] = telegram_result.get("telegram_url", "")
 
-    # 3. Publish to Git / Archive (ONLY when Telegram ok and not dry-run / simulate)
+    # 3. Publish to Git / Archive (Markdown & INDEX.md)
     print("\n📚 Step 3: Archiving to GitHub Markdown & INDEX.md...")
     if is_simulated:
         print("   [DRY RUN] Simulating Git archive (no file written)...")
         git_result = {"success": True, "simulated": True, "relative_path": "archive/simulated.md"}
-    elif not telegram_ok:
-        print("   ⚠️ Skipped Git archive: Telegram publication was not successful.")
-        git_result = {"success": False, "skipped": True, "error": "Telegram publication failed"}
     else:
         git_result = publish_to_git(
             post,

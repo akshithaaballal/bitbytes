@@ -5,7 +5,7 @@ import uuid
 import time
 import hmac
 import threading
-from datetime import datetime
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 # Add agent root to sys.path so we can import Bot
@@ -342,11 +342,69 @@ def sync_loop():
         time.sleep(10)
 
 
+def daily_post_scheduler_loop():
+    """
+    Checks periodically (every 10 minutes) if today's card has been published.
+    If the latest post in automation/history.json is older than 20 hours
+    or from a previous calendar day, automatically runs automation_main.run_pipeline().
+    """
+    print("[Cosmitude-Wrapper] Starting daily post scheduler loop...")
+    time.sleep(5)
+    while True:
+        try:
+            if automation_main:
+                base_dir = os.path.dirname(os.path.abspath(automation_main.__file__))
+                history_path = os.path.join(base_dir, "history.json")
+                history = automation_main.load_history(history_path)
+
+                needs_update = False
+                now_utc = datetime.now(timezone.utc)
+
+                if not history:
+                    needs_update = True
+                else:
+                    last_entry = history[-1]
+                    ts_str = last_entry.get("timestamp", "")
+                    if ts_str:
+                        if ts_str.endswith("Z"):
+                            ts_str = ts_str[:-1] + "+00:00"
+                        try:
+                            last_dt = datetime.fromisoformat(ts_str)
+                            if last_dt.tzinfo is None:
+                                last_dt = last_dt.replace(tzinfo=timezone.utc)
+                            age_hours = (now_utc - last_dt).total_seconds() / 3600.0
+                            if age_hours >= 20.0 or now_utc.date() > last_dt.date():
+                                needs_update = True
+                        except Exception:
+                            needs_update = True
+                    else:
+                        needs_update = True
+
+                if needs_update and not broadcast_lock.locked():
+                    print(f"[DailyScheduler] New daily post is due (last was > 20h ago). Triggering pipeline...")
+                    acquired = broadcast_lock.acquire(blocking=False)
+                    if acquired:
+                        try:
+                            res = automation_main.run_pipeline(dry_run=False)
+                            print(f"[DailyScheduler] Pipeline result: {res.get('outcome') or res.get('success')}")
+                        except Exception as e:
+                            print(f"[DailyScheduler] Error running pipeline: {e}")
+                        finally:
+                            broadcast_lock.release()
+        except Exception as exc:
+            print(f"[DailyScheduler] Scheduler exception: {exc}")
+
+        time.sleep(600)
+
+
 if __name__ == "__main__":
     initialize_cosmitude()
 
     sync_thread = threading.Thread(target=sync_loop, daemon=True)
     sync_thread.start()
+
+    scheduler_thread = threading.Thread(target=daily_post_scheduler_loop, daemon=True)
+    scheduler_thread.start()
 
     print(f"Cosmitude Real Agent Wrapper running on http://{HOST}:{PORT}")
 

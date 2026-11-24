@@ -1,11 +1,11 @@
 {
-  "last_run": "2026-11-24T05:58:35.998546+00:00",
-  "last_success": "2026-11-24T05:58:35.998546+00:00",
-  "last_post_id": null,
-  "last_post_title": "Kernel Space vs. User Space Protection Rings",
-  "last_post_track": "Core Operating Systems",
+  "last_run": "2026-11-24T08:53:18.150588+00:00",
+  "last_success": "2026-11-24T08:53:18.150588+00:00",
+  "last_post_id": "radar_20261124_0853",
+  "last_post_title": "Leaderless Distributed Consensus Algorithms",
+  "last_post_track": "Distributed Systems",
   "outcome": "published",
-  "engine": "live_radar",
+  "engine": "t2_rssfeeds (direct_http)",
   "last_error": null,
   "last_skip_reason": null
 }

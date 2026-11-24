@@ -1,7 +1,37 @@
 {
-  "total": 118,
-  "generated_at": "2026-11-24T05:58:35.990629+00:00",
+  "total": 119,
+  "generated_at": "2026-11-24T08:53:18.141241+00:00",
   "posts": [
+    {
+      "id": "radar_20261124_0853",
+      "date": "2026-11-24T08:52:53.212418+00:00",
+      "track": "Distributed Systems",
+      "title": "Leaderless Distributed Consensus Algorithms",
+      "subtitle": "Avoiding destructive interference and metastable failures in wide-area network consensus by dropping the single-leader constraint.",
+      "summary": "As you might have heard, Cloudflare adopted an unusual consensus algorithm called QuePaxa for their global control plane, Meerkat, to survive high-latency and volatile wide-area networks. So what is Leaderless Distributed Consensus? Unlike traditional protocols like Paxos or Raft that route all proposals through a single leader to avoid ballot collisions, leaderless algorithms allow multiple nodes to propose values concurrently. By eliminating strict leader dependencies and avoiding error-prone timeout-based leader elections, these systems maintain liveness even when network links exhibit unpredictable latency spikes.",
+      "key_points": [
+        "Traditional leader-based protocols (like Raft or Paxos) suffer from destructive interference when multiple candidates concurrently compete for a majority vote.",
+        "Metastable failures occur when temporary network hiccups trigger unnecessary leader elections that perpetuate system downtime long after the network heals.",
+        "Leaderless consensus trades the single-round-trip optimization of a healthy leader for enhanced resilience and liveness across asynchronous wide-area networks."
+      ],
+      "code_snippet": "class LeaderlessAcceptor:\n    def __init__(self):\n        self.highest_ballot = -1\n        self.accepted_value = None\n\n    def receive_proposal(self, ballot, value):\n        # Accept any ballot greater than or equal to the highest seen\n        if ballot >= self.highest_ballot:\n            self.highest_ballot = ballot\n            self.accepted_value = value\n            return True\n        return False",
+      "complexity": {
+        "time_or_memory": "O(N) message complexity per consensus decision across N replicas",
+        "paradigm": "Asynchronous Distributed Systems & Fault Tolerance"
+      },
+      "interview_tip": "Be prepared to explain the FLP impossibility result and how practical consensus algorithms bypass it by relying on partial synchrony or randomized leaderless designs.",
+      "source": {
+        "title": "Choosing QuePaxa, an unusual\u00a0consensus algorithm",
+        "url": "https://blog.cloudflare.com/choosing-quepaxa",
+        "domain": "cloudflare.com",
+        "fetched_at": "2026-11-24T08:53:13.709820+00:00"
+      },
+      "references": [],
+      "source_count": 1,
+      "telegram_url": "https://t.me/csbites/144",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-11-24_0853_radar_20261124_0853.md",
+      "read_minutes": 1
+    },
     {
       "id": "radar_20261102_0313",
       "date": "2026-11-02T03:13:13.252535",
@@ -2991,40 +3021,6 @@
       "source_count": null,
       "telegram_url": "",
       "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-15_0640_day_06.md",
-      "read_minutes": 1
-    },
-    {
-      "id": "day_05_202610150104",
-      "date": "2026-10-15T01:04:08.747070",
-      "track": "Computer Networks",
-      "title": "TCP vs UDP: 3-Way Handshake vs Blazing Speed",
-      "subtitle": "Understanding the transport layer powering the internet",
-      "summary": "TCP guarantees reliable, ordered packet delivery with flow and congestion control. UDP prioritizes minimum latency with zero handshake overhead.",
-      "key_points": [
-        "TCP (Reliable): 3-Way Handshake (SYN -> SYN-ACK -> ACK). Resends lost packets. Best for HTTP/HTTPS, WebSockets, File Downloads.",
-        "UDP (Speed): Connectionless, fire-and-forget. Packet loss is tolerated for low-latency streaming. Best for Video Calls (WebRTC), Gaming, DNS, VoIP.",
-        "QUIC & HTTP/3: Modern breakthrough! Runs on top of UDP to eliminate Head-of-Line blocking while maintaining TCP-level encryption and reliability."
-      ],
-      "code_snippet": "# Python UDP Socket Client (Zero Handshake)\nimport socket\n\nclient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\nclient.sendto(b\"Telemetry Ping\", (\"127.0.0.1\", 9999))\n# No connection established; sent directly over the wire!",
-      "complexity": {
-        "header_size": "TCP (20-60 bytes) vs UDP (8 bytes fixed)",
-        "overhead": "TCP has connection teardown (FIN/ACK); UDP has zero teardown"
-      },
-      "interview_tip": "When asked why YouTube or Netflix uses TCP instead of UDP: video streaming buffers chunks ahead of time via HTTP/TCP; live real-time video calls (Zoom/Meet) use UDP via WebRTC!",
-      "source": null,
-      "references": [
-        {
-          "title": "RFC 9293: Transmission Control Protocol (TCP)",
-          "url": "https://www.rfc-editor.org/rfc/rfc9293.html"
-        },
-        {
-          "title": "RFC 768: User Datagram Protocol",
-          "url": "https://www.rfc-editor.org/rfc/rfc768.html"
-        }
-      ],
-      "source_count": null,
-      "telegram_url": "",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-15_0104_day_05.md",
       "read_minutes": 1
     }
   ]
