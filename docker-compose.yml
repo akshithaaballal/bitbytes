@@ -32,7 +32,7 @@ services:
       - FRONTEND_ORIGIN=${FRONTEND_ORIGIN:-http://localhost:5180,http://127.0.0.1:5180}
     command: >
       sh -c "npm install &&
-             node src/server.js"
+             node --experimental-sqlite src/server.js"
     ports:
       - "4000:4000"
     depends_on:
