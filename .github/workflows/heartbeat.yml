@@ -72,7 +72,7 @@ jobs:
 
       - name: Create Alert Issue on Heartbeat Failure
         if: failure()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const title = '🚨 Heartbeat Alert: Automation Pipeline Stalled (> 36h since last post)';
