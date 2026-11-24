@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  test_and_build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'automation/requirements*.txt'
+
+      - name: Install Frontend Dependencies & Build
+        run: |
+          npm --prefix frontend install
+          npm --prefix frontend run build
+
+      - name: Install Middleware Dependencies & Test
+        run: |
+          npm --prefix middleware install
+          npm --prefix middleware test
+
+      - name: Install Python Dependencies & Test Automation
+        env:
+          COSMITUDE_USERNAME: dummy_user
+          COSMITUDE_PASSWORD: dummy_pass
+          COSMITUDE_SERVER_ID: dummy_server
+          COSMITUDE_FORUM_ID: dummy_forum
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r automation/requirements.txt -r automation/requirements-dev.txt
+          pytest automation/tests/ -v --tb=short
