@@ -1508,5 +1508,110 @@
       "path": "archive/2026-10-13_1217_day_04.md"
     },
     "skipped_reason": null
+  },
+  {
+    "id": "day_05",
+    "timestamp": "2026-11-25T11:54:52.351476+00:00",
+    "track": "Computer Networks",
+    "title": "TCP vs UDP: 3-Way Handshake vs Blazing Speed",
+    "subtitle": "Understanding the transport layer powering the internet",
+    "summary": "TCP guarantees reliable, ordered packet delivery with flow and congestion control. UDP prioritizes minimum latency with zero handshake overhead.",
+    "source": null,
+    "references": [
+      {
+        "title": "RFC 9293: Transmission Control Protocol (TCP)",
+        "url": "https://www.rfc-editor.org/rfc/rfc9293.html"
+      },
+      {
+        "title": "RFC 768: User Datagram Protocol",
+        "url": "https://www.rfc-editor.org/rfc/rfc768.html"
+      }
+    ],
+    "source_count": 1,
+    "engine": "content_bank_fallback",
+    "fallback_used": true,
+    "fallback_reason": "All tiers exhausted: T1 filtered_out (28 raw leads); T2 attempts exhausted (5 tried); T3 attempts exhausted (5 tried)",
+    "attempts": [
+      {
+        "url": "https://blog.cloudflare.com/open-clairic/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/dns-targeted-zone-builds/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://simonwillison.net/2026/Nov/24/llm-inflection-points/",
+        "domain": "simonwillison.net",
+        "engine": "direct_http",
+        "chars": 7928,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://simonwillison.net/2026/Nov/23/glm-54/",
+        "domain": "simonwillison.net",
+        "engine": "direct_http",
+        "chars": 3257,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.33111v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1115,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.33080v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1080,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.33065v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1105,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.33064v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1038,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.33036v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1101,
+        "reject_reason": "llm_error: rejected or empty output"
+      }
+    ],
+    "telegram": {
+      "ok": true,
+      "message_id": 152,
+      "url": "https://t.me/csbites/152"
+    },
+    "git": {
+      "ok": true,
+      "path": "archive/2026-10-20_2247_day_05.md"
+    },
+    "skipped_reason": null
   }
 ]

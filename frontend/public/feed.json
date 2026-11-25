@@ -1,7 +1,41 @@
 {
-  "total": 121,
-  "generated_at": "2026-11-24T23:42:33.989927+00:00",
+  "total": 122,
+  "generated_at": "2026-11-25T11:54:59.150824+00:00",
   "posts": [
+    {
+      "id": "day_05_202611251154",
+      "date": "2026-11-25T11:54:52.351476+00:00",
+      "track": "Computer Networks",
+      "title": "TCP vs UDP: 3-Way Handshake vs Blazing Speed",
+      "subtitle": "Understanding the transport layer powering the internet",
+      "summary": "TCP guarantees reliable, ordered packet delivery with flow and congestion control. UDP prioritizes minimum latency with zero handshake overhead.",
+      "key_points": [
+        "TCP (Reliable): 3-Way Handshake (SYN -> SYN-ACK -> ACK). Resends lost packets. Best for HTTP/HTTPS, WebSockets, File Downloads.",
+        "UDP (Speed): Connectionless, fire-and-forget. Packet loss is tolerated for low-latency streaming. Best for Video Calls (WebRTC), Gaming, DNS, VoIP.",
+        "QUIC & HTTP/3: Modern breakthrough! Runs on top of UDP to eliminate Head-of-Line blocking while maintaining TCP-level encryption and reliability."
+      ],
+      "code_snippet": "# Python UDP Socket Client (Zero Handshake)\nimport socket\n\nclient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\nclient.sendto(b\"Telemetry Ping\", (\"127.0.0.1\", 9999))\n# No connection established; sent directly over the wire!",
+      "complexity": {
+        "header_size": "TCP (20-60 bytes) vs UDP (8 bytes fixed)",
+        "overhead": "TCP has connection teardown (FIN/ACK); UDP has zero teardown"
+      },
+      "interview_tip": "When asked why YouTube or Netflix uses TCP instead of UDP: video streaming buffers chunks ahead of time via HTTP/TCP; live real-time video calls (Zoom/Meet) use UDP via WebRTC!",
+      "source": null,
+      "references": [
+        {
+          "title": "RFC 9293: Transmission Control Protocol (TCP)",
+          "url": "https://www.rfc-editor.org/rfc/rfc9293.html"
+        },
+        {
+          "title": "RFC 768: User Datagram Protocol",
+          "url": "https://www.rfc-editor.org/rfc/rfc768.html"
+        }
+      ],
+      "source_count": 1,
+      "telegram_url": "https://t.me/csbites/152",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_1215_day_05.md",
+      "read_minutes": 1
+    },
     {
       "id": "day_04_202611242342",
       "date": "2026-11-24T23:42:27.668350+00:00",
@@ -30,7 +64,7 @@
       ],
       "source_count": 1,
       "telegram_url": "https://t.me/csbites/148",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-16_0738_day_04.md",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-21_2355_day_04.md",
       "read_minutes": 1
     },
     {
@@ -61,7 +95,7 @@
       ],
       "source_count": 1,
       "telegram_url": "https://t.me/csbites/146",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_0104_day_03.md",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-19_0527_day_03.md",
       "read_minutes": 1
     },
     {
@@ -2630,7 +2664,7 @@
       ],
       "source_count": null,
       "telegram_url": "",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-12_day_05.md",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_1215_day_05.md",
       "read_minutes": 1
     },
     {
@@ -2996,36 +3030,6 @@
       "source_count": 1,
       "telegram_url": "",
       "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-15_2320_radar_20261015_2320.md",
-      "read_minutes": 1
-    },
-    {
-      "id": "day_01_202610151728",
-      "date": "2026-10-15T17:28:02.681109",
-      "track": "DSA Bite",
-      "title": "Mastering the Two-Pointer Technique",
-      "subtitle": "Solve sorted array problems in O(N) time with O(1) space",
-      "summary": "The Two-Pointer approach reduces brute-force O(N^2) pair searches to linear O(N) time by moving pointers inward or outward based on condition checks.",
-      "key_points": [
-        "Opposite Direction: One pointer at start (left = 0), another at end (right = n - 1).",
-        "Condition: If sum < target -> left++; If sum > target -> right--; If sum == target -> match found!",
-        "Classic Applications: Pair Sum, Container With Most Water, 3Sum, Valid Palindrome."
-      ],
-      "code_snippet": "def two_sum_sorted(arr, target):\n    left, right = 0, len(arr) - 1\n    while left < right:\n        curr_sum = arr[left] + arr[right]\n        if curr_sum == target:\n            return (left, right)\n        elif curr_sum < target:\n            left += 1\n        else:\n            right -= 1\n    return None",
-      "complexity": {
-        "time": "O(N) - single pass through array",
-        "space": "O(1) - only two integer pointers"
-      },
-      "interview_tip": "Always check if the array is already sorted. If not, sorting takes O(N log N) - check if hashing (O(N) space) is better!",
-      "source": null,
-      "references": [
-        {
-          "title": "Two Pointers Technique",
-          "url": "https://www.geeksforgeeks.org/two-pointers-technique/"
-        }
-      ],
-      "source_count": null,
-      "telegram_url": "",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-15_1728_day_01.md",
       "read_minutes": 1
     }
   ]
