@@ -1,7 +1,38 @@
 {
-  "total": 122,
-  "generated_at": "2026-11-25T11:54:59.150824+00:00",
+  "total": 123,
+  "generated_at": "2026-11-25T23:25:32.647797+00:00",
   "posts": [
+    {
+      "id": "day_06_202611252325",
+      "date": "2026-11-25T23:25:24.918028+00:00",
+      "track": "Database Engineering",
+      "title": "How B-Tree Indexes Speed Up SQL Queries 1000x",
+      "subtitle": "Stop table scans: how databases locate rows in milliseconds",
+      "summary": "Without an index, the database executes a Full Table Scan O(N), checking millions of rows. A B-Tree index acts like a book index, finding targets in logarithmic O(log N) disk reads.",
+      "key_points": [
+        "Structure: Self-balancing multi-way search tree where leaf nodes form a doubly linked list.",
+        "Clustered vs Non-Clustered: Clustered determines physical row storage order (Primary Key). Non-clustered stores indexed columns with pointers to the data rows.",
+        "Composite Index: An index on (user_id, created_at) must follow the Leftmost Prefix Rule to be utilized.",
+        "Trade-off: Speeds up SELECT queries, but adds write overhead on INSERT, UPDATE, and DELETE because the index tree must rebalance."
+      ],
+      "code_snippet": "-- 1. Slow without index (Full Table Scan)\nEXPLAIN SELECT * FROM orders WHERE customer_id = 4591;\n\n-- 2. Create B-Tree index\nCREATE INDEX idx_orders_customer ON orders(customer_id);\n\n-- 3. Now executes Index Seek in O(log N)\nEXPLAIN SELECT * FROM orders WHERE customer_id = 4591;",
+      "complexity": {
+        "lookup_time": "O(log N) - typically 3 to 4 disk I/O operations",
+        "storage": "Consumes 10% - 30% additional disk space per table"
+      },
+      "interview_tip": "Be prepared to explain when NOT to use an index: small tables (<1000 rows), frequently written/updated columns with rare reads, or columns with low cardinality (like boolean flags).",
+      "source": null,
+      "references": [
+        {
+          "title": "PostgreSQL Documentation: B-Tree Indexes",
+          "url": "https://www.postgresql.org/docs/current/btree-intro.html"
+        }
+      ],
+      "source_count": 1,
+      "telegram_url": "https://t.me/csbites/154",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-13_2329_day_06.md",
+      "read_minutes": 1
+    },
     {
       "id": "day_05_202611251154",
       "date": "2026-11-25T11:54:52.351476+00:00",
@@ -33,7 +64,7 @@
       ],
       "source_count": 1,
       "telegram_url": "https://t.me/csbites/152",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_1215_day_05.md",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-12_day_05.md",
       "read_minutes": 1
     },
     {
@@ -64,7 +95,7 @@
       ],
       "source_count": 1,
       "telegram_url": "https://t.me/csbites/148",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-21_2355_day_04.md",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-16_0738_day_04.md",
       "read_minutes": 1
     },
     {
@@ -95,7 +126,7 @@
       ],
       "source_count": 1,
       "telegram_url": "https://t.me/csbites/146",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-19_0527_day_03.md",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_0104_day_03.md",
       "read_minutes": 1
     },
     {
@@ -2664,7 +2695,7 @@
       ],
       "source_count": null,
       "telegram_url": "",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-23_1215_day_05.md",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-12_day_05.md",
       "read_minutes": 1
     },
     {
@@ -3000,36 +3031,6 @@
       "source_count": 1,
       "telegram_url": "",
       "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-15_2321_radar_20261015_2321.md",
-      "read_minutes": 1
-    },
-    {
-      "id": "radar_20261015_2320",
-      "date": "2026-10-15T23:20:48.224214",
-      "track": "AI & Machine Learning",
-      "title": "Simons Foundation launches $15M effort to help mathematicians navigate AI e",
-      "subtitle": "Key technical takeaways from trending software and research (October 2026)",
-      "summary": "Recent engineering developments highlight major improvements in ai & machine learning. This architectural shift focuses on eliminating latency bottlenecks and improving fault-tolerant state management.",
-      "key_points": [
-        "Bottleneck Elimination: Replaces legacy blocking operations with asynchronous, zero-copy primitives.",
-        "Resource Efficiency: Maximizes hardware utilization across memory hierarchy and cache lines.",
-        "Production Reliability: Embeds strict telemetry and idempotency guarantees for distributed scale."
-      ],
-      "code_snippet": "# Scalable Attention Mechanism Check\nimport torch\ndef flash_attention_block(q, k, v, mask=None):\n    # Linearized memory footprint: O(N) instead of O(N^2)\n    return torch.nn.functional.scaled_dot_product_attention(q, k, v, attn_mask=mask)",
-      "complexity": {
-        "time": "O(N) memory scaling",
-        "paradigm": "Flash Attention / Tensor Parallelism"
-      },
-      "interview_tip": "Expect questions on how KV-cache optimization prevents GPU out-of-memory errors during autoregressive decoding.",
-      "source": {
-        "title": "Simons Foundation launches $15M effort to help mathematicians navigate AI e",
-        "url": "https://www.simonsfoundation.org/news/simons-foundation-launches-15m-effort-to-help-mathematicians-navigate-ai-era/",
-        "domain": "simonsfoundation.org",
-        "fetched_at": "2026-10-15T23:20:48.224214"
-      },
-      "references": [],
-      "source_count": 1,
-      "telegram_url": "",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-15_2320_radar_20261015_2320.md",
       "read_minutes": 1
     }
   ]
