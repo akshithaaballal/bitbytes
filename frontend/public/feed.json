@@ -1,7 +1,33 @@
 {
-  "total": 123,
-  "generated_at": "2026-11-25T23:25:32.647797+00:00",
+  "total": 124,
+  "generated_at": "2026-11-26T11:43:30.444966+00:00",
   "posts": [
+    {
+      "id": "day_07_202611261143",
+      "date": "2026-11-26T11:43:23.724910+00:00",
+      "track": "Weekly Recap & Puzzle",
+      "title": "Weekly Challenge: The 25 Horses Puzzle",
+      "subtitle": "Classic Google & FAANG interview thinking puzzle",
+      "summary": "You have 25 horses and a race track with 5 lanes. What is the minimum number of races needed to find the top 3 fastest horses without a stopwatch?",
+      "key_points": [
+        "Round 1 (5 races): Divide 25 horses into 5 groups of 5. Race each group. Order horses within each group: A1 > A2 > A3 > A4 > A5, B1 > B2 ..., etc.",
+        "Round 2 (1 race): Race the 5 winners from Round 1 (A1, B1, C1, D1, E1). Assume order: A1 > B1 > C1 > D1 > E1. A1 is officially the fastest horse overall!",
+        "Round 3 (Final race): Horses eligible for 2nd and 3rd place are only: A2, A3, B1, B2, C1 (5 horses total). Race them once!",
+        "Total Races: 5 + 1 + 1 = 7 races."
+      ],
+      "code_snippet": "# Simulation of Elimination Logic\ncandidates = {\n    'Race 1 Winner group': ['A2', 'A3'],\n    'Race 2 Winner group': ['B1', 'B2'],\n    'Race 3 Winner group': ['C1']\n}\n# Total candidates left for 2nd and 3rd place: exactly 5 horses!",
+      "complexity": {
+        "total_races": "7 races minimum",
+        "core_skill": "Logical deduction & pruning impossible candidates"
+      },
+      "interview_tip": "In puzzle rounds, never jump to guessing. State your assumptions aloud, divide into batches, and clearly justify why certain candidates can be eliminated.",
+      "source": null,
+      "references": [],
+      "source_count": 1,
+      "telegram_url": "https://t.me/csbites/156",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-16_2013_day_07.md",
+      "read_minutes": 1
+    },
     {
       "id": "day_06_202611252325",
       "date": "2026-11-25T23:25:24.918028+00:00",
@@ -3001,36 +3027,6 @@
       "source_count": null,
       "telegram_url": "",
       "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-15_2324_day_02.md",
-      "read_minutes": 1
-    },
-    {
-      "id": "radar_20261015_2321",
-      "date": "2026-10-15T23:21:28.671061",
-      "track": "AI & Machine Learning",
-      "title": "Neural Networks Are Already Clean",
-      "subtitle": "Key technical takeaways from trending software and research (October 2026)",
-      "summary": "Recent engineering developments highlight major improvements in ai & machine learning. This architectural shift focuses on eliminating latency bottlenecks and improving fault-tolerant state management.",
-      "key_points": [
-        "Bottleneck Elimination: Replaces legacy blocking operations with asynchronous, zero-copy primitives.",
-        "Resource Efficiency: Maximizes hardware utilization across memory hierarchy and cache lines.",
-        "Production Reliability: Embeds strict telemetry and idempotency guarantees for distributed scale."
-      ],
-      "code_snippet": "# Scalable Attention Mechanism Check\nimport torch\ndef flash_attention_block(q, k, v, mask=None):\n    # Linearized memory footprint: O(N) instead of O(N^2)\n    return torch.nn.functional.scaled_dot_product_attention(q, k, v, attn_mask=mask)",
-      "complexity": {
-        "time": "O(N) memory scaling",
-        "paradigm": "Flash Attention / Tensor Parallelism"
-      },
-      "interview_tip": "Expect questions on how KV-cache optimization prevents GPU out-of-memory errors during autoregressive decoding.",
-      "source": {
-        "title": "Neural Networks Are Already Clean",
-        "url": "https://already-clean.goodfire.com/",
-        "domain": "goodfire.com",
-        "fetched_at": "2026-10-15T23:21:28.671061"
-      },
-      "references": [],
-      "source_count": 1,
-      "telegram_url": "",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-15_2321_radar_20261015_2321.md",
       "read_minutes": 1
     }
   ]
