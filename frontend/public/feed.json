@@ -1,7 +1,37 @@
 {
-  "total": 124,
-  "generated_at": "2026-11-26T11:43:30.444966+00:00",
+  "total": 125,
+  "generated_at": "2026-11-26T23:25:10.153716+00:00",
   "posts": [
+    {
+      "id": "day_01_202611262325",
+      "date": "2026-11-26T23:25:02.128795+00:00",
+      "track": "DSA Bite",
+      "title": "Mastering the Two-Pointer Technique",
+      "subtitle": "Solve sorted array problems in O(N) time with O(1) space",
+      "summary": "The Two-Pointer approach reduces brute-force O(N^2) pair searches to linear O(N) time by moving pointers inward or outward based on condition checks.",
+      "key_points": [
+        "Opposite Direction: One pointer at start (left = 0), another at end (right = n - 1).",
+        "Condition: If sum < target -> left++; If sum > target -> right--; If sum == target -> match found!",
+        "Classic Applications: Pair Sum, Container With Most Water, 3Sum, Valid Palindrome."
+      ],
+      "code_snippet": "def two_sum_sorted(arr, target):\n    left, right = 0, len(arr) - 1\n    while left < right:\n        curr_sum = arr[left] + arr[right]\n        if curr_sum == target:\n            return (left, right)\n        elif curr_sum < target:\n            left += 1\n        else:\n            right -= 1\n    return None",
+      "complexity": {
+        "time": "O(N) - single pass through array",
+        "space": "O(1) - only two integer pointers"
+      },
+      "interview_tip": "Always check if the array is already sorted. If not, sorting takes O(N log N) - check if hashing (O(N) space) is better!",
+      "source": null,
+      "references": [
+        {
+          "title": "Two Pointers Technique",
+          "url": "https://www.geeksforgeeks.org/two-pointers-technique/"
+        }
+      ],
+      "source_count": 1,
+      "telegram_url": "https://t.me/csbites/158",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-16_2306_day_01.md",
+      "read_minutes": 1
+    },
     {
       "id": "day_07_202611261143",
       "date": "2026-11-26T11:43:23.724910+00:00",
@@ -2997,36 +3027,6 @@
       "source_count": null,
       "telegram_url": "",
       "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-16_0206_day_03.md",
-      "read_minutes": 1
-    },
-    {
-      "id": "day_02_202610152324",
-      "date": "2026-10-15T23:24:31.895051",
-      "track": "System Design 101",
-      "title": "Caching Strategies: Cache-Aside vs Write-Through",
-      "subtitle": "How large-scale distributed systems achieve sub-millisecond reads",
-      "summary": "Caching places high-frequency data in lightning-fast in-memory stores (like Redis or Memcached) to prevent exhausting your primary database.",
-      "key_points": [
-        "Cache-Aside (Lazy Loading): The application first checks cache. If cache miss, reads from DB and writes to cache. Great for read-heavy workloads.",
-        "Write-Through: App writes data to the cache, which immediately writes to the DB. High consistency, slightly slower write latency.",
-        "Eviction Policies: LRU (Least Recently Used) is most common. LFU (Least Frequently Used) is best for long-term popularity curves."
-      ],
-      "code_snippet": "# Cache-Aside Pattern in Python/Redis\ndef get_user_profile(user_id):\n    cached = redis_client.get(f\"user:{user_id}\")\n    if cached:\n        return json.loads(cached)\n    \n    # Cache miss: fetch from primary database\n    user = db.query_user(user_id)\n    redis_client.setex(f\"user:{user_id}\", 3600, json.dumps(user))\n    return user",
-      "complexity": {
-        "cache_hit": "< 5ms (RAM access)",
-        "db_read": "50ms - 500ms (Disk I/O / Network)"
-      },
-      "interview_tip": "In interviews, always bring up Cache Invalidation ('There are only two hard things in Computer Science: cache invalidation and naming things').",
-      "source": null,
-      "references": [
-        {
-          "title": "Redis Documentation: Key eviction",
-          "url": "https://redis.io/docs/latest/develop/reference/eviction/"
-        }
-      ],
-      "source_count": null,
-      "telegram_url": "",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-15_2324_day_02.md",
       "read_minutes": 1
     }
   ]

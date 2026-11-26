@@ -1817,5 +1817,113 @@
       "path": "archive/2026-10-17_1948_day_07.md"
     },
     "skipped_reason": null
+  },
+  {
+    "id": "day_01",
+    "timestamp": "2026-11-26T23:25:02.128795+00:00",
+    "track": "DSA Bite",
+    "title": "Mastering the Two-Pointer Technique",
+    "subtitle": "Solve sorted array problems in O(N) time with O(1) space",
+    "summary": "The Two-Pointer approach reduces brute-force O(N^2) pair searches to linear O(N) time by moving pointers inward or outward based on condition checks.",
+    "source": null,
+    "references": [
+      {
+        "title": "Two Pointers Technique",
+        "url": "https://www.geeksforgeeks.org/two-pointers-technique/"
+      }
+    ],
+    "source_count": 1,
+    "engine": "content_bank_fallback",
+    "fallback_used": true,
+    "fallback_reason": "All tiers exhausted: T1 attempts exhausted (1 tried); T2 attempts exhausted (5 tried); T3 attempts exhausted (5 tried)",
+    "attempts": [
+      {
+        "url": "https://arxiv.org/abs/2611.34924",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1029,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/open-clairic/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/dns-targeted-zone-builds/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://simonwillison.net/2026/Nov/26/sqlite3-rsync/",
+        "domain": "simonwillison.net",
+        "engine": "direct_http",
+        "chars": 2531,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://simonwillison.net/2026/Nov/26/hn-50651685/",
+        "domain": "simonwillison.net",
+        "engine": "direct_http",
+        "chars": 1895,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.34942v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1106,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.34935v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1066,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.34928v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1071,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.34848v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1066,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.34825v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1120,
+        "reject_reason": "llm_error: rejected or empty output"
+      }
+    ],
+    "telegram": {
+      "ok": true,
+      "message_id": 158,
+      "url": "https://t.me/csbites/158"
+    },
+    "git": {
+      "ok": true,
+      "path": "archive/2026-10-17_2150_day_01.md"
+    },
+    "skipped_reason": null
   }
 ]
