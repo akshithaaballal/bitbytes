@@ -2033,5 +2033,106 @@
       "path": "archive/2026-10-20_1035_day_02.md"
     },
     "skipped_reason": null
+  },
+  {
+    "id": "day_03",
+    "timestamp": "2026-11-27T23:05:31.728673+00:00",
+    "track": "Core CS: Operating Systems",
+    "title": "Process vs Thread Explained Visually",
+    "subtitle": "The #1 favorite question asked in university exams & technical rounds",
+    "summary": "A Process is an executing program with its own dedicated memory space, whereas a Thread is a lightweight unit of execution within that process.",
+    "source": null,
+    "references": [
+      {
+        "title": "Linux Programmer's Manual: clone(2)",
+        "url": "https://man7.org/linux/man-pages/man2/clone.2.html"
+      }
+    ],
+    "source_count": 1,
+    "engine": "content_bank_fallback",
+    "fallback_used": true,
+    "fallback_reason": "All tiers exhausted: T1 filtered_out (30 raw leads); T2 attempts exhausted (5 tried); T3 attempts exhausted (5 tried)",
+    "attempts": [
+      {
+        "url": "https://blog.cloudflare.com/open-clairic/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://blog.cloudflare.com/dns-targeted-zone-builds/",
+        "domain": "cloudflare.com",
+        "engine": "direct_http",
+        "chars": 12000,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://simonwillison.net/2026/Nov/26/sqlite3-rsync/",
+        "domain": "simonwillison.net",
+        "engine": "direct_http",
+        "chars": 2531,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "https://simonwillison.net/2026/Nov/26/hn-50651685/",
+        "domain": "simonwillison.net",
+        "engine": "direct_http",
+        "chars": 1895,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.34942v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1106,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.34935v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1066,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.34928v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1071,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.34848v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1066,
+        "reject_reason": "llm_error: rejected or empty output"
+      },
+      {
+        "url": "http://arxiv.org/abs/2611.34825v1",
+        "domain": "arxiv.org",
+        "engine": "direct_http",
+        "chars": 1120,
+        "reject_reason": "llm_error: rejected or empty output"
+      }
+    ],
+    "telegram": {
+      "ok": true,
+      "message_id": 164,
+      "url": "https://t.me/csbites/164"
+    },
+    "git": {
+      "ok": true,
+      "path": "archive/2026-10-24_0742_day_03.md"
+    },
+    "skipped_reason": null
   }
 ]
