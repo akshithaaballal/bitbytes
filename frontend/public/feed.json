@@ -1,7 +1,38 @@
 {
-  "total": 127,
-  "generated_at": "2026-11-27T23:05:39.566699+00:00",
+  "total": 128,
+  "generated_at": "2026-11-28T11:10:24.792915+00:00",
   "posts": [
+    {
+      "id": "day_04_202611281110",
+      "date": "2026-11-28T11:10:18.177253+00:00",
+      "track": "Developer Tools & Git",
+      "title": "When & How to use Git Cherry-Pick",
+      "subtitle": "Pick specific commits across branches like a Senior Engineer",
+      "summary": "git cherry-pick allows you to apply a specific commit from one branch onto your current branch without merging the entire history.",
+      "key_points": [
+        "Use Case 1 (Hotfix): You fixed a bug in a development branch and need to port ONLY that fix to the production branch immediately.",
+        "Use Case 2 (Accidental Branching): You made a commit on main instead of a feature branch.",
+        "Syntax: git checkout <target-branch> -> git cherry-pick <commit-hash>",
+        "Pro Tip: If conflicts occur, resolve them and run 'git cherry-pick --continue', or abort using 'git cherry-pick --abort'."
+      ],
+      "code_snippet": "# 1. Find the commit hash from git log\ngit log --oneline\n# a1b2c3d Fix payment gateway crash\n\n# 2. Switch to production branch\ngit checkout main\n\n# 3. Cherry-pick only that commit\ngit cherry-pick a1b2c3d",
+      "complexity": {
+        "safety": "Non-destructive: generates a new SHA hash with the same diff",
+        "best_practice": "Use sparingly to avoid duplicate commits in long-lived branches"
+      },
+      "interview_tip": "Interviewers love asking how cherry-pick differs from rebase and merge: merge joins branches, rebase rewrites linear history, cherry-pick copies individual commits.",
+      "source": null,
+      "references": [
+        {
+          "title": "Git Reference: git-cherry-pick",
+          "url": "https://git-scm.com/docs/git-cherry-pick"
+        }
+      ],
+      "source_count": 1,
+      "telegram_url": "https://t.me/csbites/166",
+      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-16_0738_day_04.md",
+      "read_minutes": 1
+    },
     {
       "id": "day_03_202611272305",
       "date": "2026-11-27T23:05:31.728673+00:00",
@@ -2992,40 +3023,6 @@
       "source_count": null,
       "telegram_url": "",
       "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-16_1703_day_06.md",
-      "read_minutes": 1
-    },
-    {
-      "id": "day_05_202610161249",
-      "date": "2026-10-16T12:49:12.888461",
-      "track": "Computer Networks",
-      "title": "TCP vs UDP: 3-Way Handshake vs Blazing Speed",
-      "subtitle": "Understanding the transport layer powering the internet",
-      "summary": "TCP guarantees reliable, ordered packet delivery with flow and congestion control. UDP prioritizes minimum latency with zero handshake overhead.",
-      "key_points": [
-        "TCP (Reliable): 3-Way Handshake (SYN -> SYN-ACK -> ACK). Resends lost packets. Best for HTTP/HTTPS, WebSockets, File Downloads.",
-        "UDP (Speed): Connectionless, fire-and-forget. Packet loss is tolerated for low-latency streaming. Best for Video Calls (WebRTC), Gaming, DNS, VoIP.",
-        "QUIC & HTTP/3: Modern breakthrough! Runs on top of UDP to eliminate Head-of-Line blocking while maintaining TCP-level encryption and reliability."
-      ],
-      "code_snippet": "# Python UDP Socket Client (Zero Handshake)\nimport socket\n\nclient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\nclient.sendto(b\"Telemetry Ping\", (\"127.0.0.1\", 9999))\n# No connection established; sent directly over the wire!",
-      "complexity": {
-        "header_size": "TCP (20-60 bytes) vs UDP (8 bytes fixed)",
-        "overhead": "TCP has connection teardown (FIN/ACK); UDP has zero teardown"
-      },
-      "interview_tip": "When asked why YouTube or Netflix uses TCP instead of UDP: video streaming buffers chunks ahead of time via HTTP/TCP; live real-time video calls (Zoom/Meet) use UDP via WebRTC!",
-      "source": null,
-      "references": [
-        {
-          "title": "RFC 9293: Transmission Control Protocol (TCP)",
-          "url": "https://www.rfc-editor.org/rfc/rfc9293.html"
-        },
-        {
-          "title": "RFC 768: User Datagram Protocol",
-          "url": "https://www.rfc-editor.org/rfc/rfc768.html"
-        }
-      ],
-      "source_count": null,
-      "telegram_url": "",
-      "archive_url": "https://github.com/akshithaaballal/bitbytes/blob/main/automation/archive/2026-10-16_1249_day_05.md",
       "read_minutes": 1
     }
   ]
